@@ -1,0 +1,11 @@
+<fmt:message key="names.titleIm" bundle="${locale_prop}" var="title" />
+<fmt:message key="names.aboutIm" bundle="${locale_prop}" var="about" />
+<fmt:message key="userInfo.firstName" bundle="${locale_prop}" var="firstName" />
+<fmt:message key="userInfo.lastName" bundle="${locale_prop}" var="lastName" />
+<fmt:message key="userInfo.address" bundle="${locale_prop}" var="address" />
+<fmt:message key="userInfo.phone" bundle="${locale_prop}" var="phone" />
+<fmt:message key="userInfo.gender" bundle="${locale_prop}" var="gender" />
+<fmt:message key="userInfo.genderMale" bundle="${locale_prop}" var="male" />
+<fmt:message key="userInfo.genderFemale" bundle="${locale_prop}" var="female" />
+<fmt:message key="buttons.logout" bundle="${locale_prop}" var="logout" />
+<fmt:message key="errors.userNotFound" bundle="${locale_prop}" var="errorNotFound" />
