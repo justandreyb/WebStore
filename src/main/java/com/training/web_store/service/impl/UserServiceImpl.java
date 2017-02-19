@@ -28,7 +28,8 @@ public class UserServiceImpl implements UserService {
         UserDAO userDAO = factory.getUserDAO();
         try {
             password = ArgumentEncoderUtil.encodePassword(password);
-            userDAO.addUser(login, password, firstName, lastName, gender, address, phoneNumber, locale);
+            User user = new User(login, password, firstName, lastName, gender, address, phoneNumber, locale);
+            userDAO.addUser(user);
         } catch (DAOException | UtilException e) {
             throw new ServiceException(e);
         }

@@ -25,35 +25,42 @@ public class UserDAOImpl implements UserDAO {
     private static final String USER_ROLE = "role_id";
     private static final String USER_IS_BLOCKED = "is_blocked";
 
+    private static final String ADD_USER_QUERY =
+            "INSERT INTO " + USER_TABLE + " (" +
+                USER_LOGIN + ", " + USER_PASSWORD + ", " + USER_FIRST_NAME + ", " +
+                USER_LAST_NAME + ", " + USER_PHONE + ", " + USER_ADDRESS + ", " +
+                USER_GENDER + ", " + USER_ROLE + ", " + USER_IS_BLOCKED + ", " +
+                USER_LOCALE + ") " +
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+    private static final String GET_USER_QUERY =
+            "SELECT " +
+                USER_FIRST_NAME + ", " + USER_LAST_NAME + ", " + USER_GENDER  + ", " +
+                USER_PHONE + ", " + USER_ADDRESS + ", " + USER_LOCALE +
+            " FROM " + USER_TABLE +
+            " WHERE " + USER_LOGIN + "=? AND " + USER_PASSWORD + "=?";
+
     private static final int ROLE_ID_FOR_USER = 2;
     private static final int NOT_BLOCKED_USER_VALUE = 0;
 
     @Override
-    public void addUser(String login, String password, String firstName, String lastName, String gender,
-                        String address, String phoneNumber, String locale) throws DAOException {
-        String fields = USER_LOGIN + ", " + USER_PASSWORD + ", " + USER_FIRST_NAME + ", " +
-                        USER_LAST_NAME + ", " + USER_PHONE + ", " + USER_ADDRESS + ", " +
-                        USER_GENDER + ", " + USER_ROLE + ", " + USER_IS_BLOCKED + ", " +
-                        USER_LOCALE;
-
-        String query = "INSERT INTO " + USER_TABLE + " (" + fields + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
+    public void addUser(User user) throws DAOException {
         Connection connection = null;
         PreparedStatement statement = null;
         try {
             connection = DBConnector.getConnection();
 
-            statement = connection.prepareStatement(query);
-            statement.setString(1, login);
-            statement.setString(2, password);
-            statement.setString(3, firstName);
-            statement.setString(4, lastName);
-            statement.setString(5, phoneNumber);
-            statement.setString(6, address);
-            statement.setString(7, gender);
+            statement = connection.prepareStatement(ADD_USER_QUERY);
+            statement.setString(1, user.getEmail());
+            statement.setString(2, user.getPassword());
+            statement.setString(3, user.getFirstName());
+            statement.setString(4, user.getLastName());
+            statement.setString(5, user.getPhoneNumber());
+            statement.setString(6, user.getAddress());
+            statement.setString(7, user.getGender());
             statement.setInt(8, ROLE_ID_FOR_USER);
             statement.setInt(9, NOT_BLOCKED_USER_VALUE);
-            statement.setString(10, locale);
+            statement.setString(10, user.getLocale());
 
             if (statement.executeUpdate() < 1) {
                 throw new DAOException("Error during adding new user");
@@ -79,10 +86,6 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public User getUser(String login, String password) throws DAOException {
-        String fields = USER_FIRST_NAME + ", " + USER_LAST_NAME + ", " + USER_GENDER  + ", " +
-                        USER_PHONE + ", " + USER_ADDRESS + ", " + USER_LOCALE;
-
-        String query = "SELECT " + fields + " FROM " + USER_TABLE + " WHERE " + USER_LOGIN + "=? AND " + USER_PASSWORD + "=?";
 
         Connection connection = null;
         PreparedStatement statement = null;
@@ -91,7 +94,7 @@ public class UserDAOImpl implements UserDAO {
 
         try {
             connection = DBConnector.getConnection();
-            statement = connection.prepareStatement(query);
+            statement = connection.prepareStatement(GET_USER_QUERY);
 
             statement.setString(1, login);
             statement.setString(2, password);

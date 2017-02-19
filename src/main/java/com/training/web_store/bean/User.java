@@ -87,13 +87,4 @@ public class User {
     public void setLocale(String locale) {
         this.locale = locale;
     }
-
-    @Override
-    public String toString() {
-        if (this != null) {
-            return email + " " + password + " " + firstName + " " + lastName + " " +
-                    address + " " + gender + " " + lastName;
-        }
-        return "null";
-    }
 }

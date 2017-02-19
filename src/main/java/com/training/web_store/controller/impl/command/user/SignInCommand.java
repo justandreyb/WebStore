@@ -45,7 +45,7 @@ public class SignInCommand implements Command {
 
                 Redirector.redirect(response, JSP_IM);
             } else {
-                session.setAttribute(ERROR_PARAMETER, "User not found. Please <a href=\"/registration\">register</a> at first");
+                session.setAttribute(ERROR_PARAMETER, "User not found. Please register at first");
                 Redirector.redirect(response, JSP_SIGN_IN_ERROR);
             }
         } catch (ServiceException e) {

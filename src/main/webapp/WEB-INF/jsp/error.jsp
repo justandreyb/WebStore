@@ -3,6 +3,8 @@
 <html>
 <head>
     <title>Error</title>
+
+    <link href="../../resources/bootstrap/css/bootstrap.css" rel="stylesheet">
 </head>
 <body>
     <h1>Error :</h1>

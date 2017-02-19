@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class WrongCommand implements Command {
-    private static final String ERROR_PAGE = "/error?value=wrong";
+    private static final String ERROR_PAGE = "/error";
 
     public void execute(HttpServletRequest request, HttpServletResponse response) {
         Redirector.redirect(response, ERROR_PAGE);

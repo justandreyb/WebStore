@@ -24,7 +24,9 @@ public class SignOutCommand implements Command {
         try {
             HttpSession session = request.getSession(false);
             service.signOut(session);
-            log.info("Success completed log out");
+            if (session != null) {
+                log.info("Success completed log out");
+            }
 
             Redirector.redirect(response, START_PAGE);
         } catch (ServiceException e) {

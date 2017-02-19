@@ -31,7 +31,6 @@ public class Controller extends HttpServlet {
 
     private void analyzeRequest(HttpServletRequest request, HttpServletResponse response) {
         if (hasCommand(request)) {
-            //response.setCharacterEncoding("utf-8");
             performCommand(request, response);
         } else {
             Redirector.forward(request, response, request.getRequestURI());

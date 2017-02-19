@@ -1,31 +1,33 @@
 <%@include file="template/Settings.jsp"%>
+<%@include file="template/LoginDefines.jsp"%>
 
 <html>
 <head>
-    <title><fmt:message key="names.titleLogin" bundle="${locale_prop}" /></title>
+    <title>${title}</title>
 </head>
 <body>
-    <h2><fmt:message key="names.aboutLogin" bundle="${locale_prop}" /></h2>
+    <h2>${about}</h2>
+
     <c:if test="${sessionScope.user != null}">
-        <p><fmt:message key="errors.alreadySignedIn" bundle="${locale_prop}" /></p>
+        <p>${errorSigned}</p>
     </c:if>
+
     <c:if test="${sessionScope.user == null}">
         <form method="post">
             <label>Email</label>
             <input type="input" name="email">
 
-            <label><fmt:message key="userInfo.password" bundle="${locale_prop}" /></label>
+            <label>${password}</label>
             <input type="password" name="password">
 
             <button type="submit" name="command" value="sign_in">
-                <fmt:message key="buttons.signIn" bundle="${locale_prop}" />
+                ${signIn}
             </button>
             <button>
-                <a href="/welcome">
-                    <fmt:message key="buttons.cancel" bundle="${locale_prop}" />
-                </a>
+                <a href="/welcome">${cancel}</a>
             </button>
         </form>
     </c:if>
+
 </body>
 </html>

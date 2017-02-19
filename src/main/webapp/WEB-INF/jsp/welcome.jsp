@@ -1,20 +1,21 @@
 <%@include file="template/Settings.jsp"%>
+<%@include file="template/WelcomeDefines.jsp"%>
 
 <html>
 <head>
-    <title><fmt:message key="names.titleWelcome" bundle="${locale_prop}" /></title>
+    <title>${title}</title>
 </head>
 <body>
-    <h2><fmt:message key="names.aboutWelcome" bundle="${locale_prop}" /></h2>
+    <h2>${about}</h2>
     <form method="post">
         <button title="Sign in">
             <a href="/login">
-                <fmt:message key="buttons.signIn" bundle="${locale_prop}" />
+                ${signIn}
             </a>
         </button>
         <button title="Sign up">
             <a href="/registration">
-                <fmt:message key="buttons.signUp" bundle="${locale_prop}" />
+                ${signOut}
             </a>
         </button>
     </form>

@@ -49,7 +49,8 @@ public class SignUpCommand implements Command {
         ServiceFactory factory = ServiceFactory.getInstance();
         UserService service = factory.getUserService();
         try {
-            service.registration(email, password, firstName, lastName, phone, gender, address, locale);
+            service.registration(email, password, firstName, lastName,
+                    phone, gender, address, locale);
             User user = service.signIn(email, password);
             HttpSession session = request.getSession(true);
             if (user != null) {

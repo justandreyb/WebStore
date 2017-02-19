@@ -24,9 +24,5 @@
         <filter-name>EncodingFilter</filter-name>
         <servlet-name>Controller</servlet-name>
     </filter-mapping>
-    <!--<servlet-mapping>
-        <servlet-name>Controller</servlet-name>
-        <url-pattern>/index.jsp</url-pattern>
-    </servlet-mapping>-->
 
 </web-app>

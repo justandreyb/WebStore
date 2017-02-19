@@ -1,12 +1,13 @@
 <%@include file="template/Settings.jsp"%>
+<%@include file="template/ImDefines.jsp"%>
 
 <html>
 <head>
-    <title><fmt:message key="names.titleIm" bundle="${locale_prop}" /></title>
+    <title>${title}</title>
+    <link href="resources/bootstrap/css/bootstrap.css" rel="stylesheet">
 </head>
 <body>
-    <h2><fmt:message key="names.aboutIm" bundle="${locale_prop}" /></h2>
-
+    <h2>${about}</h2>
 
     <c:if test="${sessionScope.user != null}">
         <c:set var="user" value="${sessionScope.user}" />
@@ -16,39 +17,39 @@
             <c:out value="${user.email}"/>
         </p>
         <p>
-            <fmt:message key="userInfo.firstName" bundle="${locale_prop}" /> :
+            ${firstName} :
             <c:out value="${user.firstName}"/>
         </p>
         <p>
-            <fmt:message key="userInfo.lastName" bundle="${locale_prop}" /> :
+            ${lastName} :
             <c:out value="${user.lastName}"/>
         </p>
         <p>
-            <fmt:message key="userInfo.address" bundle="${locale_prop}" /> :
+            ${address} :
             <c:out value="${user.address}"/></p>
         <p>
-            <fmt:message key="userInfo.phone" bundle="${locale_prop}" /> :
+            ${phone} :
             <c:out value="${user.phoneNumber}"/>
         </p>
         <p>
-            <fmt:message key="userInfo.gender" bundle="${locale_prop}" /> :
+            ${gender} :
             <c:if test="${user.gender.equals('Male')}">
-                <fmt:message key="userInfo.genderMale" bundle="${locale_prop}" />
+                ${male}
             </c:if>
             <c:if test="${user.gender.equals('Female')}">
-                <fmt:message key="userInfo.genderFemale" bundle="${locale_prop}" />
+                ${female}
             </c:if>
         </p>
 
         <form method="post">
             <button name="command" value="sign_out">
-                <fmt:message key="buttons.logout" bundle="${locale_prop}" />
+                ${logout}
             </button>
         </form>
 
     </c:if>
     <c:if test="${sessionScope.user == null}">
-        <fmt:message key="errors.userNotFound" bundle="${locale_prop}" />
+        ${errorNotFound}
     </c:if>
 </body>
 </html>
