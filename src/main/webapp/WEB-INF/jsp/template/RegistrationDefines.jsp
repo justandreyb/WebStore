@@ -1,0 +1,17 @@
+<fmt:message key="names.titleSignUp" bundle="${curr_locale}" var="title" />
+<fmt:message key="names.aboutSignUp" bundle="${curr_locale}" var="about" />
+<fmt:message key="errors.alreadySignedIn" bundle="${curr_locale}" var="errorSigned" />
+<fmt:message key="userInfo.password" bundle="${curr_locale}" var="password" />
+<fmt:message key="userInfo.firstName" bundle="${curr_locale}" var="firstName" />
+<fmt:message key="userInfo.lastName" bundle="${curr_locale}" var="lastName" />
+<fmt:message key="userInfo.address" bundle="${curr_locale}" var="address" />
+<fmt:message key="userInfo.phone" bundle="${curr_locale}" var="phone" />
+<fmt:message key="userInfo.gender" bundle="${curr_locale}" var="gender" />
+<fmt:message key="userInfo.genderMale" bundle="${curr_locale}" var="male" />
+<fmt:message key="userInfo.genderFemale" bundle="${curr_locale}" var="female" />
+<fmt:message key="userInfo.genderUndefined" bundle="${curr_locale}" var="genderUndefined" />
+<fmt:message key="language.name" bundle="${curr_locale}" var="language" />
+<fmt:message key="language.russian" bundle="${curr_locale}" var="russian" />
+<fmt:message key="language.english" bundle="${curr_locale}" var="english" />
+<fmt:message key="buttons.signUp" bundle="${curr_locale}" var="signUp" />
+<fmt:message key="buttons.cancel" bundle="${curr_locale}" var="cancel" />

@@ -15,7 +15,7 @@
         </button>
         <button title="Sign up">
             <a href="/registration">
-                ${signOut}
+                ${signUp}
             </a>
         </button>
     </form>

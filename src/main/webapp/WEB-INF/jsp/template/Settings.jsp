@@ -9,4 +9,5 @@
 <c:if test="${sessionScope.locale == null}">
     <fmt:setLocale value="en-EN" />
 </c:if>
-<fmt:setBundle basename="localization/prop" var="locale_prop"/>
+
+<fmt:setBundle basename="localization.prop" var="curr_locale"/>
