@@ -17,7 +17,6 @@ public class Redirector {
         try {
             jspPath = getRealPath(jspPath);
             ServletContext context = request.getServletContext().getContext(jspPath);
-
             context.getRequestDispatcher(jspPath).forward(request, response);
         } catch (ServletException | IOException e) {
             log.log(Level.SEVERE, "Error while forwarding", e);

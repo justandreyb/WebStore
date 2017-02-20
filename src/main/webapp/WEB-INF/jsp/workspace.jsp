@@ -1,4 +1,7 @@
+<%@include file="template/Settings.jsp"%>
+
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -7,15 +10,15 @@
     <meta name="description" content="DESCRIPTION">
     <meta name="author" content="justandreyb@gmail.com">
 
-    <link rel="icon" href="favicon.ico">
+    <link rel="icon" href="${pageContext.request.contextPath}/favicon.ico">
 
     <title>Cover Template for Bootstrap</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="resources/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/resources/bootstrap/css/bootstrap.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="resources/css/cover.css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/resources/css/cover.css" rel="stylesheet">
 
 </head>
 
@@ -61,7 +64,7 @@
 </div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script src="/resources/bootstrap/js/bootstrap.js"></script>
+<script src="${pageContext.request.contextPath}/resources/bootstrap/js/bootstrap.js"></script>
 
 </body>
 </html>

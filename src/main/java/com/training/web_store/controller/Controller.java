@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 public class Controller extends HttpServlet {
     private static final Logger log = Logger.getLogger(Controller.class.getName());
     private static final String COMMAND_PARAMETER = "command";
+    private static final String RESOURCES = "resources";
 
     public Controller() {
         super();
@@ -33,7 +34,12 @@ public class Controller extends HttpServlet {
         if (hasCommand(request)) {
             performCommand(request, response);
         } else {
-            Redirector.forward(request, response, request.getRequestURI());
+            String uri = request.getRequestURI();
+            if (!isResourceURI(uri)) {
+                Redirector.forward(request, response, uri);
+            } else {
+                Redirector.redirect(response, uri);
+            }
         }
     }
 
@@ -61,5 +67,9 @@ public class Controller extends HttpServlet {
         } catch (Exception e) {
             log.log(Level.SEVERE, "Error while executing command", e);
         }
+    }
+
+    private boolean isResourceURI(String uri) {
+        return uri.contains(RESOURCES);
     }
 }
