@@ -5,7 +5,7 @@
 <html>
 <head>
     <title>${title}</title>
-    <link dir="" href="resources/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="resources/bootstrap/css/bootstrap.css" rel="stylesheet">
 </head>
 <body>
     <h2>${about}</h2>

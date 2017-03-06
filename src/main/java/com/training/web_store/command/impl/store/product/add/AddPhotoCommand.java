@@ -1,6 +1,6 @@
-package com.training.web_store.controller.impl.command.store.product.add;
+package com.training.web_store.command.impl.store.product.add;
 
-import com.training.web_store.controller.Command;
+import com.training.web_store.command.Command;
 import com.training.web_store.service.factory.ServiceFactory;
 import com.training.web_store.service.store.PhotoService;
 

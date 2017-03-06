@@ -1,4 +1,4 @@
-package com.training.web_store.bean;
+package com.training.web_store.command;
 
 public enum CommandName {
     SIGN_UP,

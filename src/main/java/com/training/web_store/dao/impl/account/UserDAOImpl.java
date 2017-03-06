@@ -1,6 +1,6 @@
-package com.training.web_store.dao.impl;
+package com.training.web_store.dao.impl.account;
 
-import com.training.web_store.bean.User;
+import com.training.web_store.bean.account.User;
 import com.training.web_store.dao.UserDAO;
 import com.training.web_store.dao.exception.DAOException;
 import com.training.web_store.util.ArgumentParserUtil;
@@ -11,8 +11,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
 
 public class UserDAOImpl implements UserDAO {
     private static final String DATABASE = "web_store";
@@ -55,18 +53,16 @@ public class UserDAOImpl implements UserDAO {
                 USER_INFO_TABLE + "." + USER_GENDER + ", " +
                 USER_INFO_TABLE + "." + USER_PHONE + ", " +
                 USER_INFO_TABLE + "." + USER_ADDRESS + ", " +
-                USER_TABLE + "." + USER_LOCALE + ", " +
+                USER_TABLE + "." + USER_LOCALE +
             " FROM " + DATABASE + "." + USER_INFO_TABLE +
             " INNER JOIN " + DATABASE + "." + USER_TABLE +
-                " ON " + USER_INFO_TABLE + "." + USER_INFO_ID + "=(" +
-                    "SELECT " + USER_ID +
-                    " FROM " + DATABASE + "." + USER_TABLE +
+                " ON " +
+                    USER_INFO_TABLE + "." + USER_INFO_ID + "=" + USER_TABLE + "." + USER_ID +
                     " WHERE (" +
                         USER_TABLE + "." + USER_LOGIN + "=? AND " +
                         USER_TABLE + "." + USER_PASSWORD + "=? AND " +
                         USER_TABLE + "." + USER_IS_ACTIVE + "=" + USER_ACTIVE_STATE +
-                    ")" +
-                ")";
+                    ")";
 
     private static final String GET_USER_ID_QUERY =
             "SELECT " +
@@ -83,6 +79,14 @@ public class UserDAOImpl implements UserDAO {
             " WHERE " +
                 USER_LOGIN + "=? AND" +
                 USER_PASSWORD + "=?";
+
+    private static final String UPDATE_USER_QUERY =
+            "UPDATE " + DATABASE + "." + USER_TABLE +
+                    " SET " + USER_IS_ACTIVE + "=?" +
+                    " WHERE " +
+                    USER_LOGIN + "=? AND" +
+                    USER_PASSWORD + "=?";
+
     private static final int ROLE_ID_FOR_USER = 2;
 
     @Override
@@ -108,6 +112,11 @@ public class UserDAOImpl implements UserDAO {
             throw new DAOException(e);
         }
     }
+    }
+
+    @Override
+    public void updateUser(int userId, User user) throws DAOException {
+        //TODO: Write
     }
 
     @Override
@@ -168,7 +177,35 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public void setUserAvailable(User user, boolean available) throws DAOException {
+        Connection connection = null;
+        PreparedStatement statement = null;
+        try {
+            connection = DBConnector.getConnection();
+            statement = connection.prepareStatement(SET_USER_AVAILABLE_QUERY);
+            statement.setBoolean(1, available);
+            statement.setString(2, user.getEmail());
+            statement.setString(3, user.getPassword());
 
+            if (statement.executeUpdate() < 1) {
+                throw new DAOException("Error during changing user state");
+            }
+
+        } catch (SQLException | UtilException e) {
+            throw new DAOException(e);
+        } finally {
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+            } catch (SQLException e) {
+                throw new DAOException(e);
+            }
+            try {
+                DBConnector.closeConnection(connection);
+            } catch (UtilException e) {
+                throw new DAOException(e);
+            }
+        }
     }
 
     private void addUserAccount(Connection connection, User user) throws DAOException {
@@ -179,6 +216,39 @@ public class UserDAOImpl implements UserDAO {
             statement.setString(2, user.getPassword());
             statement.setInt(3, ROLE_ID_FOR_USER);
             statement.setString(4, user.getLocale());
+
+            if (statement.executeUpdate() < 1) {
+                throw new DAOException("Error during adding new user");
+            }
+
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        } finally {
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+            } catch (SQLException e) {
+                throw new DAOException(e);
+            }
+        }
+    }
+
+    private void addUserInfo(Connection connection, User user, int userId) throws DAOException {
+        if (userId == -1) {
+            throw new DAOException("Error with adding user info. User not created");
+        }
+
+        PreparedStatement statement = null;
+        try {
+            statement = connection.prepareStatement(ADD_USER_INFO_QUERY);
+
+            statement.setString(1, user.getFirstName());
+            statement.setString(2, user.getLastName());
+            statement.setString(3, user.getPhoneNumber());
+            statement.setString(4, user.getAddress());
+            statement.setString(5, user.getGender());
+            statement.setInt(6, userId);
 
             if (statement.executeUpdate() < 1) {
                 throw new DAOException("Error during adding new user");
@@ -225,39 +295,6 @@ public class UserDAOImpl implements UserDAO {
             } catch (SQLException e) {
                 throw new DAOException(e);
             }
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException(e);
-            }
-        }
-    }
-
-    private void addUserInfo(Connection connection, User user, int userId) throws DAOException {
-        if (userId == -1) {
-            throw new DAOException("Error with adding user info. User not created");
-        }
-
-        PreparedStatement statement = null;
-        try {
-            statement = connection.prepareStatement(ADD_USER_INFO_QUERY);
-
-            statement.setString(1, user.getFirstName());
-            statement.setString(2, user.getLastName());
-            statement.setString(3, user.getPhoneNumber());
-            statement.setString(4, user.getAddress());
-            statement.setString(5, user.getGender());
-            statement.setInt(6, userId);
-
-            if (statement.executeUpdate() < 1) {
-                throw new DAOException("Error during adding new user");
-            }
-
-        } catch (SQLException e) {
-            throw new DAOException(e);
-        } finally {
             try {
                 if (statement != null) {
                     statement.close();

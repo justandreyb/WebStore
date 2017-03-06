@@ -1,6 +1,6 @@
-package com.training.web_store.controller.impl.command.store.customer;
+package com.training.web_store.command.impl.store.customer;
 
-import com.training.web_store.controller.Command;
+import com.training.web_store.command.Command;
 import com.training.web_store.service.factory.ServiceFactory;
 
 import javax.servlet.http.HttpServletRequest;

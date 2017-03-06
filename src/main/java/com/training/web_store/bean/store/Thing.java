@@ -1,6 +1,6 @@
-package com.training.web_store.bean;
+package com.training.web_store.bean.store;
 
-import java.sql.Date;
+import java.util.Date;
 
 public class Thing {
     private String name;
@@ -9,4 +9,10 @@ public class Thing {
     private String description;
     private Date creationDate;
     private String review;
+
+    public Thing(String name, String description, Date creationDate) {
+        this.name = name;
+        this.description = description;
+        this.creationDate = creationDate;
+    }
 }

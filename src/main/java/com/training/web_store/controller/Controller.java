@@ -1,13 +1,12 @@
 package com.training.web_store.controller;
 
-import com.training.web_store.controller.impl.CommandProvider;
+import com.training.web_store.command.Command;
+import com.training.web_store.command.CommandProvider;
 import com.training.web_store.util.Redirector;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

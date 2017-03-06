@@ -1,6 +1,6 @@
-package com.training.web_store.controller.impl.command;
+package com.training.web_store.command.impl;
 
-import com.training.web_store.controller.Command;
+import com.training.web_store.command.Command;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

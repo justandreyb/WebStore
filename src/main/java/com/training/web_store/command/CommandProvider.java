@@ -1,16 +1,14 @@
-package com.training.web_store.controller.impl;
+package com.training.web_store.command;
 
-import com.training.web_store.bean.CommandName;
-import com.training.web_store.controller.Command;
-import com.training.web_store.controller.impl.command.ChangeLocaleCommand;
-import com.training.web_store.controller.impl.command.store.customer.*;
-import com.training.web_store.controller.impl.command.store.product.add.*;
-import com.training.web_store.controller.impl.command.store.product.remove.*;
-import com.training.web_store.controller.impl.command.store.product.update.*;
-import com.training.web_store.controller.impl.command.user.SignUpCommand;
-import com.training.web_store.controller.impl.command.user.SignInCommand;
-import com.training.web_store.controller.impl.command.user.SignOutCommand;
-import com.training.web_store.controller.impl.command.WrongCommand;
+import com.training.web_store.command.impl.ChangeLocaleCommand;
+import com.training.web_store.command.impl.store.customer.*;
+import com.training.web_store.command.impl.store.product.add.*;
+import com.training.web_store.command.impl.store.product.remove.*;
+import com.training.web_store.command.impl.store.product.update.*;
+import com.training.web_store.command.impl.user.SignUpCommand;
+import com.training.web_store.command.impl.user.SignInCommand;
+import com.training.web_store.command.impl.user.SignOutCommand;
+import com.training.web_store.command.impl.WrongCommand;
 
 import java.util.HashMap;
 import java.util.logging.Level;

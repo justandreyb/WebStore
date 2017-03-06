@@ -1,6 +1,6 @@
 package com.training.web_store.service.impl;
 
-import com.training.web_store.bean.User;
+import com.training.web_store.bean.account.User;
 import com.training.web_store.dao.UserDAO;
 import com.training.web_store.dao.exception.DAOException;
 import com.training.web_store.dao.factory.DAOFactory;
@@ -15,8 +15,7 @@ import javax.servlet.http.HttpSession;
 public class UserServiceImpl implements UserService {
     private static final String USER_INFO = "user";
 
-    private DAOFactory factory = DAOFactory.getInstance();
-
+    private final DAOFactory factory = DAOFactory.getInstance();
 
     @Override
     public void registration(String login, String password, String firstName, String lastName,
@@ -60,6 +59,23 @@ public class UserServiceImpl implements UserService {
 
         if (session.getAttributeNames().hasMoreElements()) {
             session.invalidate();
+        }
+    }
+
+    @Override
+    public void updateAccountInfo(int userId, String login, String password, String firstName, String lastName,
+                                  String phoneNumber, String gender, String address, String locale) throws ServiceException {
+        if (!ArgumentParserUtil.isValidArguments(login, password, firstName, lastName, locale)) {
+            throw new ServiceException("Invalid arguments");
+        }
+
+        UserDAO userDAO = factory.getUserDAO();
+        try {
+            password = ArgumentEncoderUtil.encodePassword(password);
+            User newUser = new User(login, password, firstName, lastName, gender, address, phoneNumber, locale);
+            userDAO.updateUser(userId, newUser);
+        } catch (DAOException | UtilException e) {
+            throw new ServiceException(e);
         }
     }
 }
