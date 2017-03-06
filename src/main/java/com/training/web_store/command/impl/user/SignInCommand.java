@@ -1,6 +1,6 @@
 package com.training.web_store.controller.impl.command.user;
 
-import com.training.web_store.bean.User;
+import com.training.web_store.bean.account.User;
 import com.training.web_store.controller.Command;
 import com.training.web_store.service.UserService;
 import com.training.web_store.service.exception.ServiceException;

@@ -1,6 +1,6 @@
 package com.training.web_store.controller.impl.command.user;
 
-import com.training.web_store.bean.User;
+import com.training.web_store.bean.account.User;
 import com.training.web_store.controller.Command;
 import com.training.web_store.service.UserService;
 import com.training.web_store.service.exception.ServiceException;
@@ -10,7 +10,6 @@ import com.training.web_store.util.Redirector;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.UnsupportedEncodingException;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
