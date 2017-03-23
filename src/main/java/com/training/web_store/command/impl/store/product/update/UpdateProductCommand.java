@@ -1,11 +1,11 @@
 package com.training.web_store.command.impl.store.product.update;
 
-import com.training.web_store.command.Command;
+import com.training.web_store.command.impl.store.StoreCommand;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class UpdateProductCommand implements Command {
+public class UpdateProductCommand extends StoreCommand {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) {
 

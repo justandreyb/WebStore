@@ -32,6 +32,7 @@ public enum CommandName {
     REMOVE_CATEGORY,
     REMOVE_BRAND,
     REMOVE_DISCOUNT,
+    REMOVE_PHOTO,
 
     RATE_THING,
     ADD_TO_ORDER,

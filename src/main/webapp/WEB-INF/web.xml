@@ -5,15 +5,9 @@
 <web-app>
     <display-name>Web Store</display-name>
 
-    <servlet>
-        <servlet-name>Controller</servlet-name>
-        <servlet-class>com.training.web_store.controller.Controller</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>Controller</servlet-name>
-        <url-pattern>/</url-pattern>
-    </servlet-mapping>
+    <listener>
+        <listener-class>com.training.web_store.listener.ServerListener</listener-class>
+    </listener>
 
     <filter>
         <filter-name>EncodingFilter</filter-name>
@@ -24,5 +18,26 @@
         <filter-name>EncodingFilter</filter-name>
         <servlet-name>Controller</servlet-name>
     </filter-mapping>
+
+    <servlet>
+        <servlet-name>Controller</servlet-name>
+        <servlet-class>com.training.web_store.controller.Controller</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>Controller</servlet-name>
+        <url-pattern>/welcome</url-pattern>
+        <url-pattern>/login</url-pattern>
+        <url-pattern>/dashboard</url-pattern>
+    </servlet-mapping>
+
+    <error-page>
+        <error-code>404</error-code>
+        <location>/WEB-INF/jsp/error-pages/Page404.html</location>
+    </error-page>
+    <error-page>
+        <error-code>500</error-code>
+        <location>/WEB-INF/jsp/error-pages/Page500.html</location>
+    </error-page>
 
 </web-app>

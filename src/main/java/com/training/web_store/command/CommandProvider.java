@@ -37,7 +37,7 @@ public class CommandProvider {
         repository.put(CommandName.CREATE_PRODUCT, new CreateProductCommand());
         repository.put(CommandName.ADD_TO_PRODUCT, new AddToProductCommand());
         repository.put(CommandName.REMOVE_FROM_PRODUCT, new RemoveFromProductCommand());
-        repository.put(CommandName.CREATE_DISCOUNT, new CreateDisconutCommand());
+        repository.put(CommandName.CREATE_DISCOUNT, new CreateDiscountCommand());
 
         repository.put(CommandName.SHOW_PRODUCT, new ShowProductCommand());
         repository.put(CommandName.SEARCH_PRODUCT, new SearchProductCommand());

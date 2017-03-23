@@ -166,7 +166,7 @@ public class StoreServiceImpl implements StoreService {
     public void addPhoto(int thingId, String name) throws ServiceException {
         //TODO: create storagePath here !
         try {
-            photoDAO.addPhoto(thingId, name, name);
+            photoDAO.addThingPhoto(thingId, name, name);
         } catch (DAOException e) {
             throw new ServiceException(e);
         }
@@ -184,7 +184,7 @@ public class StoreServiceImpl implements StoreService {
     @Override
     public void deletePhoto(int photoId) throws ServiceException {
         try {
-            photoDAO.markPhotoAsDeleted(photoId);
+            photoDAO.setAvailable(photoId, false);
         } catch (DAOException e) {
             throw new ServiceException(e);
         }
@@ -193,18 +193,18 @@ public class StoreServiceImpl implements StoreService {
 /* ----------------------------------------------------------------- */
 
     @Override
-    public void addProduct(String name, int categoryId) throws ServiceException {
+    public void addProduct(String name, double price, int categoryId) throws ServiceException {
         try {
-            productDAO.addProduct(name, categoryId);
+            productDAO.addProduct(name, price, categoryId);
         } catch (DAOException e) {
             throw new ServiceException(e);
         }
     }
 
     @Override
-    public void addProduct(String name, int categoryId, int discountId) throws ServiceException {
+    public void addProduct(String name, double price, int categoryId, int discountId) throws ServiceException {
         try {
-            productDAO.addProduct(name, categoryId, discountId);
+            productDAO.addProduct(name, price, categoryId, discountId);
         } catch (DAOException e) {
             throw new ServiceException(e);
         }
@@ -253,9 +253,9 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public void updateProduct(int productId, String name, int categoryId, int discountId) throws ServiceException {
+    public void updateProduct(int productId, String name, double price, int categoryId, int discountId) throws ServiceException {
         try {
-            productDAO.updateProduct(productId, name, categoryId, discountId);
+            productDAO.updateProduct(productId, name, price, categoryId, discountId);
         } catch (DAOException e) {
             throw new ServiceException(e);
         }

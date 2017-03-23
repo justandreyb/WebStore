@@ -14,4 +14,5 @@
 <fmt:message key="language.russian" bundle="${curr_locale}" var="russian" />
 <fmt:message key="language.english" bundle="${curr_locale}" var="english" />
 <fmt:message key="buttons.signUp" bundle="${curr_locale}" var="signUp" />
+<fmt:message key="buttons.signIn" bundle="${curr_locale}" var="signIn" />
 <fmt:message key="buttons.cancel" bundle="${curr_locale}" var="cancel" />

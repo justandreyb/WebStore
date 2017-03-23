@@ -1,10 +1,7 @@
 package com.training.web_store.command.impl.user;
 
 import com.training.web_store.bean.account.User;
-import com.training.web_store.command.Command;
-import com.training.web_store.service.UserService;
 import com.training.web_store.service.exception.ServiceException;
-import com.training.web_store.service.factory.ServiceFactory;
 import com.training.web_store.util.Redirector;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,11 +9,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.Locale;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
-public class SignUpCommand implements Command {
-    private static final Logger log = Logger.getLogger(SignUpCommand.class.getName());
-
+public class SignUpCommand extends UserCommand {
     private static final String EMAIL_PARAMETER = "email";
     private static final String PASSWORD_PARAMETER = "password";
     private static final String FIRST_NAME_PARAMETER = "first_name";
@@ -44,9 +38,6 @@ public class SignUpCommand implements Command {
         String address = request.getParameter(ADDRESS_PARAMETER);
         String locale = request.getParameter(LOCALE_PARAMETER);
 
-
-        ServiceFactory factory = ServiceFactory.getInstance();
-        UserService service = factory.getUserService();
         try {
             service.registration(email, password, firstName, lastName,
                     phone, gender, address, locale);

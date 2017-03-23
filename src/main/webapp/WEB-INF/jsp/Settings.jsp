@@ -10,4 +10,4 @@
     <fmt:setLocale value="en-EN" />
 </c:if>
 
-<fmt:setBundle basename="localization.prop" var="curr_locale"/>
+<fmt:setBundle basename="com.training.web_store.localization.prop" var="curr_locale"/>

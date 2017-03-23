@@ -1,4 +1,4 @@
-<%@include file="template/Settings.jsp"%>
+<%@include file="Settings.jsp"%>
 <!DOCTYPE html>
 <html >
 <head>
@@ -12,9 +12,9 @@
         <%@include file="../../resources/bootstrap/css/bootstrap.css" %>
     </style>
 
-    <style>
+    <%--<style>
         <%@include file="../../resources/css/login_style.css" %>
-    </style>
+    </style>--%>
 
   
 </head>

@@ -1,11 +1,12 @@
-<%@include file="template/Settings.jsp"%>
-<%@include file="template/WelcomeDefines.jsp"%>
+<%@include file="Settings.jsp"%>
+<%@include file="defines/WelcomeDefines.jsp"%>
 
-<html>
-<head>
-    <title>${title}</title>
-</head>
+<%@include file="templates/head.jsp" %>
 <body>
+    <%@include file="templates/navbar/begin-navbar.jsp" %>
+        <%@include file="templates/navbar/accounts/guestAccount.jspx" %>
+    <%@include file="templates/navbar/end-navbar.jsp" %>
+
     <h2>${about}</h2>
     <form method="post">
         <button title="Sign in">
@@ -19,5 +20,9 @@
             </a>
         </button>
     </form>
-</body>
-</html>
+
+    <%@include file="templates/end-page/begin-hidden-connector.jsp" %>
+        <%@include file="templates/end-page/hidden-elements/signing.jsp" %>
+    <%@include file="templates/end-page/end-hidden-connector.jsp" %>
+
+<%@include file="templates/end-page.jsp" %>

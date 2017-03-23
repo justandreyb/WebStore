@@ -1,5 +1,7 @@
-<%@include file="template/Settings.jsp"%>
-<%@include file="template/RegistrationDefines.jsp"%>
+<%@include file="Settings.jsp"%>
+<%@include file="defines/LoginDefines.jsp"%>
+
+<%@include file="template/head.jsp" %>
 
 <html>
 <head>

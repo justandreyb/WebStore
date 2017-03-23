@@ -1,6 +1,7 @@
 package com.training.web_store.bean.account;
 
 public class User {
+    private int id;
     private String email;
     private String password;
     private String firstName;
@@ -86,5 +87,13 @@ public class User {
 
     public void setLocale(String locale) {
         this.locale = locale;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

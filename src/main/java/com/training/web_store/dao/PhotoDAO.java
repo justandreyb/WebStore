@@ -6,9 +6,11 @@ import com.training.web_store.dao.exception.DAOException;
 import java.util.List;
 
 public interface PhotoDAO {
-    void addPhoto(int thingId, String realName, String href) throws DAOException;
+    void addThingPhoto(int thingId, String realName, String href) throws DAOException;
+
+    void addProductPhoto(int productId, String realName, String href) throws DAOException;
 
     List<Photo> getPhotos(int thingId) throws DAOException;
 
-    void markPhotoAsDeleted(int photoId) throws DAOException;
+    void setAvailable(int photoId, boolean available) throws DAOException;
 }

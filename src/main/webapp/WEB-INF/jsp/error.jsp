@@ -1,4 +1,4 @@
-<%@include file="template/Settings.jsp"%>
+<:jsp:include file="Settings.jsp" />
 
 <html>
 <head>

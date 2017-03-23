@@ -4,8 +4,7 @@ import com.training.web_store.bean.account.User;
 import com.training.web_store.dao.UserDAO;
 import com.training.web_store.dao.exception.DAOException;
 import com.training.web_store.util.ArgumentParserUtil;
-import com.training.web_store.util.DBConnector;
-import com.training.web_store.util.exception.UtilException;
+import com.training.web_store.dao.util.DBConnector;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,6 +12,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class UserDAOImpl implements UserDAO {
+    private static final DBConnector dbConnector = DBConnector.getInstance();
+
     private static final String DATABASE = "web_store";
     private static final String USER_TABLE = "user";
     private static final String USER_INFO_TABLE = "customer_info";
@@ -48,6 +49,7 @@ public class UserDAOImpl implements UserDAO {
 
     private static final String GET_USER_QUERY =
             "SELECT " +
+                USER_TABLE + "." + USER_ID +
                 USER_INFO_TABLE + "." + USER_FIRST_NAME + ", " +
                 USER_INFO_TABLE + "." + USER_LAST_NAME + ", " +
                 USER_INFO_TABLE + "." + USER_GENDER + ", " +
@@ -93,7 +95,7 @@ public class UserDAOImpl implements UserDAO {
     public void addUser(User user) throws DAOException {
         Connection connection = null;
         try {
-            connection = DBConnector.getConnection();
+            connection = dbConnector.getConnection();
 
             connection.setAutoCommit(false);
             addUserAccount(connection, user);
@@ -103,15 +105,11 @@ public class UserDAOImpl implements UserDAO {
             connection.commit();
             connection.setAutoCommit(true);
 
-        } catch (UtilException | SQLException e) {
+        } catch (SQLException e) {
             throw new DAOException("Cannot get connection to DB", e);
         } finally {
-        try {
-            DBConnector.closeConnection(connection);
-        } catch (UtilException e) {
-            throw new DAOException(e);
+            dbConnector.closeConnection(connection);
         }
-    }
     }
 
     @Override
@@ -126,7 +124,7 @@ public class UserDAOImpl implements UserDAO {
         ResultSet set = null;
 
         try {
-            connection = DBConnector.getConnection();
+            connection = dbConnector.getConnection();
             statement = connection.prepareStatement(GET_USER_QUERY);
 
             statement.setString(1, login);
@@ -137,6 +135,7 @@ public class UserDAOImpl implements UserDAO {
             User user = null;
 
             while (set.next()) {
+                int userId = set.getInt(USER_ID);
                 String first_name = set.getString(USER_FIRST_NAME);
                 String last_name = set.getString(USER_LAST_NAME);
                 String gender = set.getString(USER_GENDER);
@@ -146,11 +145,12 @@ public class UserDAOImpl implements UserDAO {
 
                 if (ArgumentParserUtil.isValidArguments(first_name, last_name, gender, address, phone, locale)) {
                     user = new User(login, password, first_name, last_name, gender, address, phone, locale);
+                    user.setId(userId);
                 }
             }
             return user;
 
-        } catch (UtilException | SQLException e) {
+        } catch (SQLException e) {
             throw new DAOException(e);
         } finally {
             try {
@@ -167,11 +167,7 @@ public class UserDAOImpl implements UserDAO {
             } catch (SQLException e) {
                 throw new DAOException(e);
             }
-            try {
-                DBConnector.closeConnection(connection);
-            } catch (UtilException e) {
-                throw new DAOException(e);
-            }
+            dbConnector.closeConnection(connection);
         }
     }
 
@@ -180,7 +176,7 @@ public class UserDAOImpl implements UserDAO {
         Connection connection = null;
         PreparedStatement statement = null;
         try {
-            connection = DBConnector.getConnection();
+            connection = dbConnector.getConnection();
             statement = connection.prepareStatement(SET_USER_AVAILABLE_QUERY);
             statement.setBoolean(1, available);
             statement.setString(2, user.getEmail());
@@ -190,7 +186,7 @@ public class UserDAOImpl implements UserDAO {
                 throw new DAOException("Error during changing user state");
             }
 
-        } catch (SQLException | UtilException e) {
+        } catch (SQLException e) {
             throw new DAOException(e);
         } finally {
             try {
@@ -200,11 +196,7 @@ public class UserDAOImpl implements UserDAO {
             } catch (SQLException e) {
                 throw new DAOException(e);
             }
-            try {
-                DBConnector.closeConnection(connection);
-            } catch (UtilException e) {
-                throw new DAOException(e);
-            }
+            dbConnector.closeConnection(connection);
         }
     }
 

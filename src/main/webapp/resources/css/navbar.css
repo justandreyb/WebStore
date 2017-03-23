@@ -1,0 +1,67 @@
+html,
+body {
+    height: 100%;
+    background-color: #333;
+    font-family: 'Titillium Web', sans-serif;
+    min-height: 2000px;
+    padding-top: 70px;
+}
+body {
+    color: #fff;
+    text-shadow: 0 1px 3px rgba(0,0,0,.5);
+}
+
+/* Border color from #fff to #333 */
+.navbar-default, .navbar-default .navbar-collapse, .navbar-default .navbar-form {
+    border-color:  #333;
+}
+
+/* First color of navbar after page load*/
+.navbar-default {
+    background-color:  rgba(40, 96, 144, 0);
+}
+
+/* Font size and color of buttons in the navbar*/
+.navbar-default .navbar-nav > li > a {
+    font-size: 15px;
+    font-weight: bold;
+    color: #fff;
+    color: rgba(255,255,255,.75);
+}
+
+/* Orange color while hower the navbar's buttons */
+.navbar-default .navbar-nav > li > a:hover {
+    color:  #FF4500;
+    text-shadow: 0 0 1px  #FF4500;
+}
+
+/* Orange color of navbar's buttons while pressed*/
+.navbar-default .navbar-nav > li > a:focus {
+    color:  #FF4500;
+    text-shadow: 0 0 1px  #FF4500;
+}
+
+.modal-header {
+    padding:9px 15px 9px 15px;
+    border-bottom:1px solid #eee;
+    background-color: rgba(40, 96, 144, 0.9);
+    -webkit-border-top-left-radius: 5px;
+    -webkit-border-top-right-radius: 5px;
+     border-top-left-radius: 5px;
+     border-top-right-radius: 5px;
+    text-align: center;
+ }
+
+.modal-body {
+    text-align: center;
+}
+
+.modal-body > .tab-content {
+    color: #444;
+    text-shadow: 0 0 1px  #fff;
+}
+
+.modal-body > .tab-content > .tab-pane {
+    text-align: left;
+}
+

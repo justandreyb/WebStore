@@ -47,8 +47,8 @@ public interface StoreService {
 
     /* --------------------------------------------------------------------- */
 
-    void addProduct(String name, int categoryId) throws ServiceException;
-    void addProduct(String name, int categoryId, int discountId) throws ServiceException;
+    void addProduct(String name, double price, int categoryId) throws ServiceException;
+    void addProduct(String name, double price, int categoryId, int discountId) throws ServiceException;
 
     void addThing(int productId, int thingId) throws ServiceException;
     void removeThing(int productId, int thingId) throws ServiceException;
@@ -58,7 +58,7 @@ public interface StoreService {
     List<Product> getProductsForCategory(int categoryId) throws ServiceException;
     List<Product> getProductsForBrand(int brandId) throws ServiceException;
 
-    void updateProduct(int productId, String name, int categoryId, int discountId) throws ServiceException;
+    void updateProduct(int productId, String name, double price, int categoryId, int discountId) throws ServiceException;
 
     void deleteProduct(int productId) throws ServiceException;
 
