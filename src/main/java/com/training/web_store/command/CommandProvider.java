@@ -1,14 +1,12 @@
 package com.training.web_store.command;
 
 import com.training.web_store.command.impl.ChangeLocaleCommand;
+import com.training.web_store.command.impl.WrongCommand;
 import com.training.web_store.command.impl.store.customer.*;
-import com.training.web_store.command.impl.store.product.add.*;
-import com.training.web_store.command.impl.store.product.remove.*;
-import com.training.web_store.command.impl.store.product.update.*;
-import com.training.web_store.command.impl.user.SignUpCommand;
+import com.training.web_store.command.impl.store.product.*;
 import com.training.web_store.command.impl.user.SignInCommand;
 import com.training.web_store.command.impl.user.SignOutCommand;
-import com.training.web_store.command.impl.WrongCommand;
+import com.training.web_store.command.impl.user.SignUpCommand;
 
 import java.util.HashMap;
 import java.util.logging.Level;
@@ -29,31 +27,18 @@ public class CommandProvider {
 
         repository.put(CommandName.CHANGE_LOCALE, new ChangeLocaleCommand());
 
-        repository.put(CommandName.CREATE_BRAND, new CreateBrandCommand());
-        repository.put(CommandName.CREATE_CATEGORY, new CreateCategoryCommand());
-        repository.put(CommandName.CREATE_THING, new CreateThingCommand());
-        repository.put(CommandName.CREATE_REVIEW, new CreateReviewCommand());
-        repository.put(CommandName.ADD_PHOTO, new AddPhotoCommand());
-        repository.put(CommandName.CREATE_PRODUCT, new CreateProductCommand());
-        repository.put(CommandName.ADD_TO_PRODUCT, new AddToProductCommand());
-        repository.put(CommandName.REMOVE_FROM_PRODUCT, new RemoveFromProductCommand());
-        repository.put(CommandName.CREATE_DISCOUNT, new CreateDiscountCommand());
+        repository.put(CommandName.BRAND, new BrandCommand());
+        repository.put(CommandName.CATEGORY, new CategoryCommand());
+        repository.put(CommandName.ACCOUNT, new AccountCommand());
+        repository.put(CommandName.THING, new ThingCommand());
+        repository.put(CommandName.REVIEW, new ReviewCommand());
+        repository.put(CommandName.PHOTO, new PhotoCommand());
+        repository.put(CommandName.PRODUCT, new ProductCommand());
+        repository.put(CommandName.DISCOUNT, new DiscountCommand());
 
         repository.put(CommandName.SHOW_PRODUCT, new ShowProductCommand());
         repository.put(CommandName.SEARCH_PRODUCT, new SearchProductCommand());
         repository.put(CommandName.SHOW_PRODUCTS, new ShowProductsCommand());
-
-        repository.put(CommandName.UPDATE_PRODUCT, new UpdateProductCommand());
-        repository.put(CommandName.UPDATE_THING, new UpdateThingCommand());
-        repository.put(CommandName.UPDATE_CATEGORY, new UpdateCategoryCommand());
-        repository.put(CommandName.UPDATE_BRAND, new UpdateBrandCommand());
-        repository.put(CommandName.UPDATE_DISCOUNT, new UpdateDiscountCommand());
-
-        repository.put(CommandName.REMOVE_PRODUCT, new RemoveProductCommand());
-        repository.put(CommandName.REMOVE_THING, new RemoveThingCommand());
-        repository.put(CommandName.REMOVE_CATEGORY, new RemoveCategoryCommand());
-        repository.put(CommandName.REMOVE_BRAND, new RemoveBrandCommand());
-        repository.put(CommandName.REMOVE_DISCOUNT, new RemoveDiscountCommand());
 
         repository.put(CommandName.RATE_THING, new RateThingCommand());
         repository.put(CommandName.ADD_TO_ORDER, new AddToOrderCommand());
@@ -78,7 +63,7 @@ public class CommandProvider {
             log.info("command " + commandName.toString());
         } catch (IllegalArgumentException ex) {
             command = repository.get(CommandName.WRONG);
-            log.log(Level.WARNING, "Wrong command", ex);
+            log.log(Level.WARNING, "Wrong command"/*, ex*/);
         }
 
         return command;

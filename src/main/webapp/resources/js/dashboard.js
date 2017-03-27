@@ -14,7 +14,7 @@ function handleError(errorMessage) {
 function getForm(entity, formType) {
     showSpin();
     $.ajax({
-        url: '/'.concat(entity.toLowerCase()),
+        url: '/dashboard',
         method: 'POST',
         data: {
             command: entity.toUpperCase(),
@@ -41,6 +41,21 @@ function sendRequest(entity, inputFields) {
     });
 }
 
+function simpleAJAXRequest() {
+    showSpin();
+    $.ajax({
+        url: '/dashboard',
+        method: 'POST',
+        data: {
+            command: 'brand',
+            value: 'smt'
+        },
+        success: function (data) {
+            handleSuccess(data);
+        }
+    });
+}
+
 /* ---------------- Brand ---------------- */
 
 /* ---- Forms ----- */
@@ -56,6 +71,66 @@ function getBrandEditingForm() {
 function getBrandDeletingForm() {
     getForm("Brand", "DeletingForm");
 }
+
+/* -------------- Account --------------- */
+
+/* ---- Forms ----- */
+
+function getAccountChangingRoleForm() {
+    getForm("Account", "ChangingRoleForm");
+}
+
+function getAccountBlockingForm() {
+    getForm("Account", "EditingForm");
+}
+
+function getAccountDeletingForm() {
+    getForm("Account", "DeletingForm");
+}
+
+/* ---- Handle ---- */
+
+function handleChangeAccountRole() {
+    var data;
+    var entity = 'Account';
+    data = {
+        command: entity.toUpperCase(),
+        action: 'change'.concat(entity).concat("Role"),
+
+        name: $("#film-name-add").val(),
+    };
+
+    sendRequest(entity, data);
+}
+
+function handleBlockAccount() {
+    var data;
+    var entity = 'Account';
+    data = {
+        command: entity.toUpperCase(),
+        action: 'block'.concat(entity),
+
+        name: $("#film-name-add").val(),
+    };
+
+    sendRequest(entity, data);
+}
+
+function handleDeleteAccount() {
+    var data;
+    var entity = 'Account';
+    data = {
+        command: entity.toUpperCase(),
+        action: 'delete'.concat(entity),
+
+        name: $("#film-name-add").val(),
+    };
+
+    sendRequest(entity, data);
+}
+
+/* ----------------- END ----------------- */
+
 
 /* ---- Handle ---- */
 

@@ -1,3 +1,4 @@
+<fmt:message key="dashboard.title" bundle="${curr_locale}" var="title" />
 <fmt:message key="dashboard.description" bundle="${curr_locale}" var="dashboardInfo" />
 <fmt:message key="dashboard.profiles" bundle="${curr_locale}" var="profiles" />
 <fmt:message key="dashboard.profilesInfo" bundle="${curr_locale}" var="profilesInfo" />
