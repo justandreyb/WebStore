@@ -6,7 +6,7 @@ import com.training.web_store.util.Redirector;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.util.logging.Level;
+
 
 public class SignOutCommand extends UserCommand {
     private static final String START_PAGE = "/welcome";
@@ -21,7 +21,7 @@ public class SignOutCommand extends UserCommand {
 
             Redirector.redirect(response, START_PAGE);
         } catch (ServiceException e) {
-            log.log(Level.SEVERE, "Cannot sign out", e);
+            log.warn("Cannot sign out", e);
         }
     }
 }

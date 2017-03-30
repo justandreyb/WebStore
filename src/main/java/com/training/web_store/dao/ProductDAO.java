@@ -17,6 +17,7 @@ public interface ProductDAO {
 
     List<Product> getProducts(String requestedName) throws DAOException;
     List<Product> getProducts(int categoryId) throws DAOException;
+    List<Product> getProductsForDiscount(int discountId) throws DAOException;
     List<Thing> getThings(int categoryId) throws DAOException;
 
     void setProductAvailable(int productId, boolean available) throws DAOException;

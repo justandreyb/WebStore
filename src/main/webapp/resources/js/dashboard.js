@@ -1,9 +1,25 @@
 'use strict'
 
 function handleSuccess(data) {
+    stopSpin();
     var jsonObject;
-    jsonObject = JSON.parse(data);
-    $("#action-block").val(jsonObject);
+    var target = document.getElementById('action-block-inner');
+
+    if (data != null && data != "") {
+        jsonObject = JSON.parse(data);
+        if (jsonObject.error == null) {
+            if (jsonObject.data != null) {
+                target.innerHTML = jsonObject.data;
+            } else {
+                target.innerHTML = "Something went wrong. Please, try again";
+            }
+        } else {
+            target.innerHTML = jsonObject.error;
+        }
+    } else {
+        target.innerHTML = "Something went wrong. Please, try again"
+    }
+    $("#action-block").modal('show');
 }
 
 function handleError(errorMessage) {
@@ -13,13 +29,18 @@ function handleError(errorMessage) {
 
 function getForm(entity, formType) {
     showSpin();
+    /*
+     $('#' + entity.toLowerCase() + '-block').css({
+     'hidden': 'false',
+     'background-color': '#fff',
+     'position': 'relative'
+     });
+     */
+    var url = '/entity/'.concat(entity.toLowerCase()).concat('/').concat(formType);
+
     $.ajax({
-        url: '/dashboard',
-        method: 'POST',
-        data: {
-            command: entity.toUpperCase(),
-            action: "get".concat(entity).concat(formType),
-        },
+        url: url,
+        method: 'GET',
         success: function(data) {
             handleSuccess(data);
         },
@@ -28,6 +49,10 @@ function getForm(entity, formType) {
             handleError(errorMessage);
         }
     });
+}
+
+function closeForm(entity, formType) {
+
 }
 
 function sendRequest(entity, inputFields) {
@@ -58,81 +83,21 @@ function simpleAJAXRequest() {
 
 /* ---------------- Brand ---------------- */
 
-/* ---- Forms ----- */
+            /* ---- Forms ----- */
 
 function getBrandAddingForm() {
-    getForm("Brand", "AddingForm");
+    getForm("Brand", "add");
 }
 
 function getBrandEditingForm() {
-    getForm("Brand", "EditingForm");
+    getForm("Brand", "edit");
 }
 
 function getBrandDeletingForm() {
-    getForm("Brand", "DeletingForm");
+    getForm("Brand", "delete");
 }
 
-/* -------------- Account --------------- */
-
-/* ---- Forms ----- */
-
-function getAccountChangingRoleForm() {
-    getForm("Account", "ChangingRoleForm");
-}
-
-function getAccountBlockingForm() {
-    getForm("Account", "EditingForm");
-}
-
-function getAccountDeletingForm() {
-    getForm("Account", "DeletingForm");
-}
-
-/* ---- Handle ---- */
-
-function handleChangeAccountRole() {
-    var data;
-    var entity = 'Account';
-    data = {
-        command: entity.toUpperCase(),
-        action: 'change'.concat(entity).concat("Role"),
-
-        name: $("#film-name-add").val(),
-    };
-
-    sendRequest(entity, data);
-}
-
-function handleBlockAccount() {
-    var data;
-    var entity = 'Account';
-    data = {
-        command: entity.toUpperCase(),
-        action: 'block'.concat(entity),
-
-        name: $("#film-name-add").val(),
-    };
-
-    sendRequest(entity, data);
-}
-
-function handleDeleteAccount() {
-    var data;
-    var entity = 'Account';
-    data = {
-        command: entity.toUpperCase(),
-        action: 'delete'.concat(entity),
-
-        name: $("#film-name-add").val(),
-    };
-
-    sendRequest(entity, data);
-}
-
-/* ----------------- END ----------------- */
-
-
-/* ---- Handle ---- */
+            /* ---- Handle ---- */
 
 function handleAddBrand() {
     var data;
@@ -176,23 +141,83 @@ function handleDeleteBrand() {
 /* ----------------- END ----------------- */
 
 
+/* -------------- Account --------------- */
+
+            /* ---- Forms ----- */
+
+function getAccountChangingRoleForm() {
+    getForm("Account", "changeRole");
+}
+
+function getAccountBlockingForm() {
+    getForm("Account", "edit");
+}
+
+function getAccountDeletingForm() {
+    getForm("Account", "delete");
+}
+
+            /* ---- Handle ---- */
+
+function handleChangeAccountRole() {
+    var data;
+    var entity = 'Account';
+    data = {
+        command: entity.toUpperCase(),
+        action: 'change'.concat(entity).concat("Role"),
+
+        name: $("#film-name-add").val(),
+    };
+
+    sendRequest(entity, data);
+}
+
+function handleBlockAccount() {
+    var data;
+    var entity = 'Account';
+    data = {
+        command: entity.toUpperCase(),
+        action: 'block'.concat(entity),
+
+        name: $("#film-name-add").val(),
+    };
+
+    sendRequest(entity, data);
+}
+
+function handleDeleteAccount() {
+    var data;
+    var entity = 'Account';
+    data = {
+        command: entity.toUpperCase(),
+        action: 'delete'.concat(entity),
+
+        name: $("#film-name-add").val(),
+    };
+
+    sendRequest(entity, data);
+}
+
+/* ----------------- END ----------------- */
+
+
 /* -------------- Category --------------- */
 
-/* ---- Forms ----- */
+            /* ---- Forms ----- */
 
 function getCategoryAddingForm() {
-    getForm("Category", "AddingForm");
+    getForm("Category", "add");
 }
 
 function getCategoryEditingForm() {
-    getForm("Category", "EditingForm");
+    getForm("Category", "edit");
 }
 
 function getCategoryDeletingForm() {
-    getForm("Category", "DeletingForm");
+    getForm("Category", "delete");
 }
 
-/* ---- Handle ---- */
+            /* ---- Handle ---- */
 
 function handleAddCategory() {
     var data;
@@ -240,21 +265,21 @@ function handleDeleteCategory() {
 
 /* ---------------- Thing ---------------- */
 
-/* ---- Forms ----- */
+            /* ---- Forms ----- */
 
 function getThingAddingForm() {
-    getForm("Thing", "AddingForm");
+    getForm("Thing", "add");
 }
 
 function getThingEditingForm() {
-    getForm("Thing", "EditingForm");
+    getForm("Thing", "edit");
 }
 
 function getThingDeletingForm() {
-    getForm("Thing", "DeletingForm");
+    getForm("Thing", "delete");
 }
 
-/* ---- Handle ---- */
+            /* ---- Handle ---- */
 
 function handleAddThing() {
 
@@ -273,17 +298,17 @@ function handleDeleteThing() {
 
 /* ---------------- Review --------------- */
 
-/* ---- Forms ----- */
+            /* ---- Forms ----- */
 
 function getReviewAddingForm() {
-    getForm("Review", "AddingForm");
+    getForm("Review", "add");
 }
 
 function getReviewDeletingForm() {
-    getForm("Review", "DeletingForm");
+    getForm("Review", "delete");
 }
 
-/* ---- Handle ---- */
+            /* ---- Handle ---- */
 
 function handleAddReview() {
 
@@ -298,17 +323,17 @@ function handleDeleteReview() {
 
 /* ---------------- Photo ---------------- */
 
-/* ---- Forms ----- */
+            /* ---- Forms ----- */
 
 function getPhotoAddingForm() {
-    getForm("Photo", "AddingForm");
+    getForm("Photo", "add");
 }
 
 function getPhotoDeletingForm() {
-    getForm("Photo", "DeletingForm");
+    getForm("Photo", "delete");
 }
 
-/* ---- Handle ---- */
+            /* ---- Handle ---- */
 
 function handleAddPhoto() {
 
@@ -323,29 +348,29 @@ function handleDeletePhoto() {
 
 /* --------------- Product --------------- */
 
-/* ---- Forms ----- */
+            /* ---- Forms ----- */
 
 function getProductAddingForm() {
-    getForm("Product", "AddingForm");
+    getForm("Product", "add");
 }
 
 function getProductEditingForm() {
-    getForm("Product", "EditingForm");
+    getForm("Product", "edit");
 }
 
 function getProductDeletingForm() {
-    getForm("Product", "DeletingForm");
+    getForm("Product", "delete");
 }
 
 function getThingAddingToProductForm() {
-    getForm("Thing", "AddingToProductForm");
+    getForm("Thing", "addToProduct");
 }
 
 function getThingDeletingFromProductForm() {
-    getForm("Thing", "DeletingFromProductForm");
+    getForm("Thing", "deleteFromProduct");
 }
 
-/* ---- Handle ---- */
+            /* ---- Handle ---- */
 
 function handleAddProduct() {
 
@@ -372,21 +397,21 @@ function handleDeleteThingFromProduct() {
 
 /* --------------- Discount -------------- */
 
-/* ---- Forms ----- */
+            /* ---- Forms ----- */
 
 function getDiscountAddingForm() {
-    getForm("Discount", "AddingForm");
+    getForm("Discount", "add");
 }
 
 function getDiscountEditingForm() {
-    getForm("Discount", "EditingForm");
+    getForm("Discount", "edit");
 }
 
 function getDiscountDeletingForm() {
-    getForm("Discount", "DeletingForm");
+    getForm("Discount", "delete");
 }
 
-/* ---- Handle ---- */
+            /* ---- Handle ---- */
 
 function handleAddDiscount() {
 
@@ -405,13 +430,13 @@ function handleDeleteDiscount() {
 
 /* ---------------- Rating --------------- */
 
-/* ---- Forms ----- */
+            /* ---- Forms ----- */
 
 function getRatingSettingForm() {
-    getForm("Discount", "SettingForm");
+    getForm("Discount", "set");
 }
 
-/* ---- Handle ---- */
+            /* ---- Handle ---- */
 
 function handleSetRating() {
 
@@ -531,16 +556,6 @@ function editFilm() {
     });
 }
 
-function getBlockHashValue() {
-    var value = "&r=";
-    value.concat(Math.random());
-    return value;
-}
-
-function collectFormData() {
-
-}
-
 function showSpin() {
     var opts = {
         lines: 16, // Число линий для рисования
@@ -561,10 +576,18 @@ function showSpin() {
         left: '50%' // Положение слева относительно родителя
     };
     var target = document.getElementById('action-block');
-    var spinner = new Spinner(opts).spin(target);
+    var div = document.createElement('div');
+    div.className = "spinner";
+    target.appendChild(div);
+
+    var spinner = new Spinner(opts).spin();
+    div.appendChild(spinner.el)
+
+    $("#action-block").modal('show');
 }
 
 function stopSpin() {
-    var target = document.getElementById('action-block');
-    target.innerHTML = "Start";
+    $(".spinner").remove();
 }
+
+// http://stackoverflow.com/questions/14028959/why-does-jquery-or-a-dom-method-such-as-getelementbyid-not-find-the-element

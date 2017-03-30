@@ -135,21 +135,7 @@ public class PhotoDAOImpl implements PhotoDAO {
         } catch (SQLException e) {
             throw new DAOException(e);
         } finally {
-            try {
-                if (set != null) {
-                    set.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException(e);
-            }
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException(e);
-            }
-            dbConnector.closeConnection(connection);
+            dbConnector.closeConnection(connection, statement, set);
         }
     }
 
@@ -170,14 +156,7 @@ public class PhotoDAOImpl implements PhotoDAO {
         } catch (SQLException e) {
             throw new DAOException(e);
         } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException(e);
-            }
-            dbConnector.closeConnection(connection);
+            dbConnector.closeConnection(connection, statement);
         }
     }
 }

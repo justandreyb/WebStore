@@ -17,6 +17,7 @@
     <filter-mapping>
         <filter-name>EncodingFilter</filter-name>
         <servlet-name>Controller</servlet-name>
+        <servlet-name>PagesController</servlet-name>
     </filter-mapping>
 
     <servlet>
@@ -29,6 +30,16 @@
         <url-pattern>/welcome</url-pattern>
         <url-pattern>/login</url-pattern>
         <url-pattern>/dashboard</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>PagesController</servlet-name>
+        <servlet-class>com.training.pages_creator.controller.PagesController</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>PagesController</servlet-name>
+        <url-pattern>/entity/*</url-pattern>
     </servlet-mapping>
 
     <error-page>

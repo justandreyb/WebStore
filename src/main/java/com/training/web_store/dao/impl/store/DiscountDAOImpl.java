@@ -23,7 +23,6 @@ public class DiscountDAOImpl implements DiscountDAO {
     private static final String DISCOUNT_FINISH_DATE = "finish_date";
 
     private static final int AVAILABLE_DISCOUNT = 1;
-    private static final int UNAVAILABLE_DISCOUNT = 0;
 
     private static final String ADD_DISCOUNT_QUERY =
             "INSERT INTO " + DATABASE + "." + DISCOUNT_TABLE + " (" +

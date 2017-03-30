@@ -6,7 +6,7 @@ import com.training.web_store.service.factory.ServiceFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 public class UserCommand implements Command {
     private static final ServiceFactory factory = ServiceFactory.getInstance();

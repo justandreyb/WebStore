@@ -5,10 +5,7 @@ import com.training.web_store.bean.store.Brand;
 import com.training.web_store.dao.exception.DAOException;
 import com.training.web_store.dao.util.DBConnector;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +21,7 @@ public class BrandDAOImpl implements BrandDAO {
     private static final String BRAND_DESCRIPTION = "description";
 
     private static final int AVAILABLE_BRAND = 1;
-    private static final int UNAVAILABLE_BRAND = 0;
+    private static final String EMPTY_DESCRIPTION = null;
 
     private static final String ADD_BRAND_QUERY =
             "INSERT INTO " + DATABASE + "." + BRAND_TABLE + " (" +
@@ -51,15 +48,7 @@ public class BrandDAOImpl implements BrandDAO {
                 BRAND_ID + "=? AND" +
                 BRAND_IS_AVAILABLE + "=" + AVAILABLE_BRAND;
 
-    private static final String GET_BRANDS_QUERY =
-            "SELECT " +
-                BRAND_ID + ", " +
-                BRAND_NAME + ", " +
-                BRAND_DESCRIPTION +
-            " FROM " +
-                DATABASE + "." + BRAND_TABLE +
-            " WHERE " +
-                BRAND_IS_AVAILABLE + "=" + AVAILABLE_BRAND;
+    private static final String GET_BRANDS_QUERY = "{call getBrands()}";
 
     private static final String SET_BRAND_AVAILABLE =
             "UPDATE " + DATABASE + "." + BRAND_TABLE +
@@ -70,7 +59,7 @@ public class BrandDAOImpl implements BrandDAO {
 
     @Override
     public void addBrand(String name) throws DAOException {
-        addBrand(name, null);
+        addBrand(name, EMPTY_DESCRIPTION);
     }
 
     @Override
@@ -122,14 +111,7 @@ public class BrandDAOImpl implements BrandDAO {
         } catch (SQLException e) {
             throw new DAOException(e);
         } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException(e);
-            }
-            dbConnector.closeConnection(connection);
+            dbConnector.closeConnection(connection, statement);
         }
     }
 
@@ -166,35 +148,21 @@ public class BrandDAOImpl implements BrandDAO {
         } catch (SQLException e) {
             throw new DAOException(e);
         } finally {
-            try {
-                if (set != null) {
-                    set.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException(e);
-            }
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException(e);
-            }
-            dbConnector.closeConnection(connection);
+            dbConnector.closeConnection(connection, statement, set);
         }
     }
 
     @Override
     public List<Brand> getBrands() throws DAOException {
         Connection connection = null;
-        PreparedStatement statement = null;
+        CallableStatement statement = null;
         ResultSet set = null;
         List<Brand> brands = null;
 
         try {
             connection = dbConnector.getConnection();
-            statement = connection.prepareStatement(GET_BRANDS_QUERY);
-
+            statement = connection.prepareCall(GET_BRANDS_QUERY);
+//            statement.registerOutParameter(1, );
             set = statement.executeQuery();
 
             brands = new ArrayList<Brand>();
@@ -204,11 +172,9 @@ public class BrandDAOImpl implements BrandDAO {
 
                 int brandId = set.getInt(BRAND_ID);
                 String name = set.getString(BRAND_NAME);
-                String description = set.getString(BRAND_DESCRIPTION);
 
                 brand.setId(brandId);
                 brand.setName(name);
-                brand.setDescription(description);
 
                 brands.add(brand);
             }
@@ -217,21 +183,7 @@ public class BrandDAOImpl implements BrandDAO {
         } catch (SQLException e) {
             throw new DAOException(e);
         } finally {
-            try {
-                if (set != null) {
-                    set.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException(e);
-            }
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException(e);
-            }
-            dbConnector.closeConnection(connection);
+            dbConnector.closeConnection(connection, statement, set);
         }
     }
 
@@ -252,14 +204,7 @@ public class BrandDAOImpl implements BrandDAO {
         } catch (SQLException e) {
             throw new DAOException(e);
         } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException(e);
-            }
-            dbConnector.closeConnection(connection);
+            dbConnector.closeConnection(connection, statement);
         }
     }
 }

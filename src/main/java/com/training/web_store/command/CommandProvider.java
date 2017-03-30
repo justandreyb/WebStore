@@ -9,12 +9,12 @@ import com.training.web_store.command.impl.user.SignOutCommand;
 import com.training.web_store.command.impl.user.SignUpCommand;
 
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.apache.log4j.Logger;
 
 public class CommandProvider {
     private static final CommandProvider instance = new CommandProvider();
-    private static final Logger log = Logger.getLogger(CommandProvider.class.getName());
+    private static final Logger log = Logger.getLogger(CommandProvider.class);
 
     private HashMap<CommandName, Command> repository;
 
@@ -60,10 +60,11 @@ public class CommandProvider {
             commandName = CommandName.valueOf(request.toUpperCase());
             command = repository.get(commandName);
 
+            //TODO: Remove
             log.info("command " + commandName.toString());
         } catch (IllegalArgumentException ex) {
             command = repository.get(CommandName.WRONG);
-            log.log(Level.WARNING, "Wrong command"/*, ex*/);
+            log.warn("Wrong command", ex);
         }
 
         return command;

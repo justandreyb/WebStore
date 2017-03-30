@@ -2,14 +2,12 @@ package com.training.web_store.dao.util;
 
 import com.training.web_store.dao.exception.DAOException;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.apache.log4j.Logger;
 
 //TODO: Check and rework
 public class DBConnector {
@@ -24,7 +22,7 @@ public class DBConnector {
     private String password;
     private int poolSize;
 
-    private static Logger log = Logger.getLogger(DBConnector.class.getName());
+    private static Logger log = Logger.getLogger(DBConnector.class);
 
     private DBConnector() {
 
@@ -59,14 +57,14 @@ public class DBConnector {
         }
     }
 
-    public static void closeConnection(Connection connection) throws UtilException {
+    public static void closeConnection(Connection connection) throws ProjectUtilException {
         try {
             if (connection != null) {
                 connection.close();
             }
         } catch (SQLException e) {
             log.log(Level.SEVERE, "Error while close connection to DB", e);
-            throw new UtilException(e.getMessage());
+            throw new ProjectUtilException(e.getMessage());
         }
     }
 */
@@ -82,7 +80,7 @@ public class DBConnector {
         try {
             Class.forName(driverName);
         } catch (ClassNotFoundException exception) {
-            log.log(Level.SEVERE, "JDBC error : ", exception);
+            log.fatal("JDBC error : ", exception);
             throw new DAOException("Problem with connection to JDBC", exception);
         }
         connections = new ArrayBlockingQueue<Connection>(poolSize);
@@ -93,12 +91,12 @@ public class DBConnector {
             try {
                 connection = DriverManager.getConnection(url, user, password);
             } catch (SQLException exception) {
-                log.log(Level.SEVERE, "JDBC error : ", exception);
+                log.fatal("JDBC error : ", exception);
                 throw new DAOException("Problem with establishing connection", exception);
             }
             connections.add(connection);
         }
-        log.log(Level.INFO,"Connection initialized.");
+        log.info("Connection initialized.");
     }
 
     public void destroy() {
@@ -107,7 +105,7 @@ public class DBConnector {
             try {
                 connection.close();
             } catch (SQLException exception) {
-                log.log(Level.SEVERE, "Problem with closing connection : ", exception);
+                log.warn("Problem with closing connection : ", exception);
             }
         }
 
@@ -115,7 +113,7 @@ public class DBConnector {
             try {
                 connection.close();
             } catch (SQLException exception) {
-                log.log(Level.SEVERE, "Problem with closing connection : ", exception);
+                log.warn("Problem with closing connection : ", exception);
             }
         }
     }
@@ -136,8 +134,30 @@ public class DBConnector {
             connections.add(connection);
             usedConnections.remove(connection);
         } else {
-            log.log(Level.SEVERE, "Null connection returned.");
+            log.warn("Null connection returned.");
         }
+    }
+
+    public void closeConnection(Connection connection, Statement statement) throws DAOException {
+        try {
+            if (statement != null) {
+                statement.close();
+            }
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        }
+        closeConnection(connection);
+    }
+
+    public void closeConnection(Connection connection, Statement statement, ResultSet set) throws DAOException {
+        try {
+            if (set != null) {
+                set.close();
+            }
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        }
+        closeConnection(connection, statement);
     }
 
 }

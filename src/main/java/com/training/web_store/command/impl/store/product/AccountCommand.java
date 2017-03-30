@@ -1,10 +1,11 @@
 package com.training.web_store.command.impl.store.product;
 
 import com.training.web_store.command.Command;
-import com.training.web_store.util.PagesDescriptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 public class AccountCommand implements Command {
     private static final String ACTION = "action";
@@ -23,13 +24,13 @@ public class AccountCommand implements Command {
 
         switch (requestedAction) {
             case CHANGING_ROLE_FORM:
-                sendChangingAccountRoleForm(request, response);
+                sendChangingAccountRoleForm(response);
                 break;
             case BLOCKING_FORM:
-                sendBlockingAccountForm(request, response);
+                sendBlockingAccountForm(response);
                 break;
             case DELETING_FORM:
-                sendDeletingAccountForm(request, response);
+                sendDeletingAccountForm(response);
                 break;
             case CHANGE_ROLE:
                 handleChangeAccountRole(request, response);
@@ -45,16 +46,43 @@ public class AccountCommand implements Command {
         }
     }
 
-    private void sendChangingAccountRoleForm(HttpServletRequest request, HttpServletResponse response) {
-        String form = PagesDescriptor.getHiddenForm(CHANGE_ROLE + "Form");
+    private PrintWriter getWriter(HttpServletResponse response) {
+        PrintWriter writer = null;
+        try {
+            writer = response.getWriter();
+        } catch (IOException e) {
+            //log
+        }
+        return writer;
     }
 
-    private void sendBlockingAccountForm(HttpServletRequest request, HttpServletResponse response) {
-        String form = PagesDescriptor.getHiddenForm(CHANGE_ROLE + "Form");
+    private void sendForm(HttpServletResponse response, String formName) {
+        /*PrintWriter writer = getWriter(response);
+        if (writer != null) {
+            try {
+                String form = PagesKeeper.getHiddenForm(formName);
+                form = AnswerCreator.create(form);
+                writer.write(form);
+            } catch (ProjectUtilException e) {
+                String errorMessage = "Something went wrong while trying to open form";
+                errorMessage = AnswerCreator.createError(errorMessage);
+                writer.write(errorMessage);
+            }
+        } else {
+            //log
+        }*/
     }
 
-    private void sendDeletingAccountForm(HttpServletRequest request, HttpServletResponse response) {
+    private void sendChangingAccountRoleForm(HttpServletResponse response) {
+        sendForm(response, CHANGE_ROLE);
+    }
 
+    private void sendBlockingAccountForm(HttpServletResponse response) {
+        sendForm(response, BLOCK);
+    }
+
+    private void sendDeletingAccountForm(HttpServletResponse response) {
+        sendForm(response, DELETE);
     }
 
     private void handleChangeAccountRole(HttpServletRequest request, HttpServletResponse response) {

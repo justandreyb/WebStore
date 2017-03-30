@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.Locale;
-import java.util.logging.Level;
+
 
 public class SignUpCommand extends UserCommand {
     private static final String EMAIL_PARAMETER = "email";
@@ -55,7 +55,7 @@ public class SignUpCommand extends UserCommand {
             }
         } catch (ServiceException e) {
             String error = "Error while perform registration";
-            log.log(Level.SEVERE, error, e);
+            log.warn(error, e);
             Redirector.redirect(response, JSP_REGISTRATION_ERROR);
         }
     }

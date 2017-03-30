@@ -5,7 +5,7 @@
 
 <body>
     <%@include file="templates/navbar/begin-navbar.jsp" %>
-        <%@include file="templates/navbar/accounts/guestAccount.jspx" %>
+        <%@include file="templates/navbar/accounts/guestAccount.jsp" %>
     <%@include file="templates/navbar/end-navbar.jsp" %>
 
     <h2>${about}</h2>

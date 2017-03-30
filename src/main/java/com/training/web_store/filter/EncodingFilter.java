@@ -5,6 +5,7 @@ import javax.servlet.annotation.WebFilter;
 import java.io.IOException;
 
 public class EncodingFilter implements Filter {
+
     public void destroy() {
     }
 

@@ -157,6 +157,11 @@ public class ProductDAOImpl implements ProductDAO {
     }
 
     @Override
+    public List<Product> getProductsForDiscount(int discountId) throws DAOException {
+        return null;
+    }
+
+    @Override
     public List<Thing> getThings(int categoryId) throws DAOException {
         return null;
     }

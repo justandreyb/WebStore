@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.Locale;
-import java.util.logging.Level;
+
 
 public class SignInCommand extends UserCommand {
     private static final String EMAIL_PARAMETER = "email";
@@ -42,7 +42,7 @@ public class SignInCommand extends UserCommand {
             }
         } catch (ServiceException e) {
             String error = "Error while performing sign in";
-            log.log(Level.WARNING, error, e);
+            log.warn(error, e);
             Redirector.redirect(response, JSP_SIGN_IN_ERROR);
         }
     }

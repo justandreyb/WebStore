@@ -5,11 +5,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.apache.log4j.Logger;
 
 public class Redirector {
-    private static final Logger log = Logger.getLogger(Redirector.class.getName());
+    private static final Logger log = Logger.getLogger(Redirector.class);
 
     private static final String JSP_PATH = "/WEB-INF/jsp";
 
@@ -19,7 +19,7 @@ public class Redirector {
             ServletContext context = request.getServletContext().getContext(jspPath);
             context.getRequestDispatcher(jspPath).forward(request, response);
         } catch (ServletException | IOException e) {
-            log.log(Level.SEVERE, "Error while forwarding", e);
+            log.warn("Error while forwarding", e);
         }
     }
 
@@ -27,7 +27,7 @@ public class Redirector {
         try {
             response.sendRedirect(jspPath);
         } catch (IOException e) {
-            log.log(Level.SEVERE, "Error while redirecting", e);
+            log.warn("Error while redirecting", e);
         }
     }
 

@@ -1,7 +1,5 @@
 package com.training.web_store.util;
 
-import java.util.Locale;
-
 public class ArgumentParserUtil {
 
     public static boolean isValidArgument(String argument) {

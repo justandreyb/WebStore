@@ -5,10 +5,7 @@ import com.training.web_store.dao.CategoryDAO;
 import com.training.web_store.dao.exception.DAOException;
 import com.training.web_store.dao.util.DBConnector;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +21,7 @@ public class CategoryDAOImpl implements CategoryDAO {
     private static final String CATEGORY_IS_AVAILABLE = "is_available";
 
     private static final int AVAILABLE_CATEGORY = 1;
-    private static final int UNAVAILABLE_CATEGORY = 0;
+    private static final String EMPTY_DESCRIPTION = null;
 
     private static final String ADD_CATEGORY_QUERY =
             "INSERT INTO " + DATABASE + "." + CATEGORY_TABLE + " (" +
@@ -51,15 +48,7 @@ public class CategoryDAOImpl implements CategoryDAO {
                 CATEGORY_ID + "=? AND" +
                 CATEGORY_IS_AVAILABLE + "=" + AVAILABLE_CATEGORY;
 
-    private static final String GET_CATEGORIES_QUERY =
-            "SELECT " +
-                CATEGORY_ID + ", " +
-                CATEGORY_NAME + ", " +
-                CATEGORY_DESCRIPTION +
-            " FROM " +
-                DATABASE + "." + CATEGORY_TABLE +
-            " WHERE " +
-                CATEGORY_IS_AVAILABLE + "=" + AVAILABLE_CATEGORY;
+    private static final String GET_CATEGORIES_QUERY = "{call getCategories()}";
 
     private static final String SET_CATEGORY_AVAILABLE =
             "UPDATE " + DATABASE + "." + CATEGORY_TABLE +
@@ -70,7 +59,7 @@ public class CategoryDAOImpl implements CategoryDAO {
 
     @Override
     public void addCategory(String name) throws DAOException {
-        addCategory(name, null);
+        addCategory(name, EMPTY_DESCRIPTION);
     }
 
     @Override
@@ -122,14 +111,7 @@ public class CategoryDAOImpl implements CategoryDAO {
         } catch (SQLException e) {
             throw new DAOException(e);
         } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException(e);
-            }
-            dbConnector.closeConnection(connection);
+            dbConnector.closeConnection(connection, statement);
         }
     }
 
@@ -166,34 +148,20 @@ public class CategoryDAOImpl implements CategoryDAO {
         } catch (SQLException e) {
             throw new DAOException(e);
         } finally {
-            try {
-                if (set != null) {
-                    set.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException(e);
-            }
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException(e);
-            }
-            dbConnector.closeConnection(connection);
+            dbConnector.closeConnection(connection, statement, set);
         }
     }
 
     @Override
     public List<Category> getCategories() throws DAOException {
         Connection connection = null;
-        PreparedStatement statement = null;
+        CallableStatement statement = null;
         ResultSet set = null;
         List<Category> categories = null;
 
         try {
             connection = dbConnector.getConnection();
-            statement = connection.prepareStatement(GET_CATEGORIES_QUERY);
+            statement = connection.prepareCall(GET_CATEGORIES_QUERY);
 
             set = statement.executeQuery();
 
@@ -204,11 +172,9 @@ public class CategoryDAOImpl implements CategoryDAO {
 
                 int categoryId = set.getInt(CATEGORY_ID);
                 String name = set.getString(CATEGORY_NAME);
-                String description = set.getString(CATEGORY_DESCRIPTION);
 
                 category.setId(categoryId);
                 category.setName(name);
-                category.setDescription(description);
 
                 categories.add(category);
             }
@@ -217,21 +183,7 @@ public class CategoryDAOImpl implements CategoryDAO {
         } catch (SQLException e) {
             throw new DAOException(e);
         } finally {
-            try {
-                if (set != null) {
-                    set.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException(e);
-            }
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException(e);
-            }
-            dbConnector.closeConnection(connection);
+            dbConnector.closeConnection(connection, statement, set);
         }
     }
 
@@ -252,14 +204,7 @@ public class CategoryDAOImpl implements CategoryDAO {
         } catch (SQLException e) {
             throw new DAOException(e);
         } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException(e);
-            }
-            dbConnector.closeConnection(connection);
+            dbConnector.closeConnection(connection, statement);
         }
     }
 }

@@ -1,19 +1,19 @@
 package com.training.web_store.controller;
 
+import com.training.util.AnswerCreator;
+import com.training.util.ResponseWriter;
+import com.training.util.exception.ProjectUtilException;
 import com.training.web_store.command.Command;
 import com.training.web_store.command.CommandProvider;
 import com.training.web_store.util.Redirector;
-import org.json.simple.JSONObject;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 public class Controller extends HttpServlet {
-    private static final Logger log = Logger.getLogger(Controller.class.getName());
+    private static final Logger log = Logger.getLogger(Controller.class);
     private static final String COMMAND_PARAMETER = "command";
     private static final String ERROR = "error";
     private static final String ERROR_INFO = "Command cannot be executed right now.";
@@ -33,7 +33,7 @@ public class Controller extends HttpServlet {
     }
 
     private void analyzeRequest(HttpServletRequest request, HttpServletResponse response) {
-        System.out.println(request.getRequestURI());
+        log.debug(request.getRequestURI());
         if (hasCommand(request)) {
             performCommand(request, response);
         } else {
@@ -64,21 +64,16 @@ public class Controller extends HttpServlet {
             command.execute(request, response);
 
         } catch (Exception e) {
-            log.log(Level.SEVERE, "Error while executing command", e);
-            String answer = createError();
+            String errorMessage = "Error while executing command";
+            log.warn(errorMessage, e);
+            String answer = AnswerCreator.createError(errorMessage);
             try {
-                response.getWriter().write(answer);
-            } catch (IOException innerE) {
-                log.log(Level.SEVERE, "Error while writing in response", innerE);
+               ResponseWriter.write(response, answer);
+            } catch (ProjectUtilException innerE) {
+                log.fatal("Error while writing in response", innerE);
             }
         }
 
-    }
-
-    private String createError() {
-        JSONObject answerJSON = new JSONObject();
-        answerJSON.put(ERROR, ERROR_INFO);
-        return answerJSON.toString();
     }
 
 }
