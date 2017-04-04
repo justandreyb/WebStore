@@ -3,9 +3,8 @@ package com.training.pages_creator.controller;
 import com.training.pages_creator.bean.ParsedRequest;
 import com.training.pages_creator.command.Command;
 import com.training.pages_creator.command.factory.EntityCommandFactory;
-import com.training.pages_creator.command.factory.FactoryProducer;
-import com.training.pages_creator.util.URIParser;
-import com.training.pages_creator.util.exception.UtilException;
+import com.training.pages_creator.controller.util.URIParser;
+import com.training.pages_creator.controller.util.exception.UtilException;
 import com.training.util.AnswerCreator;
 import com.training.util.ResponseWriter;
 import com.training.util.exception.ProjectUtilException;
@@ -47,14 +46,13 @@ public class PagesController extends HttpServlet {
     private void performTask(ParsedRequest parsedRequest, HttpServletRequest request, HttpServletResponse response) {
 
         try {
-            FactoryProducer factoryProducer = FactoryProducer.getInstance();
+            EntityCommandFactory factory = EntityCommandFactory.getInstance();
             String entity = parsedRequest.getEntity();
             String requestedCommand = parsedRequest.getCommand();
 
-            EntityCommandFactory factory = factoryProducer.getFactory(entity);
             Command command = factory.getCommand(requestedCommand);
 
-            command.execute(request, response);
+            command.execute(request, response, entity);
         } catch (Exception e) {
             String errorMessage = "Error while executing command";
             log.warn(errorMessage, e);

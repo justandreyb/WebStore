@@ -4,7 +4,7 @@ import com.training.web_store.dao.DiscountDAO;
 import com.training.web_store.bean.store.Discount;
 import com.training.web_store.dao.exception.DAOException;
 import com.training.web_store.util.ArgumentExchanger;
-import com.training.web_store.dao.util.DBConnector;
+import com.training.util.database.DBConnector;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -64,12 +64,7 @@ public class DiscountDAOImpl implements DiscountDAO {
                 DISCOUNT_FINISH_DATE + ">=? AND " +
                 DISCOUNT_IS_AVAILABLE + "=" + AVAILABLE_DISCOUNT;
 
-    private static final String SET_DISCOUNT_AVAILABLE =
-            "UPDATE " + DATABASE + "." + DISCOUNT_TABLE +
-            " SET " +
-                DISCOUNT_IS_AVAILABLE + "=?" +
-            " WHERE " +
-                DISCOUNT_ID + "=?";
+    private static final String GET_DISCOUNTS_QUERY = "{call getDiscounts()}";
 
     @Override
     public void addDiscount(Discount discount) throws DAOException {
@@ -184,6 +179,41 @@ public class DiscountDAOImpl implements DiscountDAO {
     }
 
     @Override
+    public List<Discount> getDiscounts() throws DAOException {
+        Connection connection = null;
+        CallableStatement statement = null;
+        ResultSet set = null;
+        List<Discount> discounts = null;
+
+        try {
+            connection = dbConnector.getConnection();
+            statement = connection.prepareCall(GET_DISCOUNTS_QUERY);
+
+            set = statement.executeQuery();
+
+            discounts = new ArrayList<Discount>();
+
+            while (set.next()) {
+                Discount discount = new Discount();
+
+                int categoryId = set.getInt(DISCOUNT_ID);
+                byte value = set.getByte(DISCOUNT_VALUE);
+
+                discount.setId(categoryId);
+                discount.setValue(value);
+
+                discounts.add(discount);
+            }
+            return discounts;
+
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        } finally {
+            dbConnector.closeConnection(connection, statement, set);
+        }
+    }
+
+    @Override
     public List<Discount> getDiscountForDate(Date date) throws DAOException {
         Connection connection = null;
         PreparedStatement statement = null;
@@ -244,7 +274,7 @@ public class DiscountDAOImpl implements DiscountDAO {
         PreparedStatement statement = null;
         try {
             connection = dbConnector.getConnection();
-            statement = connection.prepareStatement(SET_DISCOUNT_AVAILABLE);
+            statement = connection.prepareStatement(UPDATE_DISCOUNT_QUERY);
             statement.setBoolean(1, available);
             statement.setInt(2, discountId);
 

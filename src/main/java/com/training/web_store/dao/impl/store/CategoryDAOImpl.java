@@ -3,7 +3,7 @@ package com.training.web_store.dao.impl.store;
 import com.training.web_store.bean.store.Category;
 import com.training.web_store.dao.CategoryDAO;
 import com.training.web_store.dao.exception.DAOException;
-import com.training.web_store.dao.util.DBConnector;
+import com.training.util.database.DBConnector;
 
 import java.sql.*;
 import java.util.ArrayList;

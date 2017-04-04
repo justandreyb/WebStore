@@ -1,7 +1,7 @@
 package com.training.web_store.command.impl;
 
 import com.training.web_store.command.Command;
-import com.training.web_store.util.Redirector;
+import com.training.util.Redirector;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

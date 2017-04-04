@@ -5,7 +5,7 @@ import com.training.util.ResponseWriter;
 import com.training.util.exception.ProjectUtilException;
 import com.training.web_store.command.Command;
 import com.training.web_store.command.CommandProvider;
-import com.training.web_store.util.Redirector;
+import com.training.util.Redirector;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;

@@ -12,6 +12,7 @@ public interface DiscountDAO {
     void updateDiscount(int discountId, Discount discount) throws DAOException;
 
     Discount getDiscount(int discountId) throws DAOException;
+    List<Discount> getDiscounts() throws DAOException;
     List<Discount> getDiscountForDate(Date date) throws DAOException;
 
     void setDiscountAvailable(int discountId, boolean available) throws DAOException;

@@ -1,3 +1,5 @@
+   <%--TODO: Add block for guest and user--%>
+
     <div class="container-fluid action-block">
 
         <div id="action-block" class="modal fade" role="dialog">
@@ -15,9 +17,6 @@
 
                     </div>
 
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">${cancel}</button>
-                    </div>
                 </div>
             </div>
         </div>

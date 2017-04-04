@@ -59,10 +59,16 @@
             <version>${log4j.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>RELEASE</version>
+        </dependency>
+
     </dependencies>
 
     <build>
-    <!-- Uncomment if you want to build project from console -->
+    <!-- Uncomment to build project from console -->
     <!--
         <finalName>web_store</finalName>
         <sourceDirectory>src/main/java/</sourceDirectory>

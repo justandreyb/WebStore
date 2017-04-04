@@ -23,6 +23,7 @@ public interface StoreService {
     void addCategory(String name, String description) throws ServiceException;
 
     Category getCategory(int categoryId) throws ServiceException;
+    List<Category> getCategories() throws ServiceException;
 
     void updateCategory(int categoryId, String name, String description) throws ServiceException;
 
@@ -33,6 +34,7 @@ public interface StoreService {
     void addDiscount(byte value, Date startDate, Date finishDate) throws ServiceException;
 
     Discount getDiscount(int discountId) throws ServiceException;
+    List<Discount> getDiscounts() throws ServiceException;
     List<Discount> getDiscounts(Date date) throws ServiceException;
 
     void deleteDiscount(int discountId) throws ServiceException;

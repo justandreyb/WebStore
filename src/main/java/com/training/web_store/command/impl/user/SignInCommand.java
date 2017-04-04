@@ -2,7 +2,7 @@ package com.training.web_store.command.impl.user;
 
 import com.training.web_store.bean.account.User;
 import com.training.web_store.service.exception.ServiceException;
-import com.training.web_store.util.Redirector;
+import com.training.util.Redirector;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

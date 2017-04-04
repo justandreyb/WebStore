@@ -1,7 +1,7 @@
 package com.training.web_store.service.factory;
 
 import com.training.web_store.dao.exception.DAOException;
-import com.training.web_store.dao.util.DBConnector;
+import com.training.util.database.DBConnector;
 import com.training.web_store.service.StoreService;
 import com.training.web_store.service.exception.ServiceException;
 import com.training.web_store.service.impl.StoreServiceImpl;
@@ -21,6 +21,15 @@ public class ServiceFactory {
         DBConnector connector = DBConnector.getInstance();
         try {
             connector.init();
+        } catch (DAOException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    public void close() throws ServiceException {
+        DBConnector connector = DBConnector.getInstance();
+        try {
+            connector.destroy();
         } catch (DAOException e) {
             throw new ServiceException(e);
         }

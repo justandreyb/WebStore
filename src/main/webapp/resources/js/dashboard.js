@@ -1,32 +1,5 @@
 'use strict'
 
-function handleSuccess(data) {
-    stopSpin();
-    var jsonObject;
-    var target = document.getElementById('action-block-inner');
-
-    if (data != null && data != "") {
-        jsonObject = JSON.parse(data);
-        if (jsonObject.error == null) {
-            if (jsonObject.data != null) {
-                target.innerHTML = jsonObject.data;
-            } else {
-                target.innerHTML = "Something went wrong. Please, try again";
-            }
-        } else {
-            target.innerHTML = jsonObject.error;
-        }
-    } else {
-        target.innerHTML = "Something went wrong. Please, try again"
-    }
-    $("#action-block").modal('show');
-}
-
-function handleError(errorMessage) {
-    // $("#action-block").val(createErrorBlock(errorMessage));
-    alert("Error");
-}
-
 function getForm(entity, formType) {
     showSpin();
     /*
@@ -444,14 +417,14 @@ function handleSetRating() {
 
 /* ----------------- END ----------------- */
 
-function registration() {
+function reg1istration() {
     $.ajax({
-        url: '/registration',
+        url: '/signUp',
         method: 'POST',
         data: {
-            email: $("#registration-email").val(),
-            password: $("#registration-password").val(),
-            repeat_password: $("#registration-password-repeat").val(),
+            email: $("#signUp-email").val(),
+            password: $("#signUp-password").val(),
+            repeat_password: $("#signUp-password-repeat").val(),
             command: 'REGISTRATION'
         },
         success: function(data) {
@@ -460,35 +433,12 @@ function registration() {
             if ('redirect' in jsonObject) {
                 window.location = jsonObject.redirect;
             } else if ('errorMessage' in jsonObject) {
-                $("#registration-password").val("");
-                $("#registration-password-repeat").val("");
+                $("#signUp-password").val("");
+                $("#signUp-password-repeat").val("");
                 $("#Err").text(jsonObject.errorMessage);
-                $("#error-registration-message").fadeIn(200);
+                $("#error-signUp-message").fadeIn(200);
             }
 
-        }
-    });
-}
-
-function signIn() {
-    $.ajax({
-        url: '/main',
-        method: 'POST',
-        data: {
-            email: $("#sign-in-email").val(),
-            password: $("#sign-in-password").val(),
-            command: 'SIGN_IN'
-        },
-        success: function(data) {
-            var jsonObject;
-            jsonObject = JSON.parse(data);
-            if ('redirect' in jsonObject) {
-                window.location = jsonObject.redirect;
-            } else if ('errorMessage' in jsonObject) {
-                $("#messageErr").text(jsonObject.errorMessage);
-                $("#sign-in-password").val("");
-                $("#error-sign-in-message").fadeIn(200);
-            }
         }
     });
 }
@@ -556,38 +506,5 @@ function editFilm() {
     });
 }
 
-function showSpin() {
-    var opts = {
-        lines: 16, // Число линий для рисования
-        length: 0, // Длина каждой линии
-        width: 10, // Толщина линии
-        radius: 30, // Радиус внутреннего круга
-        corners: 1, // Скругление углов (0..1)
-        rotate: 0, // Смещение вращения
-        direction: 1, // 1: по часовой стрелке, -1: против часовой стрелки
-        color: '#FF4500', // #rgb или #rrggbb или массив цветов
-        speed: 1.2, // Кругов в секунду
-        trail: 15, // Послесвечение
-        shadow: false, // Тень(true - да; false - нет)
-        hwaccel: false, // Аппаратное ускорение
-        className: 'spinner', // CSS класс
-        zIndex: 2e9, // z-index (по-умолчанию 2000000000)
-        top: '50%', // Положение сверху относительно родителя
-        left: '50%' // Положение слева относительно родителя
-    };
-    var target = document.getElementById('action-block');
-    var div = document.createElement('div');
-    div.className = "spinner";
-    target.appendChild(div);
-
-    var spinner = new Spinner(opts).spin();
-    div.appendChild(spinner.el)
-
-    $("#action-block").modal('show');
-}
-
-function stopSpin() {
-    $(".spinner").remove();
-}
 
 // http://stackoverflow.com/questions/14028959/why-does-jquery-or-a-dom-method-such-as-getelementbyid-not-find-the-element

@@ -103,6 +103,15 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
+    public List<Category> getCategories() throws ServiceException {
+        try {
+            return categoryDAO.getCategories();
+        } catch (DAOException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
     public void updateCategory(int categoryId, String name, String description) throws ServiceException {
         try {
             categoryDAO.updateCategory(categoryId, name, description);
@@ -136,6 +145,16 @@ public class StoreServiceImpl implements StoreService {
     public Discount getDiscount(int discountId) throws ServiceException {
         try {
             return discountDAO.getDiscount(discountId);
+        } catch (DAOException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public List<Discount> getDiscounts() throws ServiceException {
+        try {
+            //TODO: exchange util.date to sql.date
+            return discountDAO.getDiscounts();
         } catch (DAOException e) {
             throw new ServiceException(e);
         }

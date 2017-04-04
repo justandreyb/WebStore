@@ -61,10 +61,10 @@ public class CommandProvider {
             command = repository.get(commandName);
 
             //TODO: Remove
-            log.info("command " + commandName.toString());
+            log.debug("command " + commandName.toString());
         } catch (IllegalArgumentException ex) {
             command = repository.get(CommandName.WRONG);
-            log.warn("Wrong command", ex);
+            log.debug("Wrong command", ex);
         }
 
         return command;

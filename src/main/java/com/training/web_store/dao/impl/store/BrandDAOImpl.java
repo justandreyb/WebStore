@@ -3,7 +3,7 @@ package com.training.web_store.dao.impl.store;
 import com.training.web_store.dao.BrandDAO;
 import com.training.web_store.bean.store.Brand;
 import com.training.web_store.dao.exception.DAOException;
-import com.training.web_store.dao.util.DBConnector;
+import com.training.util.database.DBConnector;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -162,7 +162,6 @@ public class BrandDAOImpl implements BrandDAO {
         try {
             connection = dbConnector.getConnection();
             statement = connection.prepareCall(GET_BRANDS_QUERY);
-//            statement.registerOutParameter(1, );
             set = statement.executeQuery();
 
             brands = new ArrayList<Brand>();

@@ -38,6 +38,12 @@ public class ServerListener implements ServletContextListener,
          (the Web application) is undeployed or 
          Application Server shuts down.
       */
+        ServiceFactory serviceFactory = ServiceFactory.getInstance();
+        try {
+            serviceFactory.close();
+        } catch (ServiceException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     // -------------------------------------------------------
