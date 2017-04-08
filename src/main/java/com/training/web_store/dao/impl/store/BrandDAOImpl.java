@@ -1,5 +1,6 @@
 package com.training.web_store.dao.impl.store;
 
+import com.training.util.exception.ProjectUtilException;
 import com.training.web_store.dao.BrandDAO;
 import com.training.web_store.bean.store.Brand;
 import com.training.web_store.dao.exception.DAOException;

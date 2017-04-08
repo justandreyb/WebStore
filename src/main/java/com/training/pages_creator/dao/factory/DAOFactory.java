@@ -15,10 +15,10 @@ public class DAOFactory {
     private DAOFactory() {
         entities = new HashMap<>();
 
+        entities.put(EntityName.ACCOUNT, new AccountDAOImpl());
         entities.put(EntityName.BRAND, new BrandDAOImpl());
         entities.put(EntityName.CATEGORY, new CategoryDAOImpl());
         entities.put(EntityName.DISCOUNT, new DiscountDAOImpl());
-        entities.put(EntityName.ORDER, new OrderDAOImpl());
         entities.put(EntityName.PHOTO, new PhotoDAOImpl());
         entities.put(EntityName.PRODUCT, new ProductDAOImpl());
         entities.put(EntityName.THING, new ThingDAOImpl());

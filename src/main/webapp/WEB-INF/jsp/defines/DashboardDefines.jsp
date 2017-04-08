@@ -30,7 +30,8 @@
 <fmt:message key="dashboard.discounts" bundle="${curr_locale}" var="discounts" />
 <fmt:message key="dashboard.discountsInfo" bundle="${curr_locale}" var="discountsInfo" />
 
-<fmt:message key="dashboard.buttonsTextAdd" bundle="${curr_locale}" var="btnAdd" />
-<fmt:message key="dashboard.buttonsTextCreate" bundle="${curr_locale}" var="btnCreate" />
-<fmt:message key="dashboard.buttonsTextUpdate" bundle="${curr_locale}" var="btnUpdate" />
-<fmt:message key="dashboard.buttonsTextDelete" bundle="${curr_locale}" var="btnDelete" />
+<fmt:message key="buttons.add" bundle="${curr_locale}" var="btnAdd" />
+<fmt:message key="buttons.create" bundle="${curr_locale}" var="btnCreate" />
+<fmt:message key="buttons.change" bundle="${curr_locale}" var="btnChange" />
+<fmt:message key="buttons.update" bundle="${curr_locale}" var="btnUpdate" />
+<fmt:message key="buttons.delete" bundle="${curr_locale}" var="btnDelete" />

@@ -2,18 +2,16 @@
 
 function getForm(entity, formType) {
     showSpin();
-    /*
-     $('#' + entity.toLowerCase() + '-block').css({
-     'hidden': 'false',
-     'background-color': '#fff',
-     'position': 'relative'
-     });
-     */
-    var url = '/entity/'.concat(entity.toLowerCase()).concat('/').concat(formType);
+
+    var url = '/entity/'.concat(entity.toLowerCase());
 
     $.ajax({
         url: url,
         method: 'GET',
+        data: {
+            command: 'GET_FORM',
+            action: formType
+        },
         success: function(data) {
             handleSuccess(data);
         },
@@ -39,35 +37,20 @@ function sendRequest(entity, inputFields) {
     });
 }
 
-function simpleAJAXRequest() {
-    showSpin();
-    $.ajax({
-        url: '/dashboard',
-        method: 'POST',
-        data: {
-            command: 'brand',
-            value: 'smt'
-        },
-        success: function (data) {
-            handleSuccess(data);
-        }
-    });
-}
-
 /* ---------------- Brand ---------------- */
 
             /* ---- Forms ----- */
 
 function getBrandAddingForm() {
-    getForm("Brand", "add");
+    getForm("Brand", "add-brand");
 }
 
 function getBrandEditingForm() {
-    getForm("Brand", "edit");
+    getForm("Brand", "edit-brand");
 }
 
-function getBrandDeletingForm() {
-    getForm("Brand", "delete");
+function getBrandChangingForm() {
+    getForm("Brand", "change-brand");
 }
 
             /* ---- Handle ---- */
@@ -118,16 +101,16 @@ function handleDeleteBrand() {
 
             /* ---- Forms ----- */
 
-function getAccountChangingRoleForm() {
-    getForm("Account", "changeRole");
+function getAccountChangingForm() {
+    getForm("Account", "change-account");
 }
 
 function getAccountBlockingForm() {
-    getForm("Account", "edit");
+    getForm("Account", "block-account");
 }
 
-function getAccountDeletingForm() {
-    getForm("Account", "delete");
+function getAccountChangeRoleForm() {
+    getForm("Account", "block-account");
 }
 
             /* ---- Handle ---- */
@@ -179,15 +162,15 @@ function handleDeleteAccount() {
             /* ---- Forms ----- */
 
 function getCategoryAddingForm() {
-    getForm("Category", "add");
+    getForm("Category", "add-category");
 }
 
 function getCategoryEditingForm() {
-    getForm("Category", "edit");
+    getForm("Category", "edit-category");
 }
 
-function getCategoryDeletingForm() {
-    getForm("Category", "delete");
+function getCategoryChangingForm() {
+    getForm("Category", "change-category");
 }
 
             /* ---- Handle ---- */
@@ -241,15 +224,15 @@ function handleDeleteCategory() {
             /* ---- Forms ----- */
 
 function getThingAddingForm() {
-    getForm("Thing", "add");
+    getForm("Thing", "add-thing");
 }
 
 function getThingEditingForm() {
-    getForm("Thing", "edit");
+    getForm("Thing", "edit-thing");
 }
 
-function getThingDeletingForm() {
-    getForm("Thing", "delete");
+function getThingChangingForm() {
+    getForm("Thing", "change-thing");
 }
 
             /* ---- Handle ---- */
@@ -274,11 +257,11 @@ function handleDeleteThing() {
             /* ---- Forms ----- */
 
 function getReviewAddingForm() {
-    getForm("Review", "add");
+    getForm("Review", "add-review");
 }
 
 function getReviewDeletingForm() {
-    getForm("Review", "delete");
+    getForm("Review", "delete-review");
 }
 
             /* ---- Handle ---- */
@@ -299,11 +282,11 @@ function handleDeleteReview() {
             /* ---- Forms ----- */
 
 function getPhotoAddingForm() {
-    getForm("Photo", "add");
+    getForm("Photo", "add-image");
 }
 
 function getPhotoDeletingForm() {
-    getForm("Photo", "delete");
+    getForm("Photo", "delete-image");
 }
 
             /* ---- Handle ---- */
@@ -324,23 +307,23 @@ function handleDeletePhoto() {
             /* ---- Forms ----- */
 
 function getProductAddingForm() {
-    getForm("Product", "add");
+    getForm("Product", "add-product");
 }
 
 function getProductEditingForm() {
-    getForm("Product", "edit");
+    getForm("Product", "edit-product");
 }
 
-function getProductDeletingForm() {
-    getForm("Product", "delete");
+function getProductChangingForm() {
+    getForm("Product", "change-product");
 }
 
 function getThingAddingToProductForm() {
-    getForm("Thing", "addToProduct");
+    getForm("Thing_Product", "add-thing-to-product");
 }
 
 function getThingDeletingFromProductForm() {
-    getForm("Thing", "deleteFromProduct");
+    getForm("Thing_Product", "delete-thing-from-product");
 }
 
             /* ---- Handle ---- */
@@ -373,15 +356,15 @@ function handleDeleteThingFromProduct() {
             /* ---- Forms ----- */
 
 function getDiscountAddingForm() {
-    getForm("Discount", "add");
+    getForm("Discount", "add-discount");
 }
 
 function getDiscountEditingForm() {
-    getForm("Discount", "edit");
+    getForm("Discount", "edit-discount");
 }
 
-function getDiscountDeletingForm() {
-    getForm("Discount", "delete");
+function getDiscountChangingForm() {
+    getForm("Discount", "change-discount");
 }
 
             /* ---- Handle ---- */
@@ -406,7 +389,7 @@ function handleDeleteDiscount() {
             /* ---- Forms ----- */
 
 function getRatingSettingForm() {
-    getForm("Discount", "set");
+    getForm("Discount", "set-rating");
 }
 
             /* ---- Handle ---- */
@@ -416,95 +399,6 @@ function handleSetRating() {
 }
 
 /* ----------------- END ----------------- */
-
-function reg1istration() {
-    $.ajax({
-        url: '/signUp',
-        method: 'POST',
-        data: {
-            email: $("#signUp-email").val(),
-            password: $("#signUp-password").val(),
-            repeat_password: $("#signUp-password-repeat").val(),
-            command: 'REGISTRATION'
-        },
-        success: function(data) {
-            var jsonObject;
-            jsonObject = JSON.parse(data);
-            if ('redirect' in jsonObject) {
-                window.location = jsonObject.redirect;
-            } else if ('errorMessage' in jsonObject) {
-                $("#signUp-password").val("");
-                $("#signUp-password-repeat").val("");
-                $("#Err").text(jsonObject.errorMessage);
-                $("#error-signUp-message").fadeIn(200);
-            }
-
-        }
-    });
-}
-
-function addFilm() {
-    $.ajax({
-        url: '/admin',
-        method: 'POST',
-        data: {
-            name: $("#film-name-add").val(),
-            release_year: $("#film-year-add").val(),
-            average_mark: $("#film-mark-add").val(),
-            country: $("#film-country-add").val(),
-            description: $("#film-description-add").val(),
-            id_age_restriction: $("#film-id-age-restriction-add").val(),
-            producer: $("#film-producer-add").val(),
-            image: $("#film-image-add").val(),
-            trailer: $("#film-trailer-add").val(),
-            budget: $("#film-budget-add").val(),
-            box_office: $("#film-box-office-add").val(),
-            command: 'ADD_PRODUCT'
-        },
-        success: function (data) {
-            var jsonObject;
-            jsonObject = JSON.parse(data);
-            if ('redirect' in jsonObject) {
-                window.location = jsonObject.redirect;
-            } else if ('errorMessage' in jsonObject) {
-                $("#messageEditErr").text(jsonObject.errorMessage);
-                $("#error-edit-message").fadeIn(200);
-            }
-        }
-    });
-}
-
-function editFilm() {
-    $.ajax({
-        url: '/admin',
-        method: 'POST',
-        data: {
-            name: $("#film-name-add").val(),
-            release_year: $("#film-year-add").val(),
-            average_mark: $("#film-mark-add").val(),
-            country: $("#film-country-add").val(),
-            description: $("#film-description-add").val(),
-            id_age_restriction: $("#film-id-age-restriction-add").val(),
-            producer: $("#film-producer-add").val(),
-            image: $("#film-image-add").val(),
-            trailer: $("#film-trailer-add").val(),
-            budget: $("#film-budget-add").val(),
-            box_office: $("#film-box-office-add").val(),
-            change_id: $("#edit-id").val(),
-            command: 'EDIT_PRODUCT'
-        },
-        success: function (data) {
-            var jsonObject;
-            jsonObject = JSON.parse(data);
-            if ('redirect' in jsonObject) {
-                window.location = jsonObject.redirect;
-            } else if ('errorMessage' in jsonObject) {
-                $("#messageEditErr").text(jsonObject.errorMessage);
-                $("#error-edit-message").fadeIn(200);
-            }
-        }
-    });
-}
 
 
 // http://stackoverflow.com/questions/14028959/why-does-jquery-or-a-dom-method-such-as-getelementbyid-not-find-the-element

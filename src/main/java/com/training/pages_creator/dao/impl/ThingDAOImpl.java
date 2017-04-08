@@ -17,4 +17,9 @@ public class ThingDAOImpl implements EntityDAO {
     public List<CollectedData> getObjects() throws DAOException {
         return null;
     }
+
+    @Override
+    public List<CollectedData> getObjects(int objectId) throws DAOException {
+        return null;
+    }
 }

@@ -9,5 +9,6 @@ public enum EntityName {
     PRODUCT,
     THING,
     THING_PRODUCT,
+    ACCOUNT,
     WRONG
 }

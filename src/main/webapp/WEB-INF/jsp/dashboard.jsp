@@ -44,7 +44,7 @@
                         <br>
                         <div class="row">
 
-                            <div class="dashboard-button col-sm-4" onclick="getAccountChangingRoleForm()">
+                            <%--<div class="dashboard-button col-sm-4" onclick="getAccountChangingRoleForm()">
                                 <a name="button" value="change-user-role">
                                     <div class="well">
                                         <h4><span class="glyphicon glyphicon-sunglasses"></span></h4>
@@ -52,19 +52,19 @@
 
                                     </div>
                                 </a>
-                            </div>
+                            </div>--%>
 
-                            <div class="dashboard-button col-sm-4" onclick="getAccountBlockingForm()">
+                            <div class="dashboard-button col-sm-12" onclick="getAccountChangingForm()">
                                 <a>
                                     <div class="well">
                                         <h4><span class="glyphicon glyphicon-ban-circle"></span></h4>
-                                        <p>${blockUser}</p>
+                                        <p>${blockUser}/${changeUserRole}/${btnDelete}</p>
 
                                     </div>
                                 </a>
                             </div>
 
-                            <div class="dashboard-button col-sm-4" onclick="getAccountDeletingForm()">
+                            <%--<div class="dashboard-button col-sm-4" onclick="getAccountDeletingForm()">
                                 <a>
                                     <div class="well">
                                         <h4><span class="glyphicon glyphicon-remove-circle"></span></h4>
@@ -72,7 +72,7 @@
 
                                     </div>
                                 </a>
-                            </div>
+                            </div>--%>
 
                         </div>
                     </div>
@@ -91,7 +91,7 @@
                         <br>
 
                         <div class="row">
-                            <div class="dashboard-button col-sm-4"  onclick="getCategoryAddingForm()">
+                            <div class="dashboard-button col-sm-6"  onclick="getCategoryAddingForm()">
                                 <a>
                                     <div class="well">
                                         <h4><span class="glyphicon glyphicon-plus"></span></h4>
@@ -101,7 +101,17 @@
                                 </a>
                             </div>
 
-                            <div class="dashboard-button col-sm-4"  onclick="getCategoryEditingForm()">
+                            <div class="dashboard-button col-sm-6"  onclick="getCategoryChangingForm()">
+                                <a>
+                                    <div class="well">
+                                        <h4><span class="glyphicon glyphicon-refresh"></span></h4>
+                                        <p>${btnChange}</p>
+
+                                    </div>
+                                </a>
+                            </div>
+
+                            <%--<div class="dashboard-button col-sm-4"  onclick="getCategoryEditingForm()">
                                 <a>
                                     <div class="well">
                                         <h4><span class="glyphicon glyphicon-refresh"></span></h4>
@@ -119,7 +129,7 @@
 
                                     </div>
                                 </a>
-                            </div>
+                            </div>--%>
                         </div>
                     </div>
 
@@ -129,7 +139,7 @@
                         <br>
 
                         <div class="row">
-                            <div class="dashboard-button col-sm-4" onclick="getBrandAddingForm()">
+                            <div class="dashboard-button col-sm-6" onclick="getBrandAddingForm()">
                                 <a>
                                     <div class="well">
                                         <h4><span class="glyphicon glyphicon-plus"></span></h4>
@@ -139,6 +149,17 @@
                                 </a>
                             </div>
 
+                            <div class="dashboard-button col-sm-6" onclick="getBrandChangingForm()">
+                                <a>
+                                    <div class="well">
+                                        <h4><span class="glyphicon glyphicon-eye-close"></span></h4>
+                                        <p>${btnChange}</p>
+
+                                    </div>
+                                </a>
+                            </div>
+
+                            <%--
                             <div class="dashboard-button col-sm-4" onclick="getBrandEditingForm()">
                                 <a>
                                     <div class="well">
@@ -158,6 +179,7 @@
                                     </div>
                                 </a>
                             </div>
+                            --%>
                         </div>
                     </div>
 
@@ -167,7 +189,7 @@
                         <br>
 
                         <div class="row">
-                            <div class="dashboard-button col-sm-4"  onclick="getThingAddingForm()">
+                            <div class="dashboard-button col-sm-6"  onclick="getThingAddingForm()">
                                 <a>
                                     <div class="well">
                                         <h4><span class="glyphicon glyphicon-plus"></span></h4>
@@ -177,6 +199,17 @@
                                 </a>
                             </div>
 
+                            <div class="dashboard-button col-sm-6" onclick="getThingChangingForm()">
+                                <a>
+                                    <div class="well">
+                                        <h4><span class="glyphicon glyphicon-eye-close"></span></h4>
+                                        <p>${btnChange}</p>
+
+                                    </div>
+                                </a>
+                            </div>
+
+                            <%--
                             <div class="dashboard-button col-sm-4" onclick="getThingEditingForm()">
                                 <a>
                                     <div class="well">
@@ -196,6 +229,7 @@
                                     </div>
                                 </a>
                             </div>
+                            --%>
                         </div>
                     </div>
 
@@ -271,7 +305,7 @@
                         <br>
                         <div class="row">
 
-                            <div class="dashboard-button col-sm-4" onclick="getProductAddingForm()">
+                            <div class="dashboard-button col-sm-6" onclick="getProductAddingForm()">
                                 <a>
                                     <div class="well">
                                         <h4><span class="glyphicon glyphicon-plus"></span></h4>
@@ -281,6 +315,17 @@
                                 </a>
                             </div>
 
+                            <div class="dashboard-button col-sm-6" onclick="getProductChangingForm()">
+                                <a>
+                                    <div class="well">
+                                        <h4><span class="glyphicon glyphicon-refresh"></span></h4>
+                                        <p>${btnChange}</p>
+
+                                    </div>
+                                </a>
+                            </div>
+
+                            <%--
                             <div class="dashboard-button col-sm-4" onclick="getProductEditingForm()">
                                 <a>
                                     <div class="well">
@@ -300,6 +345,7 @@
                                     </div>
                                 </a>
                             </div>
+                            --%>
 
                         </div>
                     </div>
@@ -349,6 +395,17 @@
                                 </a>
                             </div>
 
+                            <div class="dashboard-button col-sm-4" onclick="getDiscountChangingForm()">
+                                <a>
+                                    <div class="well">
+                                        <h4><span class="glyphicon glyphicon-remove-circle"></span></h4>
+                                        <p>${btnChange}</p>
+
+                                    </div>
+                                </a>
+                            </div>
+
+                            <%--
                             <div class="dashboard-button col-sm-4" onclick="getDiscountEditingForm()">
                                 <a>
                                     <div class="well">
@@ -368,6 +425,7 @@
                                     </div>
                                 </a>
                             </div>
+                            --%>
 
                         </div>
                     </div>

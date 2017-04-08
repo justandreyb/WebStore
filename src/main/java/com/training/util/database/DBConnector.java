@@ -1,5 +1,6 @@
 package com.training.util.database;
 
+import com.training.util.exception.ProjectUtilException;
 import com.training.web_store.dao.exception.DAOException;
 
 import java.sql.*;
@@ -28,7 +29,7 @@ public class DBConnector {
 
     }
 
-    private void initializeProperties() throws DAOException {
+    private void initializeProperties() /*throws ProjectUtilException*/ {
         DatabaseResourcesMapper resourcesMapper = DatabaseResourcesMapper.getInstance();
 
         this.driverName = resourcesMapper.getProperty("db.driver");
@@ -42,46 +43,18 @@ public class DBConnector {
         }
     }
 
-   /* public Connection getConnection() throws DAOException {
-        try {
-            Class.forName(driverName);
-            try {
-                return DriverManager.getConnection(url, user, password);
-            } catch (SQLException sqlEx) {
-                log.log(Level.SEVERE, "Cannot connect to sql server", sqlEx);
-                throw new DAOException(sqlEx);
-            }
-        } catch (ClassNotFoundException e) {
-            log.log(Level.SEVERE, "DB driver not found", e);
-            throw new DAOException(e);
-        }
-    }
-
-    public static void closeConnection(Connection connection) throws ProjectUtilException {
-        try {
-            if (connection != null) {
-                connection.close();
-            }
-        } catch (SQLException e) {
-            log.log(Level.SEVERE, "Error while close connection to DB", e);
-            throw new ProjectUtilException(e.getMessage());
-        }
-    }
-*/
-    /*=========================================================*/
-
     public static DBConnector getInstance() {
         return instance;
     }
 
-    public void init() throws DAOException {
+    public void init() /*throws ProjectUtilException*/ {
         initializeProperties();
 
         try {
             Class.forName(driverName);
         } catch (ClassNotFoundException exception) {
             log.fatal("JDBC error : ", exception);
-            throw new DAOException("Problem with connection to JDBC", exception);
+//            throw new ProjectUtilException("Problem with connection to JDBC", exception);
         }
         connections = new ArrayBlockingQueue<Connection>(poolSize);
         usedConnections = new CopyOnWriteArrayList<Connection>();
@@ -92,21 +65,22 @@ public class DBConnector {
                 connection = DriverManager.getConnection(url, user, password);
             } catch (SQLException exception) {
                 log.fatal("JDBC error : ", exception);
-                throw new DAOException("Problem with establishing connection", exception);
+//                throw new ProjectUtilException("Problem with establishing connection", exception);
+                return;
             }
             connections.add(connection);
         }
         log.info("Connection initialized.");
     }
 
-    public void destroy() throws DAOException {
+    public void destroy() /*throws ProjectUtilException*/ {
 
         for (Connection connection : connections) {
             try {
                 connection.close();
             } catch (SQLException exception) {
                 log.warn("Problem with closing connection : ", exception);
-                throw new DAOException(exception);
+                //       TODO:     throw new ProjectUtilException(e);
             }
         }
 
@@ -119,18 +93,18 @@ public class DBConnector {
         }
     }
 
-    public Connection getConnection() throws DAOException {
+    public Connection getConnection() /*throws ProjectUtilException*/ {
         Connection connection = null;
         try {
             connection = connections.take();
             usedConnections.add(connection);
         } catch (InterruptedException e) {
-            throw new DAOException(e);
+//       TODO:     throw new ProjectUtilException(e);
         }
         return connection;
     }
 
-    public void closeConnection(Connection connection) throws DAOException {
+    public void closeConnection(Connection connection) /*throws ProjectUtilException*/ {
         if (connection != null) {
             connections.add(connection);
             usedConnections.remove(connection);
@@ -139,24 +113,24 @@ public class DBConnector {
         }
     }
 
-    public void closeConnection(Connection connection, Statement statement) throws DAOException {
+    public void closeConnection(Connection connection, Statement statement) /*throws ProjectUtilException*/ {
         try {
             if (statement != null) {
                 statement.close();
             }
         } catch (SQLException e) {
-            throw new DAOException(e);
+            //       TODO:     throw new ProjectUtilException(e);
         }
         closeConnection(connection);
     }
 
-    public void closeConnection(Connection connection, Statement statement, ResultSet set) throws DAOException {
+    public void closeConnection(Connection connection, Statement statement, ResultSet set)/* throws ProjectUtilException*/ {
         try {
             if (set != null) {
                 set.close();
             }
         } catch (SQLException e) {
-            throw new DAOException(e);
+            //       TODO:     throw new ProjectUtilException(e);
         }
         closeConnection(connection, statement);
     }

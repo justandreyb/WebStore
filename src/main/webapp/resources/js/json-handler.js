@@ -17,7 +17,10 @@ function handleSuccess(data) {
     } else {
         printDefaultError(block);
     }
-    $("#action-block").modal('show');
+    var actionBlock = $("#action-block");
+    if (!actionBlock.modal.isShown) {
+        actionBlock.modal('show');
+    }
 }
 
 function handleAuthorisationSuccess(data) {
@@ -36,7 +39,10 @@ function handleAuthorisationSuccess(data) {
     } else {
         printDefaultError(block);
     }
-    $("#action-block").modal('show');
+    var actionBlock = $("#action-block");
+    if (!actionBlock.modal.isShown) {
+        actionBlock.modal('show');
+    }
 }
 
 function reloadPage(block, jsonObject) {
@@ -48,12 +54,10 @@ function reloadPage(block, jsonObject) {
     }
 }
 
-function printResult(block, jsonObject) {
-    if (jsonObject.data != null) {
-        block.innerHTML = jsonObject.data;
-    } else {
-        printError(block, jsonObject);
-    }
+function handleError(errorMessage) {
+    stopSpin();
+    var block = $("#action-block-inner");
+    block.html(errorMessage);
 }
 
 function printError(block, jsonObject) {

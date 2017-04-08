@@ -38,4 +38,9 @@ public class ProductDAOImpl implements EntityDAO {
         return null;
     }
 
+    @Override
+    public List<CollectedData> getObjects(int objectId) throws DAOException {
+        return null;
+    }
+
 }

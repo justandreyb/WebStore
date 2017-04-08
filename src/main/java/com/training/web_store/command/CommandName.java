@@ -1,6 +1,7 @@
 package com.training.web_store.command;
 
 public enum CommandName {
+    //TODO: Rework commands
     SIGN_UP,
     SIGN_IN,
     SIGN_OUT,

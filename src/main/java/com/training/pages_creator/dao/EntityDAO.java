@@ -8,4 +8,5 @@ import java.util.List;
 public interface EntityDAO {
     CollectedData getObject(int objectId) throws DAOException;
     List<CollectedData> getObjects() throws DAOException;
+    List<CollectedData> getObjects(int objectId) throws DAOException;
 }

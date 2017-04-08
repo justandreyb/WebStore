@@ -11,21 +11,21 @@ import com.training.pages_creator.command.impl.GetFormCommand;
 import com.training.pages_creator.command.impl.WrongCommand;
 import org.apache.log4j.Logger;
 
-public class EntityCommandFactory {
+public class EntityCommandRepository {
     private static final Logger log = Logger.getLogger(CommandException.class.getName());
 
-    private static final EntityCommandFactory instance = new EntityCommandFactory();
+    private static final EntityCommandRepository instance = new EntityCommandRepository();
 
     private Map<CommandName, Command> repository;
 
-    private EntityCommandFactory() {
+    private EntityCommandRepository() {
         repository = new HashMap<CommandName, Command>();
 
         repository.put(CommandName.GET_FORM, new GetFormCommand());
         repository.put(CommandName.WRONG, new WrongCommand());
     }
 
-    public static EntityCommandFactory getInstance() {
+    public static EntityCommandRepository getInstance() {
         return instance;
     }
 

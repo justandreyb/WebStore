@@ -1,6 +1,6 @@
 package com.training.util.database;
 
-import com.training.web_store.dao.exception.DAOException;
+import com.training.util.exception.ProjectUtilException;
 
 import java.util.ResourceBundle;
 
@@ -14,7 +14,7 @@ public class DatabaseResourcesMapper {
         return instance;
     }
 
-    public String getProperty(String key) throws DAOException {
+    public String getProperty(String key)/* throws ProjectUtilException */{
         return properties.getString(key);
     }
 }

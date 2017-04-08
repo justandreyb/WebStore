@@ -1,5 +1,6 @@
 package com.training.web_store.dao;
 
+import com.training.util.exception.ProjectUtilException;
 import com.training.web_store.bean.account.User;
 import com.training.web_store.dao.exception.DAOException;
 

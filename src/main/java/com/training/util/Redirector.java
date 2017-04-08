@@ -27,14 +27,6 @@ public class Redirector {
         forward(request, response, JSP_PATH, jspName);
     }
 
-    public static void redirect(HttpServletResponse response, String jspPath) {
-        try {
-            response.sendRedirect(jspPath);
-        } catch (IOException e) {
-            log.warn("Error while redirecting", e);
-        }
-    }
-
     private static String getRealPath(String root, String jspName) {
         StringBuilder builder = new StringBuilder();
         builder.append(root);

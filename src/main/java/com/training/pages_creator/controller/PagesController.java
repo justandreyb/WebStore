@@ -2,7 +2,7 @@ package com.training.pages_creator.controller;
 
 import com.training.pages_creator.bean.ParsedRequest;
 import com.training.pages_creator.command.Command;
-import com.training.pages_creator.command.factory.EntityCommandFactory;
+import com.training.pages_creator.command.factory.EntityCommandRepository;
 import com.training.pages_creator.controller.util.URIParser;
 import com.training.pages_creator.controller.util.exception.UtilException;
 import com.training.util.AnswerCreator;
@@ -34,8 +34,7 @@ public class PagesController extends HttpServlet {
 
     private void analyzeRequest(HttpServletRequest request, HttpServletResponse response) {
         try {
-            String uri = request.getRequestURI();
-            ParsedRequest parsedRequest = URIParser.parseRequest(uri);
+            ParsedRequest parsedRequest = URIParser.parseRequest(request);
 
             performTask(parsedRequest, request, response);
         } catch (UtilException e) {
@@ -46,7 +45,7 @@ public class PagesController extends HttpServlet {
     private void performTask(ParsedRequest parsedRequest, HttpServletRequest request, HttpServletResponse response) {
 
         try {
-            EntityCommandFactory factory = EntityCommandFactory.getInstance();
+            EntityCommandRepository factory = EntityCommandRepository.getInstance();
             String entity = parsedRequest.getEntity();
             String requestedCommand = parsedRequest.getCommand();
 

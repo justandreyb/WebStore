@@ -1,5 +1,6 @@
 package com.training.web_store.dao.impl.account;
 
+import com.training.util.exception.ProjectUtilException;
 import com.training.web_store.bean.account.User;
 import com.training.web_store.dao.UserDAO;
 import com.training.web_store.dao.exception.DAOException;
@@ -14,18 +15,16 @@ public class UserDAOImpl implements UserDAO {
 
     private static final String DATABASE = "web_store";
     private static final String USER_TABLE = "user";
-    private static final String USER_INFO_TABLE = "customer_info";
     private static final String USER_ID = "id";
-    private static final String USER_INFO_ID = "user_id";
     private static final String USER_LOGIN = "email";
     private static final String USER_PASSWORD = "password";
-    private static final String USER_ROLE = "role_id";
     private static final String USER_IS_ACTIVE = "is_active";
     private static final String USER_LOCALE = "locale";
     private static final String USER_FIRST_NAME = "first_name";
     private static final String USER_LAST_NAME = "last_name";
     private static final String USER_PHONE = "phone_number";
     private static final String USER_GENDER = "gender";
+    private static final String USER_ROLE_INFO = "role";
     private static final String USER_ADDRESS = "address";
 
     private static final String ADD_USER_QUERY = "{call addUser(?,?,?,?,?,?,?,?,?)}";
@@ -42,7 +41,6 @@ public class UserDAOImpl implements UserDAO {
     private static final String UPDATE_USER_QUERY = "{call updateUser(?,?,?,?,?,?,?,?,?)}";
 
     private static final String GET_USERS_QUERY = "{call getUsers()}";
-
     private static final int ROLE_ID_FOR_USER = 1;
 
     @Override
@@ -64,7 +62,7 @@ public class UserDAOImpl implements UserDAO {
             statement.setString(8, user.getAddress());
             statement.setInt(9, ROLE_ID_FOR_USER);
 
-            System.out.println("Rows affected: " + statement.executeUpdate());
+            statement.executeUpdate();
 
         } catch (SQLException e) {
             throw new DAOException(e);
@@ -128,11 +126,13 @@ public class UserDAOImpl implements UserDAO {
                 String phone = set.getString(USER_PHONE);
                 String address = set.getString(USER_ADDRESS);
                 String locale = set.getString(USER_LOCALE);
+                String role = set.getString(USER_ROLE_INFO);
 
 
                 user = new User(login, password, firstName, lastName, gender, address,
                         phone, locale);
                 user.setId(userId);
+                user.setRole(role);
 
             }
             return user;

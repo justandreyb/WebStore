@@ -41,6 +41,7 @@ public class GetFormCommand extends BaseCommand {
             if (formName != null) {
                 List<CollectedData> entities = service.getEntities(entity, formName);
                 request.setAttribute(ENTITIES, entities);
+                formName = entity + "/" + formName;
                 Redirector.forward(request, response, ROOT, formName);
             }
         } catch (ServiceException e) {
