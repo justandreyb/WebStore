@@ -17,6 +17,7 @@
         <jstl.version>1.2</jstl.version>
         <jsonsimple.version>1.1.1</jsonsimple.version>
         <log4j.version>1.2.17</log4j.version>
+        <json-taglib.version>0.4.1</json-taglib.version>
     </properties>
 
     <dependencies>
@@ -63,6 +64,12 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>RELEASE</version>
+        </dependency>
+
+        <dependency>
+            <groupId>atg.taglib.json</groupId>
+            <artifactId>json-taglib</artifactId>
+            <version>${json-taglib.version}</version>
         </dependency>
 
     </dependencies>

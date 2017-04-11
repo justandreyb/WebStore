@@ -6,8 +6,6 @@ import com.training.web_store.service.factory.ServiceFactory;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
 public class OrderDAOImplTest {
     StoreService service;
 

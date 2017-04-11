@@ -1,5 +1,7 @@
 package com.training.web_store.util;
 
+import com.training.web_store.bean.account.User;
+
 public class ArgumentParserUtil {
 
     public static boolean isValidArgument(String argument) {
@@ -39,5 +41,9 @@ public class ArgumentParserUtil {
         }
 
         return valid;
+    }
+
+    public static boolean isValidUser(User user) {
+        return isValidArguments(user.getEmail(), user.getPassword(), user.getFirstName(), user.getLastName(), user.getLocale());
     }
 }

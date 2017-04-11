@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class WrongCommand implements Command {
+
     private static final String ROOT = "/WEB-INF/jsp/templates/forms/";
     private static final String WRONG_FORM = "wrong-form";
 

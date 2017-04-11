@@ -17,9 +17,9 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <br>
-                            <button class="btn btn-default col-md-offset-3 col-md-6 col-md-offset-3 col-xs-offset-1 col-xs-offset-1 col-xs-10 col-sm-offset-2 col-sm-8 col-sm-offset-2" onclick="handleAddBrand()">${add}</button>
-                        </div>
                     </form>
+                    <div class="form-group">
+                        <br>
+                        <button class="btn btn-default col-md-offset-3 col-md-6 col-md-offset-3 col-xs-offset-1 col-xs-offset-1 col-xs-10 col-sm-offset-2 col-sm-8 col-sm-offset-2" onclick="handleAddBrand()">${add}</button>
+                    </div>
                 </div>

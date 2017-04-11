@@ -33,6 +33,8 @@ public interface StoreService {
 
     void addDiscount(byte value, Date startDate, Date finishDate) throws ServiceException;
 
+    void updateDiscount(int id, byte value, Date startDate, Date finishDate) throws ServiceException;
+
     Discount getDiscount(int discountId) throws ServiceException;
     List<Discount> getDiscounts() throws ServiceException;
     List<Discount> getDiscounts(Date date) throws ServiceException;
@@ -41,7 +43,8 @@ public interface StoreService {
 
     /* --------------------------------------------------------------------- */
 
-    void addPhoto(int thingId, String name) throws ServiceException;
+    void addPhotoForThing(int thingId, String name) throws ServiceException;
+    void addPhotoForProduct(int productId, String name) throws ServiceException;
 
     List<Photo> getPhotos(int thingId) throws ServiceException;
 
@@ -52,29 +55,43 @@ public interface StoreService {
     void addProduct(String name, double price, int categoryId) throws ServiceException;
     void addProduct(String name, double price, int categoryId, int discountId) throws ServiceException;
 
-    void addThing(int productId, int thingId) throws ServiceException;
+    void addThingToProduct(int productId, int thingId) throws ServiceException;
     void removeThing(int productId, int thingId) throws ServiceException;
 
+    Product getProduct(int productId) throws ServiceException;
     Product getProduct(String name, int categoryId) throws ServiceException;
+    List<Product> getProducts() throws ServiceException;
     List<Product> getProducts(String requestedProduct) throws ServiceException;
     List<Product> getProductsForCategory(int categoryId) throws ServiceException;
     List<Product> getProductsForBrand(int brandId) throws ServiceException;
 
+    void updateProduct(int productId, String name, double price, int categoryId) throws ServiceException;
     void updateProduct(int productId, String name, double price, int categoryId, int discountId) throws ServiceException;
 
     void deleteProduct(int productId) throws ServiceException;
 
     /* --------------------------------------------------------------------- */
 
-    void addThing(String name, String description, Date creationDate) throws ServiceException;
-
-    void addReview(int thingId, String review) throws ServiceException;
-    void addRating(int userId, int thingId, byte value) throws ServiceException;
+    void addThing(String name, String category, String description, Date creationDate, int brandId) throws ServiceException;
 
     Thing getThing(int thingId) throws ServiceException;
-    byte getRating(int thingId) throws ServiceException;
 
     void updateThing(int thingId, String name, String description, Date creationDate) throws ServiceException;
 
     void deleteThing(int thingId) throws ServiceException;
+
+    /* --------------------------------------------------------------------- */
+
+    void addRating(int userId, int thingId, byte value) throws ServiceException;
+    Rating getRating(int thingId) throws ServiceException;
+    void deleteRating(int ratingId) throws ServiceException;
+
+    /* --------------------------------------------------------------------- */
+
+    //TODO: Rework
+    void addReview(int thingId, String review) throws ServiceException;
+    Review getReview(int thingId) throws ServiceException;
+    List<Review> getReviews() throws ServiceException;
+    void deleteReview(int reviewId) throws ServiceException;
+
 }

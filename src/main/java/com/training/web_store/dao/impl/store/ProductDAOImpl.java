@@ -1,8 +1,8 @@
 package com.training.web_store.dao.impl.store;
 
-import com.training.web_store.dao.ProductDAO;
 import com.training.web_store.bean.store.Product;
 import com.training.web_store.bean.store.Thing;
+import com.training.web_store.dao.ProductDAO;
 import com.training.web_store.dao.exception.DAOException;
 
 import java.util.List;
@@ -131,6 +131,11 @@ public class ProductDAOImpl implements ProductDAO {
     }
 
     @Override
+    public void updateProduct(int productId, String name, double price, int categoryId) throws DAOException {
+
+    }
+
+    @Override
     public void updateProduct(int productId, String name, double price, int categoryId, int discountId) throws DAOException {
 
     }
@@ -141,7 +146,18 @@ public class ProductDAOImpl implements ProductDAO {
     }
 
     @Override
+    public Product getProduct(int productId) throws DAOException {
+        return null;
+    }
+
+    @Override
     public Product getProduct(String name, int categoryId) throws DAOException {
+        return null;
+    }
+
+    @Override
+    public List<Product> getProducts() throws DAOException {
+        //todo: don't forget about '%name%'
         return null;
     }
 

@@ -36,4 +36,5 @@ public class ResponseWriter {
         answer = AnswerCreator.createError(answer);
         write(response, answer);
     }
+
 }

@@ -2,6 +2,7 @@ package com.training.web_store.command.impl.user;
 
 import com.training.util.ResponseWriter;
 import com.training.web_store.bean.account.User;
+import com.training.web_store.command.impl.UserCommand;
 import com.training.web_store.service.exception.ServiceException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -33,9 +34,11 @@ public class SignUpCommand extends UserCommand {
         String locale = request.getParameter(LOCALE_PARAMETER);
 
         try {
-            service.registration(email, password, firstName, lastName,
-                    phone, gender, address, locale);
-            User user = service.signIn(email, password);
+            User user = new User(email, password, firstName, lastName, phone,
+                    gender, address, locale);
+
+            service.registration(user);
+            user = service.signIn(email, password);
             HttpSession session = request.getSession(true);
             if (user != null) {
                 Locale currentLocale = new Locale(locale);

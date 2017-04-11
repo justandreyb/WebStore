@@ -1,4 +1,7 @@
 function showSpin() {
+    if ($("#spinner-block") != null) {
+        stopSpin();
+    }
 
     var target = document.getElementById('action-block');
     var div = document.createElement('div');
@@ -9,11 +12,5 @@ function showSpin() {
 }
 
 function stopSpin() {
-   /*/!* var spinner = Spinner;
-
-    if (spinner != null) {*!/
-        var element = document.getElementsByClassName('spinner-block');
-        element.parentNode.removeChild(element);
-    // }*/
    $("#spinner-block").remove();
 }

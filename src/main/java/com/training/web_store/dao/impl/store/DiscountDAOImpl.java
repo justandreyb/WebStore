@@ -1,10 +1,10 @@
 package com.training.web_store.dao.impl.store;
 
-import com.training.web_store.dao.DiscountDAO;
 import com.training.web_store.bean.store.Discount;
+import com.training.web_store.dao.DiscountDAO;
 import com.training.web_store.dao.exception.DAOException;
 import com.training.web_store.util.ArgumentExchanger;
-import com.training.util.database.DBConnector;
+import com.training.web_store.util.database.DBConnector;
 
 import java.sql.*;
 import java.util.ArrayList;

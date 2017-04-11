@@ -1,19 +1,20 @@
 package com.training.web_store.service.factory;
 
-import com.training.util.exception.ProjectUtilException;
-import com.training.web_store.dao.exception.DAOException;
-import com.training.util.database.DBConnector;
+import com.training.web_store.service.InteractionService;
 import com.training.web_store.service.StoreService;
-import com.training.web_store.service.exception.ServiceException;
-import com.training.web_store.service.impl.StoreServiceImpl;
 import com.training.web_store.service.UserService;
+import com.training.web_store.service.exception.ServiceException;
+import com.training.web_store.service.impl.InteractionServiceImpl;
+import com.training.web_store.service.impl.StoreServiceImpl;
 import com.training.web_store.service.impl.UserServiceImpl;
+import com.training.web_store.util.database.DBConnector;
 
 public class ServiceFactory {
     private static final ServiceFactory factory = new ServiceFactory();
 
     private final UserService userServiceImpl = new UserServiceImpl();
     private final StoreService storeServiceImpl = new StoreServiceImpl();
+    private final InteractionService interactionService = new InteractionServiceImpl();
 
     private ServiceFactory() {
     }
@@ -46,5 +47,9 @@ public class ServiceFactory {
 
     public StoreService getStoreService() {
         return storeServiceImpl;
+    }
+
+    public InteractionService getInteractionService() {
+        return interactionService;
     }
 }

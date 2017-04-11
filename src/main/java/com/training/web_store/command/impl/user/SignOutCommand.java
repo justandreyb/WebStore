@@ -1,9 +1,8 @@
 package com.training.web_store.command.impl.user;
 
 import com.training.util.ResponseWriter;
-import com.training.util.exception.ProjectUtilException;
+import com.training.web_store.command.impl.UserCommand;
 import com.training.web_store.service.exception.ServiceException;
-import com.training.util.Redirector;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

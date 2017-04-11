@@ -7,6 +7,7 @@ function signIn() {
         url: uri,
         method: 'POST',
         data: {
+            entity: "account",
             command: 'SIGN_IN',
             email: $("#login-email").val(),
             password: $("#login-password").val()
@@ -30,6 +31,7 @@ function signUp() {
         url: uri,
         method: 'POST',
         data: {
+            entity: "account",
             command: 'SIGN_UP',
             email: $("#register-email").val(),
             password: $("#register-password").val(),
@@ -60,6 +62,7 @@ function signOut() {
         url: uri,
         method: 'POST',
         data: {
+            entity: "account",
             command: 'SIGN_OUT'
         },
         success: function (data) {

@@ -142,6 +142,16 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
+    public void updateDiscount(int id, byte value, Date startDate, Date finishDate) throws ServiceException {
+        Discount discount = new Discount(value, startDate, finishDate);
+        try {
+            discountDAO.updateDiscount(id, discount);
+        } catch (DAOException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
     public Discount getDiscount(int discountId) throws ServiceException {
         try {
             return discountDAO.getDiscount(discountId);
@@ -182,10 +192,20 @@ public class StoreServiceImpl implements StoreService {
 /* ----------------------------------------------------------------------- */
 
     @Override
-    public void addPhoto(int thingId, String name) throws ServiceException {
+    public void addPhotoForThing(int thingId, String name) throws ServiceException {
         //TODO: create storagePath here !
         try {
             photoDAO.addThingPhoto(thingId, name, name);
+        } catch (DAOException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public void addPhotoForProduct(int productId, String name) throws ServiceException {
+        //TODO: create storagePath here !
+        try {
+            photoDAO.addProductPhoto(productId, name, name);
         } catch (DAOException e) {
             throw new ServiceException(e);
         }
@@ -230,7 +250,7 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public void addThing(int productId, int thingId) throws ServiceException {
+    public void addThingToProduct(int productId, int thingId) throws ServiceException {
 
     }
 
@@ -240,9 +260,27 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
+    public Product getProduct(int productId) throws ServiceException {
+        try {
+            return productDAO.getProduct(productId);
+        } catch (DAOException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
     public Product getProduct(String name, int categoryId) throws ServiceException {
         try {
             return productDAO.getProduct(name, categoryId);
+        } catch (DAOException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public List<Product> getProducts() throws ServiceException {
+        try {
+            return productDAO.getProducts();
         } catch (DAOException e) {
             throw new ServiceException(e);
         }
@@ -269,6 +307,15 @@ public class StoreServiceImpl implements StoreService {
     @Override
     public List<Product> getProductsForBrand(int brandId) throws ServiceException {
         return null;
+    }
+
+    @Override
+    public void updateProduct(int productId, String name, double price, int categoryId) throws ServiceException {
+        try {
+            productDAO.updateProduct(productId, name, price, categoryId);
+        } catch (DAOException e) {
+            throw new ServiceException(e);
+        }
     }
 
     @Override

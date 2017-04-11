@@ -2,18 +2,15 @@ package com.training.pages_creator.controller;
 
 import com.training.pages_creator.bean.ParsedRequest;
 import com.training.pages_creator.command.Command;
-import com.training.pages_creator.command.factory.EntityCommandRepository;
+import com.training.pages_creator.command.factory.CommandRepository;
 import com.training.pages_creator.controller.util.URIParser;
 import com.training.pages_creator.controller.util.exception.UtilException;
-import com.training.util.AnswerCreator;
 import com.training.util.ResponseWriter;
-import com.training.util.exception.ProjectUtilException;
+import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.log4j.Logger;
 
 public class PagesController extends HttpServlet {
     private static final Logger log = Logger.getLogger(PagesController.class.getName());
@@ -45,7 +42,7 @@ public class PagesController extends HttpServlet {
     private void performTask(ParsedRequest parsedRequest, HttpServletRequest request, HttpServletResponse response) {
 
         try {
-            EntityCommandRepository factory = EntityCommandRepository.getInstance();
+            CommandRepository factory = CommandRepository.getInstance();
             String entity = parsedRequest.getEntity();
             String requestedCommand = parsedRequest.getCommand();
 
@@ -55,12 +52,7 @@ public class PagesController extends HttpServlet {
         } catch (Exception e) {
             String errorMessage = "Error while executing command";
             log.warn(errorMessage, e);
-            String answer = AnswerCreator.createError(errorMessage);
-            try {
-                ResponseWriter.write(response, answer);
-            } catch (ProjectUtilException innerE) {
-                log.fatal("Error while writing in response", innerE);
-            }
+            ResponseWriter.writeError(response, errorMessage);
         }
     }
 

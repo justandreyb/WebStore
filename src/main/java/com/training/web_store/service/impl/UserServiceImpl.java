@@ -6,9 +6,7 @@ import com.training.web_store.dao.exception.DAOException;
 import com.training.web_store.dao.factory.DAOFactory;
 import com.training.web_store.service.UserService;
 import com.training.web_store.service.exception.ServiceException;
-import com.training.web_store.util.ArgumentEncoderUtil;
 import com.training.web_store.util.ArgumentParserUtil;
-import com.training.web_store.util.exception.UtilException;
 
 import javax.servlet.http.HttpSession;
 
@@ -18,15 +16,13 @@ public class UserServiceImpl implements UserService {
     private final DAOFactory factory = DAOFactory.getInstance();
 
     @Override
-    public void registration(String login, String password, String firstName, String lastName,
-                             String phoneNumber, String gender, String address, String locale) throws ServiceException {
-        if (!ArgumentParserUtil.isValidArguments(login, password, firstName, lastName, locale)) {
+    public void registration(User user) throws ServiceException {
+        if (!ArgumentParserUtil.isValidUser(user)) {
             throw new ServiceException("Invalid arguments");
         }
 
         UserDAO userDAO = factory.getUserDAO();
         try {
-            User user = new User(login, password, firstName, lastName, gender, address, phoneNumber, locale);
             userDAO.addUser(user);
         } catch (DAOException e) {
             throw new ServiceException(e);
@@ -61,18 +57,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateAccountInfo(int userId, String login, String password, String firstName, String lastName,
-                                  String phoneNumber, String gender, String address, String locale) throws ServiceException {
-        if (!ArgumentParserUtil.isValidArguments(login, password, firstName, lastName, locale)) {
+    public void updateAccountInfo(int userId, User user) throws ServiceException {
+        if (!ArgumentParserUtil.isValidUser(user)) {
             throw new ServiceException("Invalid arguments");
         }
 
         UserDAO userDAO = factory.getUserDAO();
         try {
-            password = ArgumentEncoderUtil.encodePassword(password);
-            User newUser = new User(login, password, firstName, lastName, gender, address, phoneNumber, locale);
-            userDAO.updateUser(userId, newUser);
-        } catch (DAOException | UtilException e) {
+            userDAO.updateUser(userId, user);
+        } catch (DAOException e) {
             throw new ServiceException(e);
         }
     }

@@ -6,15 +6,15 @@
         <div class="form-group">
             <label class="control-label col-sm-2" for="change-account">${accountsField}</label>
             <div class="col-sm-10">
-                <c:set var="accounts" scope="request" value="${entities}" />
+                <c:set var="data" value="${requestScope.collectedData}" />
                 <select class="form-control" id="change-account">
-                    <option selected>${none}</option>
+                    <option value="Not selected" selected>${none}</option>
+                    <c:set var="accounts" value="${data.accounts}" />
                     <c:if test="${accounts != null}">
                         <c:forEach items="${accounts}" var="account">
-                            <c:set var="map" scope="request" value="${account.parameters}" />
-                            <option value="<c:out value="${map['user_id']}"/>">
-                                <c:out value="${map['user_email']}"/> |
-                                <c:out value="${map['user_first_name']}"/>
+                            <option value="<c:out value="${account.id}"/>">
+                                <c:out value="${account.email}"/> |
+                                <c:out value="${account.firstName}"/>
                             </option>
                         </c:forEach>
                     </c:if>
@@ -28,6 +28,6 @@
         <div class="col-xs-2"></div>
         <button class="btn btn-default col-xs-3" onclick="getAccountChangeRoleForm()">${changeRole}</button>
         <div class="col-xs-2"></div>
-        <button class="btn btn-default col-xs-3" onclick="handleDeleteBrand()">${delete}</button>
+        <button class="btn btn-default col-xs-3" onclick="handleDeleteAccount()">${delete}</button>
     </div>
 </div>
