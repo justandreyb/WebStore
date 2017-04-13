@@ -5,12 +5,10 @@ import java.sql.Date;
 public class ArgumentExchanger {
 
     public static Date exchangeToSQLDate(java.util.Date date) {
-        //TODO: Write
-        return null;
+        return new java.sql.Date(date.getTime());
     }
 
     public static java.util.Date exchangeFromSQLDate(Date date) {
-        //TODO: Write
-        return null;
+        return new java.util.Date(date.getTime());
     }
 }

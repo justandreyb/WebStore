@@ -14,14 +14,14 @@ public class UserServiceImpl implements UserService {
     private static final String USER_INFO = "user";
 
     private final DAOFactory factory = DAOFactory.getInstance();
+    private final UserDAO userDAO = factory.getUserDAO();
+    private static final String INVALID_ARGUMENT = "Invalid arguments";
 
     @Override
     public void registration(User user) throws ServiceException {
         if (!ArgumentParserUtil.isValidUser(user)) {
-            throw new ServiceException("Invalid arguments");
+            throw new ServiceException(INVALID_ARGUMENT);
         }
-
-        UserDAO userDAO = factory.getUserDAO();
         try {
             userDAO.addUser(user);
         } catch (DAOException e) {
@@ -30,10 +30,9 @@ public class UserServiceImpl implements UserService {
     }
 
     public User signIn(String login, String password) throws ServiceException {
-        if (!ArgumentParserUtil.isValidArguments(login, password)) {
-            throw new ServiceException("Invalid arguments");
+        if (!ArgumentParserUtil.areValidArguments(login, password)) {
+            throw new ServiceException(INVALID_ARGUMENT);
         }
-        UserDAO userDAO = factory.getUserDAO();
         User user = null;
         try {
             user = userDAO.getUser(login, password);
@@ -48,7 +47,6 @@ public class UserServiceImpl implements UserService {
         if (session == null) {
             throw new ServiceException("Session not found");
         }
-
         session.removeAttribute(USER_INFO);
 
         if (session.getAttributeNames().hasMoreElements()) {
@@ -58,11 +56,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateAccountInfo(int userId, User user) throws ServiceException {
-        if (!ArgumentParserUtil.isValidUser(user)) {
-            throw new ServiceException("Invalid arguments");
+        if (!ArgumentParserUtil.isValidArgument(userId)) {
+            throw new ServiceException(INVALID_ARGUMENT);
         }
-
-        UserDAO userDAO = factory.getUserDAO();
+        if (!ArgumentParserUtil.isValidUser(user)) {
+            throw new ServiceException(INVALID_ARGUMENT);
+        }
         try {
             userDAO.updateUser(userId, user);
         } catch (DAOException e) {

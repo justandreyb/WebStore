@@ -20,9 +20,9 @@ public class GetProductCommand extends StoreCommand {
         try {
             int id = Integer.parseInt(idParam);
             Product product = service.getProduct(id);
-            String categoryJSON = AnswerCreator.createJSONFromProduct(product);
+            String productJSON = AnswerCreator.createJSONFromProduct(product);
 
-            ResponseWriter.writeData(response, categoryJSON);
+            ResponseWriter.writeData(response, productJSON);
         } catch (ServiceException e) {
             log.warn(ERROR_MESSAGE, e);
             ResponseWriter.writeError(response, ERROR_MESSAGE);

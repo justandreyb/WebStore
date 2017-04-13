@@ -18,12 +18,10 @@ public interface ProductDAO {
     Product getProduct(int productId) throws DAOException;
     Product getProduct(String name, int categoryId) throws DAOException;
     List<Product> getProducts() throws DAOException;
-    List<Product> getProducts(String requestedName) throws DAOException;
-    List<Product> getProducts(int categoryId) throws DAOException;
-
+    List<Product> searchProduct(String requestedName) throws DAOException;
+    List<Product> getProductsForCategory(int categoryId) throws DAOException;
+    List<Product> getProductsForBrand(int brandId) throws DAOException;
     List<Product> getProductsForDiscount(int discountId) throws DAOException;
-
-    List<Thing> getThings(int categoryId) throws DAOException;
 
     void setProductAvailable(int productId, boolean available) throws DAOException;
 

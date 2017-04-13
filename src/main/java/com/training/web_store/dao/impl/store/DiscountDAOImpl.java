@@ -66,32 +66,29 @@ public class DiscountDAOImpl implements DiscountDAO {
 
     private static final String GET_DISCOUNTS_QUERY = "{call getDiscounts()}";
 
+    private static final String ERROR_ADDING = "Error during adding new entity";
+    private static final String ERROR_UPDATE = "Error during updating";
+    private static final String ERROR_DELETING = "Error during changing state";
+
     @Override
     public void addDiscount(Discount discount) throws DAOException {
         Connection connection = null;
         PreparedStatement statement = null;
         try {
             connection = dbConnector.getConnection();
-
-            connection.setAutoCommit(false);
-
             statement = connection.prepareStatement(ADD_DISCOUNT_QUERY);
 
             statement.setByte(1, discount.getValue());
-            statement.setDate(2, ArgumentExchanger.exchangeToSQLDate(discount.getStartDate()));
-            statement.setDate(3, ArgumentExchanger.exchangeToSQLDate(discount.getFinishDate()));
+            statement.setDate(2, (Date) discount.getStartDate());
+            statement.setDate(3, (Date) discount.getFinishDate());
 
             if (statement.executeUpdate() < 1) {
-                throw new DAOException("Error during adding new entity");
+                throw new DAOException(ERROR_ADDING);
             }
-
-            connection.commit();
-            connection.setAutoCommit(true);
-
         } catch (SQLException e) {
             throw new DAOException("Cannot get connection to DB", e);
         } finally {
-            dbConnector.closeConnection(connection);
+            dbConnector.closeConnection(connection, statement);
         }
     }
 
@@ -104,25 +101,18 @@ public class DiscountDAOImpl implements DiscountDAO {
             statement = connection.prepareStatement(UPDATE_DISCOUNT_QUERY);
 
             statement.setByte(1, discount.getValue());
-            statement.setDate(2, ArgumentExchanger.exchangeToSQLDate(discount.getStartDate()));
-            statement.setDate(3, ArgumentExchanger.exchangeToSQLDate(discount.getFinishDate()));
+            statement.setDate(2, (Date) discount.getStartDate());
+            statement.setDate(3, (Date) discount.getFinishDate());
             statement.setInt(4, discount.getId());
 
             if (statement.executeUpdate() < 1) {
-                throw new DAOException("Error during updating");
+                throw new DAOException(ERROR_UPDATE);
             }
 
         } catch (SQLException e) {
             throw new DAOException(e);
         } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException(e);
-            }
-            dbConnector.closeConnection(connection);
+            dbConnector.closeConnection(connection, statement);
         }
     }
 
@@ -160,21 +150,7 @@ public class DiscountDAOImpl implements DiscountDAO {
         } catch (SQLException e) {
             throw new DAOException(e);
         } finally {
-            try {
-                if (set != null) {
-                    set.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException(e);
-            }
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException(e);
-            }
-            dbConnector.closeConnection(connection);
+            dbConnector.closeConnection(connection, statement, set);
         }
     }
 
@@ -196,11 +172,15 @@ public class DiscountDAOImpl implements DiscountDAO {
             while (set.next()) {
                 Discount discount = new Discount();
 
-                int categoryId = set.getInt(DISCOUNT_ID);
+                int discountId = set.getInt(DISCOUNT_ID);
+                java.util.Date startDate = ArgumentExchanger.exchangeFromSQLDate(set.getDate(DISCOUNT_START_DATE));
+                java.util.Date finishDate = ArgumentExchanger.exchangeFromSQLDate(set.getDate(DISCOUNT_FINISH_DATE));
                 byte value = set.getByte(DISCOUNT_VALUE);
 
-                discount.setId(categoryId);
+                discount.setId(discountId);
                 discount.setValue(value);
+                discount.setStartDate(startDate);
+                discount.setFinishDate(finishDate);
 
                 discounts.add(discount);
             }
@@ -250,21 +230,7 @@ public class DiscountDAOImpl implements DiscountDAO {
         } catch (SQLException e) {
             throw new DAOException(e);
         } finally {
-            try {
-                if (set != null) {
-                    set.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException(e);
-            }
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException(e);
-            }
-            dbConnector.closeConnection(connection);
+            dbConnector.closeConnection(connection, statement, set);
         }
     }
 
@@ -279,20 +245,13 @@ public class DiscountDAOImpl implements DiscountDAO {
             statement.setInt(2, discountId);
 
             if (statement.executeUpdate() < 1) {
-                throw new DAOException("Error during changing state");
+                throw new DAOException(ERROR_DELETING);
             }
 
         } catch (SQLException e) {
             throw new DAOException(e);
         } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException(e);
-            }
-            dbConnector.closeConnection(connection);
+            dbConnector.closeConnection(connection, statement);
         }
     }
 }

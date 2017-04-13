@@ -18,9 +18,8 @@ public class AddImageCommand extends StoreCommand {
     public void execute(HttpServletRequest request, HttpServletResponse response) {
         String productParam = request.getParameter(PRODUCT_ID_PARAMETER);
         String thingParam = request.getParameter(THING_ID_PARAMETER);
-        String href = request.getParameter(HREF_PARAMETER);
         String realName = request.getParameter(REAL_NAME_PARAMETER);
-        //TODO: Write service correct
+
         try {
             if (productParam != null) {
                 int product = Integer.parseInt(productParam);

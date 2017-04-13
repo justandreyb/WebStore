@@ -20,7 +20,6 @@ public class CategoryDAOImpl implements CategoryDAO {
     private static final String CATEGORY_DESCRIPTION = "description";
     private static final String CATEGORY_IS_AVAILABLE = "is_available";
 
-    private static final int AVAILABLE_CATEGORY = 1;
     private static final String EMPTY_DESCRIPTION = null;
 
     private static final String ADD_CATEGORY_QUERY =
@@ -38,15 +37,7 @@ public class CategoryDAOImpl implements CategoryDAO {
             " WHERE " +
                 CATEGORY_ID + "=?";
 
-    private static final String GET_CATEGORY_QUERY =
-            "SELECT " +
-                CATEGORY_NAME + ", " +
-                CATEGORY_DESCRIPTION +
-            " FROM " +
-                DATABASE + "." + CATEGORY_TABLE +
-            " WHERE " +
-                CATEGORY_ID + "=? AND" +
-                CATEGORY_IS_AVAILABLE + "=" + AVAILABLE_CATEGORY;
+    private static final String GET_CATEGORY_QUERY = "{call getCategory(?)}";
 
     private static final String GET_CATEGORIES_QUERY = "{call getCategories()}";
 
@@ -56,6 +47,10 @@ public class CategoryDAOImpl implements CategoryDAO {
                 CATEGORY_IS_AVAILABLE + "=?" +
             " WHERE " +
                 CATEGORY_ID + "=?";
+
+    private static final String ERROR_ADDING = "Error during adding new entity";
+    private static final String ERROR_UPDATE = "Error during updating";
+    private static final String ERROR_DELETING = "Error during changing state";
 
     @Override
     public void addCategory(String name) throws DAOException {
@@ -68,23 +63,17 @@ public class CategoryDAOImpl implements CategoryDAO {
         PreparedStatement statement = null;
         try {
             connection = dbConnector.getConnection();
-
-            connection.setAutoCommit(false);
-
             statement = connection.prepareStatement(ADD_CATEGORY_QUERY);
 
             statement.setString(1, name);
+            //TODO: Mb just send null without check?
             if (description != null) {
                 statement.setString(2, description);
             }
 
             if (statement.executeUpdate() < 1) {
-                throw new DAOException("Error during adding new entity");
+                throw new DAOException(ERROR_ADDING);
             }
-
-            connection.commit();
-            connection.setAutoCommit(true);
-
         } catch (SQLException e) {
             throw new DAOException("Cannot get connection to DB", e);
         } finally {
@@ -105,7 +94,7 @@ public class CategoryDAOImpl implements CategoryDAO {
             statement.setInt(3, categoryId);
 
             if (statement.executeUpdate() < 1) {
-                throw new DAOException("Error during updating");
+                throw new DAOException(ERROR_UPDATE);
             }
 
         } catch (SQLException e) {
@@ -118,12 +107,12 @@ public class CategoryDAOImpl implements CategoryDAO {
     @Override
     public Category getCategory(int categoryId) throws DAOException {
         Connection connection = null;
-        PreparedStatement statement = null;
+        CallableStatement statement = null;
         ResultSet set = null;
 
         try {
             connection = dbConnector.getConnection();
-            statement = connection.prepareStatement(GET_CATEGORY_QUERY);
+            statement = connection.prepareCall(GET_CATEGORY_QUERY);
 
             statement.setInt(1, categoryId);
 
@@ -135,7 +124,6 @@ public class CategoryDAOImpl implements CategoryDAO {
                 category = new Category();
 
                 category.setId(categoryId);
-
                 String name = set.getString(CATEGORY_NAME);
                 String description = set.getString(CATEGORY_DESCRIPTION);
 
@@ -172,9 +160,11 @@ public class CategoryDAOImpl implements CategoryDAO {
 
                 int categoryId = set.getInt(CATEGORY_ID);
                 String name = set.getString(CATEGORY_NAME);
+                String description = set.getString(CATEGORY_DESCRIPTION);
 
                 category.setId(categoryId);
                 category.setName(name);
+                category.setDescription(description);
 
                 categories.add(category);
             }
@@ -198,7 +188,7 @@ public class CategoryDAOImpl implements CategoryDAO {
             statement.setInt(2, categoryId);
 
             if (statement.executeUpdate() < 1) {
-                throw new DAOException("Error during changing state");
+                throw new DAOException(ERROR_DELETING);
             }
 
         } catch (SQLException e) {

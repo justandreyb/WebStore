@@ -18,6 +18,7 @@ public class AddBrandCommand extends StoreCommand {
         String description = request.getParameter(DESCRIPTION_PARAMETER);
 
         try {
+            //TODO: Change to 1 method
             if (description != null) {
                 service.addBrand(name, description);
             } else {

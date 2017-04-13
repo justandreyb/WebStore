@@ -24,6 +24,7 @@ public class AddProductCommand extends StoreCommand {
         try {
             double price = Double.parseDouble(priceParam);
             int category = Integer.parseInt(categoryParam);
+            //TODO: Change to 1 method
             if (discountParam != null) {
                 int discount = Integer.parseInt(discountParam);
                 service.addProduct(name, price, category, discount);

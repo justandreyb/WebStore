@@ -10,7 +10,8 @@ public interface PhotoDAO {
 
     void addProductPhoto(int productId, String realName, String href) throws DAOException;
 
-    List<Photo> getPhotos(int thingId) throws DAOException;
+    List<Photo> getPhotosForThing(int thingId) throws DAOException;
+    List<Photo> getPhotosForProduct(int productId) throws DAOException;
 
     void setAvailable(int photoId, boolean available) throws DAOException;
 }

@@ -20,7 +20,6 @@ public class BrandDAOImpl implements BrandDAO {
     private static final String BRAND_IS_AVAILABLE = "is_available";
     private static final String BRAND_DESCRIPTION = "description";
 
-    private static final int AVAILABLE_BRAND = 1;
     private static final String EMPTY_DESCRIPTION = null;
 
     private static final String ADD_BRAND_QUERY =
@@ -38,15 +37,7 @@ public class BrandDAOImpl implements BrandDAO {
             " WHERE " +
                 BRAND_ID + "=?";
 
-    private static final String GET_BRAND_QUERY =
-            "SELECT " +
-                BRAND_NAME + ", " +
-                BRAND_DESCRIPTION +
-            " FROM " +
-                DATABASE + "." + BRAND_TABLE +
-            " WHERE " +
-                BRAND_ID + "=? AND" +
-                BRAND_IS_AVAILABLE + "=" + AVAILABLE_BRAND;
+    private static final String GET_BRAND_QUERY = "{call getBrand(?)}";
 
     private static final String GET_BRANDS_QUERY = "{call getBrands()}";
 
@@ -56,6 +47,10 @@ public class BrandDAOImpl implements BrandDAO {
                 BRAND_IS_AVAILABLE + "=?" +
             " WHERE " +
                 BRAND_ID + "=?";
+
+    private static final String ERROR_ADDING = "Error during adding new entity";
+    private static final String ERROR_UPDATE = "Error during updating";
+    private static final String ERROR_DELETING = "Error during changing state";
 
     @Override
     public void addBrand(String name) throws DAOException {
@@ -68,9 +63,6 @@ public class BrandDAOImpl implements BrandDAO {
         PreparedStatement statement = null;
         try {
             connection = dbConnector.getConnection();
-
-            connection.setAutoCommit(false);
-
             statement = connection.prepareStatement(ADD_BRAND_QUERY);
 
             statement.setString(1, name);
@@ -79,12 +71,8 @@ public class BrandDAOImpl implements BrandDAO {
             }
 
             if (statement.executeUpdate() < 1) {
-                throw new DAOException("Error during adding new entity");
+                throw new DAOException(ERROR_ADDING);
             }
-
-            connection.commit();
-            connection.setAutoCommit(true);
-
         } catch (SQLException e) {
             throw new DAOException("Cannot get connection to DB", e);
         } finally {
@@ -105,7 +93,7 @@ public class BrandDAOImpl implements BrandDAO {
             statement.setInt(3, brandId);
 
             if (statement.executeUpdate() < 1) {
-                throw new DAOException("Error during updating");
+                throw new DAOException(ERROR_UPDATE);
             }
 
         } catch (SQLException e) {
@@ -118,18 +106,18 @@ public class BrandDAOImpl implements BrandDAO {
     @Override
     public Brand getBrand(int brandId) throws DAOException {
         Connection connection = null;
-        PreparedStatement statement = null;
+        CallableStatement statement = null;
         ResultSet set = null;
+        Brand brand = null;
 
         try {
             connection = dbConnector.getConnection();
-            statement = connection.prepareStatement(GET_BRAND_QUERY);
+            statement = connection.prepareCall(GET_BRAND_QUERY);
 
             statement.setInt(1, brandId);
 
             set = statement.executeQuery();
 
-            Brand brand = null;
 
             while (set.next()) {
                 brand = new Brand();
@@ -197,7 +185,7 @@ public class BrandDAOImpl implements BrandDAO {
             statement.setInt(2, brandId);
 
             if (statement.executeUpdate() < 1) {
-                throw new DAOException("Error during changing state");
+                throw new DAOException(ERROR_DELETING);
             }
 
         } catch (SQLException e) {

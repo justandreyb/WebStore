@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 public class GetProductsCommand extends StoreCommand {
-    private static final String ID_PARAMETER = "id";
     private static final String ERROR_MESSAGE = "Something went wrong while getting products";
 
     @Override

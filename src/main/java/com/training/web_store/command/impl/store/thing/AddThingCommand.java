@@ -21,7 +21,7 @@ public class AddThingCommand extends StoreCommand {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) {
         String name = request.getParameter(NAME_PARAMETER);
-        String category = request.getParameter(CATEGORY_PARAMETER);
+        String categoryParam = request.getParameter(CATEGORY_PARAMETER);
         String description = request.getParameter(DESCRIPTION_PARAMETER);
         String creationDateParam = request.getParameter(CREATION_DATE_PARAMETER);
         String brandParam = request.getParameter(BRAND_PARAMETER);
@@ -30,8 +30,9 @@ public class AddThingCommand extends StoreCommand {
             SimpleDateFormat dateFormat = new SimpleDateFormat();
             Date creationDate = dateFormat.parse(creationDateParam);
             int brand = Integer.parseInt(brandParam);
+            int category = Integer.parseInt(categoryParam);
 
-            service.addThing(name, category, description, creationDate, brand);
+            service.addThing(name, description, creationDate, category, brand);
         } catch (ServiceException | ParseException e) {
             log.warn(ERROR_MESSAGE, e);
             ResponseWriter.writeError(response, ERROR_MESSAGE);

@@ -33,6 +33,7 @@ public class Controller extends HttpServlet {
     }
 
     private void analyzeRequest(HttpServletRequest request, HttpServletResponse response) {
+        //TODO: Remove
         log.debug(request.getRequestURI());
         if (hasCommand(request)) {
             performCommand(request, response);

@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 public class GetReviewCommand extends StoreCommand {
     private static final String ID_PARAMETER = "thingId";
-    private static final String ERROR_MESSAGE = "Something went wrong while getting product";
+    private static final String ERROR_MESSAGE = "Something went wrong while getting review";
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) {

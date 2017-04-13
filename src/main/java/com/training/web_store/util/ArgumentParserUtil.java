@@ -2,6 +2,8 @@ package com.training.web_store.util;
 
 import com.training.web_store.bean.account.User;
 
+import java.util.Date;
+
 public class ArgumentParserUtil {
 
     public static boolean isValidArgument(String argument) {
@@ -14,7 +16,19 @@ public class ArgumentParserUtil {
         return result;
     }
 
-    public static boolean isValidArguments(String ... arguments) {
+    public static boolean isValidArgument(Date date) {
+        return date != null && date.getTime() != 0;
+    }
+
+    public static boolean isValidArgument(int number) {
+        return number > 0;
+    }
+
+    public static boolean isValidArgument(double number) {
+        return number > 0;
+    }
+
+    public static boolean areValidArguments(String ... arguments) {
         boolean validArguments = true;
         for (String argument : arguments) {
             validArguments = isValidArgument(argument);
@@ -23,18 +37,33 @@ public class ArgumentParserUtil {
         return validArguments;
     }
 
+    public static boolean areValidArguments(int ... numbers) {
+        boolean validArguments = true;
+        for (int argument : numbers) {
+            validArguments = isValidArgument(argument);
+        }
+
+        return validArguments;
+    }
+
+    public static boolean areValidArguments(Date ... dates) {
+        boolean validArguments = true;
+        for (Date argument : dates) {
+            validArguments = isValidArgument(argument);
+        }
+
+        return validArguments;
+    }
+
     public static boolean isValidPassword(String password) {
         boolean result = true;
-
+        //TODO: Write
         return result;
     }
 
     public static boolean isValidLogin(String email) {
         boolean valid = true;
-
-        if (!valid) {
-            return false;
-        }
+        //TODO: Wrie
 
         if (!email.contains("@")) {
             valid = false;
@@ -44,6 +73,16 @@ public class ArgumentParserUtil {
     }
 
     public static boolean isValidUser(User user) {
-        return isValidArguments(user.getEmail(), user.getPassword(), user.getFirstName(), user.getLastName(), user.getLocale());
+        boolean result = true;
+        if (!isValidLogin(user.getEmail())) {
+            result = false;
+        }
+        if (!isValidPassword(user.getPassword())) {
+            result = false;
+        }
+        if (!areValidArguments(user.getFirstName(), user.getLastName(), user.getLocale())) {
+            result = false;
+        }
+        return result;
     }
 }

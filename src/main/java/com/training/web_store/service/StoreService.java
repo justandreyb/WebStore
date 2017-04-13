@@ -56,12 +56,12 @@ public interface StoreService {
     void addProduct(String name, double price, int categoryId, int discountId) throws ServiceException;
 
     void addThingToProduct(int productId, int thingId) throws ServiceException;
-    void removeThing(int productId, int thingId) throws ServiceException;
+    void deleteThingFromProduct(int productId, int thingId) throws ServiceException;
 
     Product getProduct(int productId) throws ServiceException;
     Product getProduct(String name, int categoryId) throws ServiceException;
     List<Product> getProducts() throws ServiceException;
-    List<Product> getProducts(String requestedProduct) throws ServiceException;
+    List<Product> searchProduct(String requestedProduct) throws ServiceException;
     List<Product> getProductsForCategory(int categoryId) throws ServiceException;
     List<Product> getProductsForBrand(int brandId) throws ServiceException;
 
@@ -72,26 +72,25 @@ public interface StoreService {
 
     /* --------------------------------------------------------------------- */
 
-    void addThing(String name, String category, String description, Date creationDate, int brandId) throws ServiceException;
+    void addThing(String name, String description, Date creationDate, int categoryId, int brandId) throws ServiceException;
 
     Thing getThing(int thingId) throws ServiceException;
+    List<Thing> getThings() throws ServiceException;
 
-    void updateThing(int thingId, String name, String description, Date creationDate) throws ServiceException;
+    void updateThing(int thingId, String name, String description, Date creationDate, int categoryId, int brandId) throws ServiceException;
 
     void deleteThing(int thingId) throws ServiceException;
 
     /* --------------------------------------------------------------------- */
 
     void addRating(int userId, int thingId, byte value) throws ServiceException;
-    Rating getRating(int thingId) throws ServiceException;
-    void deleteRating(int ratingId) throws ServiceException;
+    byte getRating(int thingId) throws ServiceException;
+    void deleteRating(int thingId, int userId) throws ServiceException;
 
     /* --------------------------------------------------------------------- */
 
-    //TODO: Rework
     void addReview(int thingId, String review) throws ServiceException;
-    Review getReview(int thingId) throws ServiceException;
-    List<Review> getReviews() throws ServiceException;
-    void deleteReview(int reviewId) throws ServiceException;
+    String getReview(int thingId) throws ServiceException;
+    void deleteReview(int thingId) throws ServiceException;
 
 }

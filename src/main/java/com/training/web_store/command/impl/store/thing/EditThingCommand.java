@@ -23,7 +23,7 @@ public class EditThingCommand extends StoreCommand {
     public void execute(HttpServletRequest request, HttpServletResponse response) {
         String idParam = request.getParameter(ID_PARAMETER);
         String name = request.getParameter(NAME_PARAMETER);
-        String category = request.getParameter(CATEGORY_PARAMETER);
+        String categoryParam = request.getParameter(CATEGORY_PARAMETER);
         String description = request.getParameter(DESCRIPTION_PARAMETER);
         String creationDateParam = request.getParameter(CREATION_DATE_PARAMETER);
         String brandParam = request.getParameter(BRAND_PARAMETER);
@@ -32,6 +32,7 @@ public class EditThingCommand extends StoreCommand {
             int id = Integer.parseInt(idParam);
             SimpleDateFormat dateFormat = new SimpleDateFormat();
             Date creationDate = dateFormat.parse(creationDateParam);
+            int category = Integer.parseInt(categoryParam);
             int brand = Integer.parseInt(brandParam);
 
             service.updateThing(id, name, description, creationDate, category, brand);

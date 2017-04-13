@@ -698,6 +698,7 @@ function handleDeleteDiscount() {
             /* ---- Forms ----- */
 
 function getRatingSettingForm() {
+    //TODO: Collected data
     getForm("Rating", "set-rating", null);
 }
 

@@ -11,15 +11,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 public class GetThingsCommand extends StoreCommand {
-    private static final String ID_PARAMETER = "id";
     private static final String ERROR_MESSAGE = "Something went wrong while getting product";
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) {
-        String idParam = request.getParameter(ID_PARAMETER);
-
         try {
-            int id = Integer.parseInt(idParam);
             List<Thing> things = service.getThings();
             String thingsJSON = AnswerCreator.createJSONFromThings(things);
 

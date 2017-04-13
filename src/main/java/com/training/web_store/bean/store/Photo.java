@@ -5,6 +5,7 @@ public class Photo {
     private String href;
     private String realName;
     private int thingId;
+    private int productId;
 
     public Photo() {
     }
@@ -39,5 +40,13 @@ public class Photo {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public void setProductId(int productId) {
+        this.productId = productId;
+    }
+
+    public int getProductId() {
+        return productId;
     }
 }
