@@ -8,6 +8,7 @@ import com.training.web_store.service.impl.InteractionServiceImpl;
 import com.training.web_store.service.impl.StoreServiceImpl;
 import com.training.web_store.service.impl.UserServiceImpl;
 import com.training.web_store.util.database.DBConnector;
+import com.training.web_store.util.exception.StorageException;
 
 public class ServiceFactory {
     private static final ServiceFactory factory = new ServiceFactory();
@@ -21,20 +22,22 @@ public class ServiceFactory {
 
     public void init() throws ServiceException {
         DBConnector connector = DBConnector.getInstance();
-//        try {
+        try {
             connector.init();
-       /* } catch (ProjectUtilException e) {
+        } catch (StorageException e) {
             throw new ServiceException(e);
-        }*/
+        }
+
     }
 
     public void close() throws ServiceException {
         DBConnector connector = DBConnector.getInstance();
-//        try {
+        try {
             connector.destroy();
-        /*} catch (ProjectUtilException e) {
+        } catch (StorageException e) {
             throw new ServiceException(e);
-        }*/
+        }
+
     }
 
     public static ServiceFactory getInstance() {

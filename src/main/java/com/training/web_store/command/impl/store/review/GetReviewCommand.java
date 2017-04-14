@@ -2,7 +2,6 @@ package com.training.web_store.command.impl.store.review;
 
 import com.training.util.AnswerCreator;
 import com.training.util.ResponseWriter;
-import com.training.web_store.bean.store.Review;
 import com.training.web_store.command.impl.StoreCommand;
 import com.training.web_store.service.exception.ServiceException;
 
@@ -19,7 +18,7 @@ public class GetReviewCommand extends StoreCommand {
 
         try {
             int id = Integer.parseInt(idParam);
-            Review review = service.getReview(id);
+            String review = service.getReview(id);
             String reviewJSON = AnswerCreator.createJSONFromReview(review);
 
             ResponseWriter.writeData(response, reviewJSON);

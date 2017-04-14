@@ -8,6 +8,7 @@ import com.training.web_store.service.StoreService;
 import com.training.web_store.service.exception.ServiceException;
 import com.training.web_store.util.ArgumentExchanger;
 import com.training.web_store.util.ArgumentParserUtil;
+import com.training.web_store.util.exception.StorageException;
 
 import java.util.Date;
 import java.util.List;
@@ -31,7 +32,7 @@ public class StoreServiceImpl implements StoreService {
         }
         try {
             brandDAO.addBrand(name);
-        } catch (DAOException e) {
+        } catch (DAOException | StorageException e) {
             throw new ServiceException(e);
         }
     }
@@ -43,7 +44,7 @@ public class StoreServiceImpl implements StoreService {
         }
         try {
             brandDAO.addBrand(name, description);
-        } catch (DAOException e) {
+        } catch (DAOException | StorageException e) {
             throw new ServiceException(e);
         }
     }
@@ -55,7 +56,7 @@ public class StoreServiceImpl implements StoreService {
         }
         try {
             return brandDAO.getBrand(brandId);
-        } catch (DAOException e) {
+        } catch (DAOException | StorageException e) {
             throw new ServiceException(e);
         }
     }
@@ -64,7 +65,7 @@ public class StoreServiceImpl implements StoreService {
     public List<Brand> getBrands() throws ServiceException {
         try {
             return brandDAO.getBrands();
-        } catch (DAOException e) {
+        } catch (DAOException | StorageException e) {
             throw new ServiceException(e);
         }
     }
@@ -79,7 +80,7 @@ public class StoreServiceImpl implements StoreService {
         }
         try {
             brandDAO.updateBrand(brandId, name, description);
-        } catch (DAOException e) {
+        } catch (DAOException | StorageException e) {
             throw new ServiceException(e);
         }
     }
@@ -91,7 +92,7 @@ public class StoreServiceImpl implements StoreService {
         }
         try {
             brandDAO.setBrandAvailable(brandId, false);
-        } catch (DAOException e) {
+        } catch (DAOException | StorageException e) {
             throw new ServiceException(e);
         }
     }
@@ -105,7 +106,7 @@ public class StoreServiceImpl implements StoreService {
         }
         try {
             categoryDAO.addCategory(name);
-        } catch (DAOException e) {
+        } catch (DAOException | StorageException e) {
             throw new ServiceException(e);
         }
     }
@@ -117,7 +118,7 @@ public class StoreServiceImpl implements StoreService {
         }
         try {
             categoryDAO.addCategory(name, description);
-        } catch (DAOException e) {
+        } catch (DAOException | StorageException e) {
             throw new ServiceException(e);
         }
     }
@@ -129,7 +130,7 @@ public class StoreServiceImpl implements StoreService {
         }
         try {
             return categoryDAO.getCategory(categoryId);
-        } catch (DAOException e) {
+        } catch (DAOException | StorageException e) {
             throw new ServiceException(e);
         }
     }
@@ -138,7 +139,7 @@ public class StoreServiceImpl implements StoreService {
     public List<Category> getCategories() throws ServiceException {
         try {
             return categoryDAO.getCategories();
-        } catch (DAOException e) {
+        } catch (DAOException | StorageException e) {
             throw new ServiceException(e);
         }
     }
@@ -153,7 +154,7 @@ public class StoreServiceImpl implements StoreService {
         }
         try {
             categoryDAO.updateCategory(categoryId, name, description);
-        } catch (DAOException e) {
+        } catch (DAOException | StorageException e) {
             throw new ServiceException(e);
         }
     }
@@ -165,7 +166,7 @@ public class StoreServiceImpl implements StoreService {
         }
         try {
             categoryDAO.setAvailable(categoryId, false);
-        } catch (DAOException e) {
+        } catch (DAOException | StorageException e) {
             throw new ServiceException(e);
         }
     }
@@ -185,7 +186,7 @@ public class StoreServiceImpl implements StoreService {
         Discount discount = new Discount(value, startDateSQL, finishDateSQL);
         try {
             discountDAO.addDiscount(discount);
-        } catch (DAOException e) {
+        } catch (DAOException | StorageException e) {
             throw new ServiceException(e);
         }
     }
@@ -203,7 +204,7 @@ public class StoreServiceImpl implements StoreService {
         Discount discount = new Discount(value, startDateSQL, finishDateSQL);
         try {
             discountDAO.updateDiscount(id, discount);
-        } catch (DAOException e) {
+        } catch (DAOException | StorageException e) {
             throw new ServiceException(e);
         }
     }
@@ -222,7 +223,7 @@ public class StoreServiceImpl implements StoreService {
             discount.setFinishDate(finishDate);
 
             return discount;
-        } catch (DAOException e) {
+        } catch (DAOException | StorageException e) {
             throw new ServiceException(e);
         }
     }
@@ -238,7 +239,7 @@ public class StoreServiceImpl implements StoreService {
                 discount.setFinishDate(finishDate);
             }
             return discounts;
-        } catch (DAOException e) {
+        } catch (DAOException | StorageException e) {
             throw new ServiceException(e);
         }
     }
@@ -258,7 +259,7 @@ public class StoreServiceImpl implements StoreService {
                 discount.setFinishDate(finishDate);
             }
             return discounts;
-        } catch (DAOException e) {
+        } catch (DAOException | StorageException e) {
             throw new ServiceException(e);
         }
     }
@@ -270,7 +271,7 @@ public class StoreServiceImpl implements StoreService {
         }
         try {
             discountDAO.setDiscountAvailable(discountId, false);
-        } catch (DAOException e) {
+        } catch (DAOException | StorageException e) {
             throw new ServiceException(e);
         }
     }
@@ -288,7 +289,7 @@ public class StoreServiceImpl implements StoreService {
         //TODO: create storagePath here !
         try {
             photoDAO.addThingPhoto(thingId, name, name);
-        } catch (DAOException e) {
+        } catch (DAOException | StorageException e) {
             throw new ServiceException(e);
         }
     }
@@ -304,7 +305,7 @@ public class StoreServiceImpl implements StoreService {
         //TODO: create storagePath here !
         try {
             photoDAO.addProductPhoto(productId, name, name);
-        } catch (DAOException e) {
+        } catch (DAOException | StorageException e) {
             throw new ServiceException(e);
         }
     }
@@ -316,7 +317,7 @@ public class StoreServiceImpl implements StoreService {
         }
         try {
             return photoDAO.getPhotosForThing(thingId);
-        } catch (DAOException e) {
+        } catch (DAOException | StorageException e) {
             throw new ServiceException(e);
         }
     }
@@ -328,7 +329,7 @@ public class StoreServiceImpl implements StoreService {
         }
         try {
             photoDAO.setAvailable(photoId, false);
-        } catch (DAOException e) {
+        } catch (DAOException | StorageException e) {
             throw new ServiceException(e);
         }
     }
@@ -348,7 +349,7 @@ public class StoreServiceImpl implements StoreService {
         }
         try {
             productDAO.addProduct(name, price, categoryId);
-        } catch (DAOException e) {
+        } catch (DAOException | StorageException e) {
             throw new ServiceException(e);
         }
     }
@@ -366,7 +367,7 @@ public class StoreServiceImpl implements StoreService {
         }
         try {
             productDAO.addProduct(name, price, categoryId, discountId);
-        } catch (DAOException e) {
+        } catch (DAOException | StorageException e) {
             throw new ServiceException(e);
         }
     }
@@ -378,7 +379,7 @@ public class StoreServiceImpl implements StoreService {
         }
         try {
             productDAO.addThing(productId, thingId);
-        } catch (DAOException e) {
+        } catch (DAOException | StorageException e) {
             throw new ServiceException(e);
         }
     }
@@ -390,7 +391,7 @@ public class StoreServiceImpl implements StoreService {
         }
         try {
             productDAO.removeThing(productId, thingId);
-        } catch (DAOException e) {
+        } catch (DAOException | StorageException e) {
             throw new ServiceException(e);
         }
     }
@@ -411,7 +412,7 @@ public class StoreServiceImpl implements StoreService {
             }
             product.setThings(things);
             return product;
-        } catch (DAOException e) {
+        } catch (DAOException | StorageException e) {
             throw new ServiceException(e);
         }
     }
@@ -436,7 +437,7 @@ public class StoreServiceImpl implements StoreService {
             }
             product.setThings(things);
             return product;
-        } catch (DAOException e) {
+        } catch (DAOException | StorageException e) {
             throw new ServiceException(e);
         }
     }
@@ -452,7 +453,7 @@ public class StoreServiceImpl implements StoreService {
                 product.setThings(things);
             }
             return products;
-        } catch (DAOException e) {
+        } catch (DAOException | StorageException e) {
             throw new ServiceException(e);
         }
     }
@@ -471,7 +472,7 @@ public class StoreServiceImpl implements StoreService {
                 product.setThings(things);
             }
             return products;
-        } catch (DAOException e) {
+        } catch (DAOException | StorageException e) {
             throw new ServiceException(e);
         }
     }
@@ -490,7 +491,7 @@ public class StoreServiceImpl implements StoreService {
                 product.setThings(things);
             }
             return products;
-        } catch (DAOException e) {
+        } catch (DAOException | StorageException e) {
             throw new ServiceException(e);
         }
     }
@@ -509,7 +510,7 @@ public class StoreServiceImpl implements StoreService {
                 product.setThings(things);
             }
             return products;
-        } catch (DAOException e) {
+        } catch (DAOException | StorageException e) {
             throw new ServiceException(e);
         }
     }
@@ -527,7 +528,7 @@ public class StoreServiceImpl implements StoreService {
         }
         try {
             productDAO.updateProduct(productId, name, price, categoryId);
-        } catch (DAOException e) {
+        } catch (DAOException | StorageException e) {
             throw new ServiceException(e);
         }
     }
@@ -545,7 +546,7 @@ public class StoreServiceImpl implements StoreService {
         }
         try {
             productDAO.updateProduct(productId, name, price, categoryId, discountId);
-        } catch (DAOException e) {
+        } catch (DAOException | StorageException e) {
             throw new ServiceException(e);
         }
     }
@@ -557,7 +558,7 @@ public class StoreServiceImpl implements StoreService {
         }
         try {
             productDAO.setProductAvailable(productId, false);
-        } catch (DAOException e) {
+        } catch (DAOException | StorageException e) {
             throw new ServiceException(e);
         }
     }
@@ -579,7 +580,7 @@ public class StoreServiceImpl implements StoreService {
         Thing thing = new Thing(name, description, creationDateSQL);
         try {
             thingDAO.addThing(thing, categoryId, brandId);
-        } catch (DAOException e) {
+        } catch (DAOException | StorageException e) {
             throw new ServiceException(e);
         }
     }
@@ -591,7 +592,7 @@ public class StoreServiceImpl implements StoreService {
         }
         try {
             return thingDAO.getThing(thingId);
-        } catch (DAOException e) {
+        } catch (DAOException | StorageException e) {
             throw new ServiceException(e);
         }
     }
@@ -600,7 +601,7 @@ public class StoreServiceImpl implements StoreService {
     public List<Thing> getThings() throws ServiceException {
         try {
             return thingDAO.getThings();
-        } catch (DAOException e) {
+        } catch (DAOException | StorageException e) {
             throw new ServiceException(e);
         }
     }
@@ -619,7 +620,7 @@ public class StoreServiceImpl implements StoreService {
         try {
             java.sql.Date creationDateSQL = new java.sql.Date(creationDate.getTime());
             thingDAO.updateThing(thingId, name, description, creationDateSQL, categoryId, brandId);
-        } catch (DAOException e) {
+        } catch (DAOException | StorageException e) {
             throw new ServiceException(e);
         }
     }
@@ -631,7 +632,7 @@ public class StoreServiceImpl implements StoreService {
         }
         try {
             thingDAO.setThingAvailable(thingId, false);
-        } catch (DAOException e) {
+        } catch (DAOException | StorageException e) {
             throw new ServiceException(e);
         }
     }
@@ -645,7 +646,7 @@ public class StoreServiceImpl implements StoreService {
         }
         try {
             thingDAO.addRating(userId, thingId, value);
-        } catch (DAOException e) {
+        } catch (DAOException | StorageException e) {
             throw new ServiceException(e);
         }
     }
@@ -657,7 +658,7 @@ public class StoreServiceImpl implements StoreService {
         }
         try {
             return thingDAO.getRating(thingId);
-        } catch (DAOException e) {
+        } catch (DAOException | StorageException e) {
             throw new ServiceException(e);
         }
     }
@@ -669,7 +670,7 @@ public class StoreServiceImpl implements StoreService {
         }
         try {
             thingDAO.deleteRating(thingId, userId);
-        } catch (DAOException e) {
+        } catch (DAOException | StorageException e) {
             throw new ServiceException(e);
         }
     }
@@ -686,7 +687,7 @@ public class StoreServiceImpl implements StoreService {
         }
         try {
             thingDAO.addThingReview(thingId, review);
-        } catch (DAOException e) {
+        } catch (DAOException | StorageException e) {
             throw new ServiceException(e);
         }
     }
@@ -698,7 +699,7 @@ public class StoreServiceImpl implements StoreService {
         }
         try {
             return thingDAO.getThingReview(thingId);
-        } catch (DAOException e) {
+        } catch (DAOException | StorageException e) {
             throw new ServiceException(e);
         }
     }
@@ -710,7 +711,7 @@ public class StoreServiceImpl implements StoreService {
         }
         try {
             thingDAO.deleteThingReview(thingId);
-        } catch (DAOException e) {
+        } catch (DAOException | StorageException e) {
             throw new ServiceException(e);
         }
     }

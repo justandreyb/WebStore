@@ -1,5 +1,6 @@
 package com.training.web_store.util.database;
 
+import com.training.web_store.util.exception.StorageException;
 import org.apache.log4j.Logger;
 
 import java.sql.*;
@@ -7,7 +8,6 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-//TODO: Check and rework
 public class DBConnector {
     private static final DBConnector instance = new DBConnector();
 
@@ -26,7 +26,7 @@ public class DBConnector {
 
     }
 
-    private void initializeProperties() /*throws ProjectUtilException*/ {
+    private void initializeProperties() throws StorageException {
         DatabaseResourcesMapper resourcesMapper = DatabaseResourcesMapper.getInstance();
 
         this.driverName = resourcesMapper.getProperty("db.driver");
@@ -38,20 +38,21 @@ public class DBConnector {
         } catch (NumberFormatException e) {
             poolSize = 5;
         }
+
     }
 
     public static DBConnector getInstance() {
         return instance;
     }
 
-    public void init() /*throws ProjectUtilException*/ {
+    public void init() throws StorageException {
         initializeProperties();
 
         try {
             Class.forName(driverName);
         } catch (ClassNotFoundException exception) {
             log.fatal("JDBC error : ", exception);
-//            throw new ProjectUtilException("Problem with connection to JDBC", exception);
+            throw new StorageException("Problem with connection to JDBC", exception);
         }
         connections = new ArrayBlockingQueue<Connection>(poolSize);
         usedConnections = new CopyOnWriteArrayList<Connection>();
@@ -62,46 +63,36 @@ public class DBConnector {
                 connection = DriverManager.getConnection(url, user, password);
             } catch (SQLException exception) {
                 log.fatal("JDBC error : ", exception);
-//                throw new ProjectUtilException("Problem with establishing connection", exception);
-                return;
+                throw new StorageException("Problem with establishing connection", exception);
             }
             connections.add(connection);
         }
-        log.info("Connection initialized.");
+        log.debug("Connection initialized.");
     }
 
-    public void destroy() /*throws ProjectUtilException*/ {
-
+    public void destroy() throws StorageException {
         for (Connection connection : connections) {
             try {
                 connection.close();
             } catch (SQLException exception) {
                 log.warn("Problem with closing connection : ", exception);
-                //       TODO:     throw new ProjectUtilException(e);
-            }
-        }
-
-        for (Connection connection : usedConnections) {
-            try {
-                connection.close();
-            } catch (SQLException exception) {
-                log.warn("Problem with closing connection : ", exception);
+                throw new StorageException(exception);
             }
         }
     }
 
-    public Connection getConnection() /*throws ProjectUtilException*/ {
+    public Connection getConnection() throws StorageException {
         Connection connection = null;
         try {
             connection = connections.take();
             usedConnections.add(connection);
         } catch (InterruptedException e) {
-//       TODO:     throw new ProjectUtilException(e);
+            throw new StorageException(e);
         }
         return connection;
     }
 
-    public void closeConnection(Connection connection) /*throws ProjectUtilException*/ {
+    public void closeConnection(Connection connection) throws StorageException {
         if (connection != null) {
             connections.add(connection);
             usedConnections.remove(connection);
@@ -110,24 +101,24 @@ public class DBConnector {
         }
     }
 
-    public void closeConnection(Connection connection, Statement statement) /*throws ProjectUtilException*/ {
+    public void closeConnection(Connection connection, Statement statement) throws StorageException {
         try {
             if (statement != null) {
                 statement.close();
             }
         } catch (SQLException e) {
-            //       TODO:     throw new ProjectUtilException(e);
+            throw new StorageException(e);
         }
         closeConnection(connection);
     }
 
-    public void closeConnection(Connection connection, Statement statement, ResultSet set)/* throws ProjectUtilException*/ {
+    public void closeConnection(Connection connection, Statement statement, ResultSet set) throws StorageException {
         try {
             if (set != null) {
                 set.close();
             }
         } catch (SQLException e) {
-            //       TODO:     throw new ProjectUtilException(e);
+            throw new StorageException(e);
         }
         closeConnection(connection, statement);
     }

@@ -5,6 +5,7 @@ import com.training.web_store.dao.ThingDAO;
 import com.training.web_store.dao.exception.DAOException;
 import com.training.web_store.util.ArgumentExchanger;
 import com.training.web_store.util.database.DBConnector;
+import com.training.web_store.util.exception.StorageException;
 
 import java.sql.*;
 import java.util.LinkedList;
@@ -42,7 +43,7 @@ public class ThingDAOImpl implements ThingDAO {
 
     private static final String GET_THING_QUERY = "{call getThing(?)}";
 
-    private static final String GET_THINGS_QUERY = "{call getThings(?)}";
+    private static final String GET_THINGS_QUERY = "{call getThings()}";
 
     private static final String GET_THINGS_FOR_PRODUCT_QUERY = "{call getThingsForProduct(?)}";
 
@@ -101,7 +102,7 @@ public class ThingDAOImpl implements ThingDAO {
     private static final String ERROR_DELETING = "Error during deleting";
 
     @Override
-    public void addThing(Thing thing, int categoryId, int brandId) throws DAOException {
+    public void addThing(Thing thing, int categoryId, int brandId) throws DAOException, StorageException {
         Connection connection = null;
         PreparedStatement statement = null;
         try {
@@ -127,7 +128,7 @@ public class ThingDAOImpl implements ThingDAO {
     }
 
     @Override
-    public Thing getThing(int thingId) throws DAOException {
+    public Thing getThing(int thingId) throws DAOException, StorageException {
         Connection connection = null;
         CallableStatement statement = null;
         ResultSet set = null;
@@ -168,7 +169,7 @@ public class ThingDAOImpl implements ThingDAO {
     }
 
     @Override
-    public List<Thing> getThings() throws DAOException {
+    public List<Thing> getThings() throws DAOException, StorageException {
         Connection connection = null;
         CallableStatement statement = null;
         ResultSet set = null;
@@ -212,7 +213,7 @@ public class ThingDAOImpl implements ThingDAO {
     }
 
     @Override
-    public List<Thing> getThingsForProduct(int productId) throws DAOException {
+    public List<Thing> getThingsForProduct(int productId) throws DAOException, StorageException {
         Connection connection = null;
         CallableStatement statement = null;
         ResultSet set = null;
@@ -258,7 +259,7 @@ public class ThingDAOImpl implements ThingDAO {
     }
 
     @Override
-    public void updateThing(int thingId, String name, String description, Date creationDate, int categoryId, int brandId) throws DAOException {
+    public void updateThing(int thingId, String name, String description, Date creationDate, int categoryId, int brandId) throws DAOException, StorageException {
         Connection connection = null;
         CallableStatement statement = null;
         try {
@@ -281,7 +282,7 @@ public class ThingDAOImpl implements ThingDAO {
     }
 
     @Override
-    public void setThingAvailable(int thingId, boolean available) throws DAOException {
+    public void setThingAvailable(int thingId, boolean available) throws DAOException, StorageException {
         Connection connection = null;
         PreparedStatement statement = null;
         try {
@@ -302,7 +303,7 @@ public class ThingDAOImpl implements ThingDAO {
     }
 
     @Override
-    public void addRating(int userId, int thingId, byte value) throws DAOException {
+    public void addRating(int userId, int thingId, byte value) throws DAOException, StorageException {
         Connection connection = null;
         PreparedStatement statement = null;
         try {
@@ -324,7 +325,7 @@ public class ThingDAOImpl implements ThingDAO {
     }
 
     @Override
-    public byte getRating(int thingId) throws DAOException {
+    public byte getRating(int thingId) throws DAOException, StorageException {
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet set = null;
@@ -353,7 +354,7 @@ public class ThingDAOImpl implements ThingDAO {
     }
 
     @Override
-    public void deleteRating(int thingId, int userId) throws DAOException {
+    public void deleteRating(int thingId, int userId) throws DAOException, StorageException {
         Connection connection = null;
         PreparedStatement statement = null;
         try {
@@ -374,7 +375,7 @@ public class ThingDAOImpl implements ThingDAO {
     }
 
     @Override
-    public void addThingReview(int thingId, String review) throws DAOException {
+    public void addThingReview(int thingId, String review) throws DAOException, StorageException {
         Connection connection = null;
         PreparedStatement statement = null;
         try {
@@ -395,7 +396,7 @@ public class ThingDAOImpl implements ThingDAO {
     }
 
     @Override
-    public String getThingReview(int thingId) throws DAOException {
+    public String getThingReview(int thingId) throws DAOException, StorageException {
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet set = null;
@@ -422,7 +423,7 @@ public class ThingDAOImpl implements ThingDAO {
     }
 
     @Override
-    public void deleteThingReview(int thingId) throws DAOException {
+    public void deleteThingReview(int thingId) throws DAOException, StorageException {
         Connection connection = null;
         PreparedStatement statement = null;
         try {

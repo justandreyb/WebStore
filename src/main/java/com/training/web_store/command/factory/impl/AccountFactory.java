@@ -3,7 +3,13 @@ package com.training.web_store.command.factory.impl;
 import com.training.web_store.command.CommandName;
 import com.training.web_store.command.factory.EntityFactory;
 import com.training.web_store.command.impl.WrongCommand;
-import com.training.web_store.command.impl.interaction.*;
+import com.training.web_store.command.impl.interaction.ChangeLocaleCommand;
+import com.training.web_store.command.impl.interaction.SearchProductCommand;
+import com.training.web_store.command.impl.interaction.SetRatingCommand;
+import com.training.web_store.command.impl.interaction.order.AddToOrderCommand;
+import com.training.web_store.command.impl.interaction.order.BuyOrderCommand;
+import com.training.web_store.command.impl.interaction.order.GetOrderCommand;
+import com.training.web_store.command.impl.interaction.order.RemoveFromOrderCommand;
 import com.training.web_store.command.impl.user.SignInCommand;
 import com.training.web_store.command.impl.user.SignOutCommand;
 import com.training.web_store.command.impl.user.SignUpCommand;
@@ -25,12 +31,10 @@ public class AccountFactory extends EntityFactory {
         repository.put(CommandName.SET, new SetRatingCommand());
         repository.put(CommandName.ADD_TO_ORDER, new AddToOrderCommand());
         repository.put(CommandName.REMOVE_FROM_ORDER, new RemoveFromOrderCommand());
+        repository.put(CommandName.GET_ORDER, new GetOrderCommand());
         repository.put(CommandName.BUY_ORDER, new BuyOrderCommand());
         repository.put(CommandName.SEARCH_PRODUCT, new SearchProductCommand());
-        /*
-        repository.put(CommandName.SHOW_PRODUCT, new ShowProductCommand());
-        repository.put(CommandName.SHOW_PRODUCTS, new ShowProductsCommand());
-        */
+
         repository.put(CommandName.WRONG, new WrongCommand());
     }
 }

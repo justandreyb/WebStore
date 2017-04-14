@@ -4,6 +4,7 @@ import com.training.web_store.bean.account.User;
 import com.training.web_store.dao.UserDAO;
 import com.training.web_store.dao.exception.DAOException;
 import com.training.web_store.util.database.DBConnector;
+import com.training.web_store.util.exception.StorageException;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -43,7 +44,7 @@ public class UserDAOImpl implements UserDAO {
     private static final int ROLE_ID_FOR_USER = 1;
 
     @Override
-    public void addUser(User user) throws DAOException {
+    public void addUser(User user) throws DAOException, StorageException {
         Connection connection = null;
         CallableStatement statement = null;
 
@@ -71,7 +72,7 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public void updateUser(int userId, User user) throws DAOException {
+    public void updateUser(int userId, User user) throws DAOException, StorageException {
         Connection connection = null;
         CallableStatement statement = null;
 
@@ -101,7 +102,7 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public User getUser(String login, String password) throws DAOException {
+    public User getUser(String login, String password) throws DAOException, StorageException {
         Connection connection = null;
         CallableStatement statement = null;
         ResultSet set = null;
@@ -144,7 +145,7 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public List<User> getUsers() throws DAOException {
+    public List<User> getUsers() throws DAOException, StorageException {
         Connection connection = null;
         CallableStatement statement = null;
         ResultSet set = null;
@@ -188,7 +189,7 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public void setUserAvailable(User user, boolean available) throws DAOException {
+    public void setUserAvailable(User user, boolean available) throws DAOException, StorageException {
         Connection connection = null;
         PreparedStatement statement = null;
         try {

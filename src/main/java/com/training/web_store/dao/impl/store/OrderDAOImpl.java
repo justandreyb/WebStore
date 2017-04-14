@@ -5,6 +5,7 @@ import com.training.web_store.dao.OrderDAO;
 import com.training.web_store.dao.exception.DAOException;
 import com.training.web_store.util.ArgumentExchanger;
 import com.training.web_store.util.database.DBConnector;
+import com.training.web_store.util.exception.StorageException;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -64,7 +65,7 @@ public class OrderDAOImpl implements OrderDAO {
     private static final String ERROR_DELETING = "Error during deleting";
 
     @Override
-    public void addOrder(Order order) throws DAOException {
+    public void addOrder(Order order) throws DAOException, StorageException {
         Connection connection = null;
         PreparedStatement statement = null;
         try {
@@ -87,7 +88,7 @@ public class OrderDAOImpl implements OrderDAO {
     }
 
     @Override
-    public Order getOrder(int userId, int orderId) throws DAOException {
+    public Order getOrder(int userId, int orderId) throws DAOException, StorageException {
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet set = null;
@@ -127,7 +128,7 @@ public class OrderDAOImpl implements OrderDAO {
     }
 
     @Override
-    public List<Order> getOrders(int userId) throws DAOException {
+    public List<Order> getOrders(int userId) throws DAOException, StorageException {
         Connection connection = null;
         CallableStatement statement = null;
         ResultSet set = null;
@@ -170,7 +171,7 @@ public class OrderDAOImpl implements OrderDAO {
     }
 
     @Override
-    public void setOrderState(int orderId, boolean state) throws DAOException {
+    public void setOrderState(int orderId, boolean state) throws DAOException, StorageException {
         Connection connection = null;
         PreparedStatement statement = null;
         try {

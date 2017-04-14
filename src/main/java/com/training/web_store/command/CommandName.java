@@ -26,5 +26,5 @@ public enum CommandName {
 
     CHANGE_LOCALE,
 
-    WRONG,
+    WRONG, GET_ORDER,
 }

@@ -7,6 +7,7 @@ import com.training.web_store.dao.factory.DAOFactory;
 import com.training.web_store.service.UserService;
 import com.training.web_store.service.exception.ServiceException;
 import com.training.web_store.util.ArgumentParserUtil;
+import com.training.web_store.util.exception.StorageException;
 
 import javax.servlet.http.HttpSession;
 
@@ -24,7 +25,7 @@ public class UserServiceImpl implements UserService {
         }
         try {
             userDAO.addUser(user);
-        } catch (DAOException e) {
+        } catch (DAOException | StorageException e) {
             throw new ServiceException(e);
         }
     }
@@ -36,7 +37,7 @@ public class UserServiceImpl implements UserService {
         User user = null;
         try {
             user = userDAO.getUser(login, password);
-        } catch (DAOException e) {
+        } catch (DAOException | StorageException e) {
             throw new ServiceException(e);
         }
 
@@ -64,7 +65,7 @@ public class UserServiceImpl implements UserService {
         }
         try {
             userDAO.updateUser(userId, user);
-        } catch (DAOException e) {
+        } catch (DAOException | StorageException e) {
             throw new ServiceException(e);
         }
     }

@@ -33,7 +33,6 @@ public class Controller extends HttpServlet {
     }
 
     private void analyzeRequest(HttpServletRequest request, HttpServletResponse response) {
-        //TODO: Remove
         log.debug(request.getRequestURI());
         if (hasCommand(request)) {
             performCommand(request, response);
@@ -56,22 +55,19 @@ public class Controller extends HttpServlet {
     }
 
     private void performCommand(HttpServletRequest request, HttpServletResponse response) {
-        //TODO: Refactor
-            String requestedCommand = getCommandFromRequest(request);
-            String entity = (String) request.getAttribute(ENTITY_PARAMETER);
+        String requestedCommand = getCommandFromRequest(request);
+        String entity = (String) request.getAttribute(ENTITY_PARAMETER);
 
-            FactoryProducer factoryProducer = FactoryProducer.getInstance();
-            EntityFactory factory = factoryProducer.getFactory(entity);
-        //
+        FactoryProducer factoryProducer = FactoryProducer.getInstance();
+        EntityFactory factory = factoryProducer.getFactory(entity);
 
         try {
             Command command = factory.getCommand(requestedCommand);
             command.execute(request, response);
 
         } catch (Exception e) {
-            String errorMessage = "Error while executing command";
-            log.warn(errorMessage, e);
-            ResponseWriter.writeError(response, errorMessage);
+            log.warn(ERROR_INFO, e);
+            ResponseWriter.writeError(response, ERROR_INFO);
         }
 
     }

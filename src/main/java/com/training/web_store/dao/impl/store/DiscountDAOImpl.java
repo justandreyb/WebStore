@@ -5,6 +5,7 @@ import com.training.web_store.dao.DiscountDAO;
 import com.training.web_store.dao.exception.DAOException;
 import com.training.web_store.util.ArgumentExchanger;
 import com.training.web_store.util.database.DBConnector;
+import com.training.web_store.util.exception.StorageException;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -36,20 +37,12 @@ public class DiscountDAOImpl implements DiscountDAO {
             "UPDATE " + DATABASE + "." + DISCOUNT_TABLE +
             " SET " +
                 DISCOUNT_VALUE + "=?, " +
-                DISCOUNT_START_DATE + "=?" +
+                DISCOUNT_START_DATE + "=?, " +
                 DISCOUNT_FINISH_DATE + "=?" +
             " WHERE " +
                 DISCOUNT_ID + "=?";
 
-    private static final String GET_DISCOUNT_QUERY =
-            "SELECT " +
-                    DISCOUNT_VALUE + ", " +
-                    DISCOUNT_START_DATE +
-            " FROM " +
-                DATABASE + "." + DISCOUNT_TABLE +
-            " WHERE " +
-                DISCOUNT_ID + "=? AND" +
-                DISCOUNT_IS_AVAILABLE + "=" + AVAILABLE_DISCOUNT;
+    private static final String GET_DISCOUNT_QUERY = "{call getDiscount(?)}";
 
     private static final String GET_DISCOUNTS_FOR_DATE_QUERY =
             "SELECT " +
@@ -71,7 +64,7 @@ public class DiscountDAOImpl implements DiscountDAO {
     private static final String ERROR_DELETING = "Error during changing state";
 
     @Override
-    public void addDiscount(Discount discount) throws DAOException {
+    public void addDiscount(Discount discount) throws DAOException, StorageException {
         Connection connection = null;
         PreparedStatement statement = null;
         try {
@@ -93,7 +86,7 @@ public class DiscountDAOImpl implements DiscountDAO {
     }
 
     @Override
-    public void updateDiscount(int discountId, Discount discount) throws DAOException {
+    public void updateDiscount(int discountId, Discount discount) throws DAOException, StorageException {
         Connection connection = null;
         PreparedStatement statement = null;
         try {
@@ -117,14 +110,14 @@ public class DiscountDAOImpl implements DiscountDAO {
     }
 
     @Override
-    public Discount getDiscount(int discountId) throws DAOException {
+    public Discount getDiscount(int discountId) throws DAOException, StorageException {
         Connection connection = null;
-        PreparedStatement statement = null;
+        CallableStatement statement = null;
         ResultSet set = null;
 
         try {
             connection = dbConnector.getConnection();
-            statement = connection.prepareStatement(GET_DISCOUNT_QUERY);
+            statement = connection.prepareCall(GET_DISCOUNT_QUERY);
 
             statement.setInt(1, discountId);
 
@@ -135,8 +128,8 @@ public class DiscountDAOImpl implements DiscountDAO {
             while (set.next()) {
                 discount = new Discount();
 
-                java.util.Date startDate = ArgumentExchanger.exchangeFromSQLDate(set.getDate(DISCOUNT_START_DATE));
-                java.util.Date finishDate = ArgumentExchanger.exchangeFromSQLDate(set.getDate(DISCOUNT_FINISH_DATE));
+                Date startDate = set.getDate(DISCOUNT_START_DATE);
+                Date finishDate = set.getDate(DISCOUNT_FINISH_DATE);
                 byte value = set.getByte(DISCOUNT_VALUE);
 
                 discount.setId(discountId);
@@ -155,7 +148,7 @@ public class DiscountDAOImpl implements DiscountDAO {
     }
 
     @Override
-    public List<Discount> getDiscounts() throws DAOException {
+    public List<Discount> getDiscounts() throws DAOException, StorageException {
         Connection connection = null;
         CallableStatement statement = null;
         ResultSet set = null;
@@ -173,8 +166,8 @@ public class DiscountDAOImpl implements DiscountDAO {
                 Discount discount = new Discount();
 
                 int discountId = set.getInt(DISCOUNT_ID);
-                java.util.Date startDate = ArgumentExchanger.exchangeFromSQLDate(set.getDate(DISCOUNT_START_DATE));
-                java.util.Date finishDate = ArgumentExchanger.exchangeFromSQLDate(set.getDate(DISCOUNT_FINISH_DATE));
+                Date startDate = set.getDate(DISCOUNT_START_DATE);
+                Date finishDate = set.getDate(DISCOUNT_FINISH_DATE);
                 byte value = set.getByte(DISCOUNT_VALUE);
 
                 discount.setId(discountId);
@@ -194,7 +187,7 @@ public class DiscountDAOImpl implements DiscountDAO {
     }
 
     @Override
-    public List<Discount> getDiscountForDate(Date date) throws DAOException {
+    public List<Discount> getDiscountForDate(Date date) throws DAOException, StorageException {
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet set = null;
@@ -235,7 +228,7 @@ public class DiscountDAOImpl implements DiscountDAO {
     }
 
     @Override
-    public void setDiscountAvailable(int discountId, boolean available) throws DAOException {
+    public void setDiscountAvailable(int discountId, boolean available) throws DAOException, StorageException {
         Connection connection = null;
         PreparedStatement statement = null;
         try {

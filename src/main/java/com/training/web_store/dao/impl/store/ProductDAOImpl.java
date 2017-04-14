@@ -5,6 +5,7 @@ import com.training.web_store.bean.store.Thing;
 import com.training.web_store.dao.ProductDAO;
 import com.training.web_store.dao.exception.DAOException;
 import com.training.web_store.util.database.DBConnector;
+import com.training.web_store.util.exception.StorageException;
 
 import java.sql.*;
 import java.util.LinkedList;
@@ -93,12 +94,12 @@ public class ProductDAOImpl implements ProductDAO {
     private static final int INITIAL_AMOUNT = 1;
 
     @Override
-    public void addProduct(String name, double price, int categoryId) throws DAOException {
+    public void addProduct(String name, double price, int categoryId) throws DAOException, StorageException {
         addProduct(name, price, categoryId, 0);
     }
 
     @Override
-    public void addProduct(String name, double price, int categoryId, int discountId) throws DAOException {
+    public void addProduct(String name, double price, int categoryId, int discountId) throws DAOException, StorageException {
         Connection connection = null;
         PreparedStatement statement = null;
         try {
@@ -123,12 +124,12 @@ public class ProductDAOImpl implements ProductDAO {
     }
 
     @Override
-    public void updateProduct(int productId, String name, double price, int categoryId) throws DAOException {
+    public void updateProduct(int productId, String name, double price, int categoryId) throws DAOException, StorageException {
         updateProduct(productId, name, price, categoryId, 0);
     }
 
     @Override
-    public void updateProduct(int productId, String name, double price, int categoryId, int discountId) throws DAOException {
+    public void updateProduct(int productId, String name, double price, int categoryId, int discountId) throws DAOException, StorageException {
         Connection connection = null;
         CallableStatement statement = null;
         try {
@@ -150,7 +151,7 @@ public class ProductDAOImpl implements ProductDAO {
     }
 
     @Override
-    public Product getProduct(int productId) throws DAOException {
+    public Product getProduct(int productId) throws DAOException, StorageException {
         Connection connection = null;
         CallableStatement statement = null;
         ResultSet set = null;
@@ -194,7 +195,7 @@ public class ProductDAOImpl implements ProductDAO {
     }
 
     @Override
-    public List<Product> getProducts() throws DAOException {
+    public List<Product> getProducts() throws DAOException, StorageException {
         Connection connection = null;
         CallableStatement statement = null;
         ResultSet set = null;
@@ -235,7 +236,7 @@ public class ProductDAOImpl implements ProductDAO {
     }
 
     @Override
-    public List<Product> searchProduct(String requestedName) throws DAOException {
+    public List<Product> searchProduct(String requestedName) throws DAOException, StorageException {
         Connection connection = null;
         CallableStatement statement = null;
         ResultSet set = null;
@@ -278,22 +279,22 @@ public class ProductDAOImpl implements ProductDAO {
     }
 
     @Override
-    public List<Product> getProductsForCategory(int categoryId) throws DAOException {
+    public List<Product> getProductsForCategory(int categoryId) throws DAOException, StorageException {
         return getProductsToRequirements(GET_PRODUCTS_FOR_CATEGORY_QUERY, categoryId);
     }
 
     @Override
-    public List<Product> getProductsForBrand(int brandId) throws DAOException {
+    public List<Product> getProductsForBrand(int brandId) throws DAOException, StorageException {
         //TODO: Create (search in things)
         return getProductsToRequirements(GET_PRODUCTS_FOR_BRAND_QUERY, brandId);
     }
 
     @Override
-    public List<Product> getProductsForDiscount(int discountId) throws DAOException {
+    public List<Product> getProductsForDiscount(int discountId) throws DAOException, StorageException {
         return getProductsToRequirements(GET_PRODUCTS_FOR_DISCOUNT_QUERY, discountId);
     }
 
-    private List<Product> getProductsToRequirements(String query, int entityId) throws DAOException {
+    private List<Product> getProductsToRequirements(String query, int entityId) throws DAOException, StorageException {
         Connection connection = null;
         CallableStatement statement = null;
         ResultSet set = null;
@@ -336,7 +337,7 @@ public class ProductDAOImpl implements ProductDAO {
     }
 
     @Override
-    public void setProductAvailable(int productId, boolean available) throws DAOException {
+    public void setProductAvailable(int productId, boolean available) throws DAOException, StorageException {
         Connection connection = null;
         PreparedStatement statement = null;
         try {
@@ -357,7 +358,7 @@ public class ProductDAOImpl implements ProductDAO {
     }
 
     @Override
-    public void addThing(int productId, int thingId) throws DAOException {
+    public void addThing(int productId, int thingId) throws DAOException, StorageException {
         Connection connection = null;
         PreparedStatement statement = null;
         try {
@@ -379,7 +380,7 @@ public class ProductDAOImpl implements ProductDAO {
     }
 
     @Override
-    public void removeThing(int productId, int thingId) throws DAOException {
+    public void removeThing(int productId, int thingId) throws DAOException, StorageException {
         Connection connection = null;
         PreparedStatement statement = null;
         try {

@@ -4,6 +4,7 @@ import com.training.web_store.bean.store.Photo;
 import com.training.web_store.dao.PhotoDAO;
 import com.training.web_store.dao.exception.DAOException;
 import com.training.web_store.util.database.DBConnector;
+import com.training.web_store.util.exception.StorageException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,7 +18,7 @@ public class PhotoDAOImpl implements PhotoDAO {
     private static final DBConnector dbConnector = DBConnector.getInstance();
 
     private static final String DATABASE = "web_store";
-    private static final String PHOTO_TABLE = "thing_image";
+    private static final String PHOTO_TABLE = "image";
     private static final String PHOTO_ID = "id";
     private static final String PHOTO_HREF = "href";
     private static final String PHOTO_REAL_NAME = "real_name";
@@ -51,7 +52,7 @@ public class PhotoDAOImpl implements PhotoDAO {
             " FROM " +
                 DATABASE + "." + PHOTO_TABLE +
             " WHERE " +
-                THING_ID + "=? AND" +
+                THING_ID + "=? AND " +
                 PHOTO_IS_AVAILABLE + "=" + PHOTO_AVAILABLE;
 
     private static final String GET_PHOTOS_FOR_PRODUCT_QUERY =
@@ -62,7 +63,7 @@ public class PhotoDAOImpl implements PhotoDAO {
             " FROM " +
                 DATABASE + "." + PHOTO_TABLE +
             " WHERE " +
-                PRODUCT_ID + "=? AND" +
+                PRODUCT_ID + "=? AND " +
                 PHOTO_IS_AVAILABLE + "=" + PHOTO_AVAILABLE;
 
     private static final String SET_PHOTO_AVAILABLE =
@@ -76,16 +77,16 @@ public class PhotoDAOImpl implements PhotoDAO {
     private static final String ERROR_DELETING = "Error during deleting";
 
     @Override
-    public void addThingPhoto(int thingId, String realName, String href) throws DAOException {
+    public void addThingPhoto(int thingId, String realName, String href) throws DAOException, StorageException {
         addPhoto(ADD_THING_PHOTO_QUERY, thingId, realName, href);
     }
 
     @Override
-    public void addProductPhoto(int productId, String realName, String href) throws DAOException {
+    public void addProductPhoto(int productId, String realName, String href) throws DAOException, StorageException {
         addPhoto(ADD_PRODUCT_PHOTO_QUERY, productId, realName, href);
     }
 
-    private void addPhoto(String query, int id, String realName, String href) throws DAOException {
+    private void addPhoto(String query, int id, String realName, String href) throws DAOException, StorageException {
         Connection connection = null;
         PreparedStatement statement = null;
         try {
@@ -108,7 +109,7 @@ public class PhotoDAOImpl implements PhotoDAO {
     }
 
     @Override
-    public List<Photo> getPhotosForThing(int thingId) throws DAOException {
+    public List<Photo> getPhotosForThing(int thingId) throws DAOException, StorageException {
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet set = null;
@@ -148,7 +149,7 @@ public class PhotoDAOImpl implements PhotoDAO {
     }
 
     @Override
-    public List<Photo> getPhotosForProduct(int productId) throws DAOException {
+    public List<Photo> getPhotosForProduct(int productId) throws DAOException, StorageException {
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet set = null;
@@ -188,7 +189,7 @@ public class PhotoDAOImpl implements PhotoDAO {
     }
 
     @Override
-    public void setAvailable(int photoId, boolean available) throws DAOException {
+    public void setAvailable(int photoId, boolean available) throws DAOException, StorageException {
         Connection connection = null;
         PreparedStatement statement = null;
         try {

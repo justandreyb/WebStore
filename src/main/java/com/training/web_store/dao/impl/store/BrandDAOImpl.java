@@ -4,6 +4,7 @@ import com.training.web_store.bean.store.Brand;
 import com.training.web_store.dao.BrandDAO;
 import com.training.web_store.dao.exception.DAOException;
 import com.training.web_store.util.database.DBConnector;
+import com.training.web_store.util.exception.StorageException;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -53,12 +54,12 @@ public class BrandDAOImpl implements BrandDAO {
     private static final String ERROR_DELETING = "Error during changing state";
 
     @Override
-    public void addBrand(String name) throws DAOException {
+    public void addBrand(String name) throws DAOException, StorageException {
         addBrand(name, EMPTY_DESCRIPTION);
     }
 
     @Override
-    public void addBrand(String name, String description) throws DAOException {
+    public void addBrand(String name, String description) throws DAOException, StorageException {
         Connection connection = null;
         PreparedStatement statement = null;
         try {
@@ -81,7 +82,7 @@ public class BrandDAOImpl implements BrandDAO {
     }
 
     @Override
-    public void updateBrand(int brandId, String name, String updatedDescription) throws DAOException {
+    public void updateBrand(int brandId, String name, String updatedDescription) throws DAOException, StorageException {
         Connection connection = null;
         PreparedStatement statement = null;
         try {
@@ -104,7 +105,7 @@ public class BrandDAOImpl implements BrandDAO {
     }
 
     @Override
-    public Brand getBrand(int brandId) throws DAOException {
+    public Brand getBrand(int brandId) throws DAOException, StorageException {
         Connection connection = null;
         CallableStatement statement = null;
         ResultSet set = null;
@@ -141,7 +142,7 @@ public class BrandDAOImpl implements BrandDAO {
     }
 
     @Override
-    public List<Brand> getBrands() throws DAOException {
+    public List<Brand> getBrands() throws DAOException, StorageException {
         Connection connection = null;
         CallableStatement statement = null;
         ResultSet set = null;
@@ -175,7 +176,7 @@ public class BrandDAOImpl implements BrandDAO {
     }
 
     @Override
-    public void setBrandAvailable(int brandId, boolean available) throws DAOException {
+    public void setBrandAvailable(int brandId, boolean available) throws DAOException, StorageException {
         Connection connection = null;
         PreparedStatement statement = null;
         try {

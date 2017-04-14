@@ -4,6 +4,7 @@ import com.training.web_store.bean.store.Category;
 import com.training.web_store.dao.CategoryDAO;
 import com.training.web_store.dao.exception.DAOException;
 import com.training.web_store.util.database.DBConnector;
+import com.training.web_store.util.exception.StorageException;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -53,12 +54,12 @@ public class CategoryDAOImpl implements CategoryDAO {
     private static final String ERROR_DELETING = "Error during changing state";
 
     @Override
-    public void addCategory(String name) throws DAOException {
+    public void addCategory(String name) throws DAOException, StorageException {
         addCategory(name, EMPTY_DESCRIPTION);
     }
 
     @Override
-    public void addCategory(String name, String description) throws DAOException {
+    public void addCategory(String name, String description) throws DAOException, StorageException {
         Connection connection = null;
         PreparedStatement statement = null;
         try {
@@ -82,7 +83,7 @@ public class CategoryDAOImpl implements CategoryDAO {
     }
 
     @Override
-    public void updateCategory(int categoryId, String name, String updatedDescription) throws DAOException {
+    public void updateCategory(int categoryId, String name, String updatedDescription) throws DAOException, StorageException {
         Connection connection = null;
         PreparedStatement statement = null;
         try {
@@ -105,7 +106,7 @@ public class CategoryDAOImpl implements CategoryDAO {
     }
 
     @Override
-    public Category getCategory(int categoryId) throws DAOException {
+    public Category getCategory(int categoryId) throws DAOException, StorageException {
         Connection connection = null;
         CallableStatement statement = null;
         ResultSet set = null;
@@ -141,7 +142,7 @@ public class CategoryDAOImpl implements CategoryDAO {
     }
 
     @Override
-    public List<Category> getCategories() throws DAOException {
+    public List<Category> getCategories() throws DAOException, StorageException {
         Connection connection = null;
         CallableStatement statement = null;
         ResultSet set = null;
@@ -178,7 +179,7 @@ public class CategoryDAOImpl implements CategoryDAO {
     }
 
     @Override
-    public void setAvailable(int categoryId, boolean available) throws DAOException {
+    public void setAvailable(int categoryId, boolean available) throws DAOException, StorageException {
         Connection connection = null;
         PreparedStatement statement = null;
         try {
