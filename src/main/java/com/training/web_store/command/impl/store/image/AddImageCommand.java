@@ -28,6 +28,7 @@ public class AddImageCommand extends StoreCommand {
                 int thing = Integer.parseInt(thingParam);
                 service.addPhotoForThing(thing, realName);
             }
+            ResponseWriter.writeSuccess(response, SUCCESS_MESSAGE);
         } catch (ServiceException e) {
             log.warn(ERROR_MESSAGE, e);
             ResponseWriter.writeError(response, ERROR_MESSAGE);

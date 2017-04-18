@@ -29,6 +29,8 @@ public class AddDiscountCommand extends StoreCommand {
             Date finishDate = dateFormat.parse(finishDateParam);
 
             service.addDiscount(value, startDate, finishDate);
+
+            ResponseWriter.writeSuccess(response, SUCCESS_MESSAGE);
         } catch (ServiceException | ParseException e) {
             log.warn(ERROR_MESSAGE, e);
             ResponseWriter.writeError(response, ERROR_MESSAGE);

@@ -33,6 +33,8 @@ public class AddThingCommand extends StoreCommand {
             int category = Integer.parseInt(categoryParam);
 
             service.addThing(name, description, creationDate, category, brand);
+
+            ResponseWriter.writeSuccess(response, SUCCESS_MESSAGE);
         } catch (ServiceException | ParseException e) {
             log.warn(ERROR_MESSAGE, e);
             ResponseWriter.writeError(response, ERROR_MESSAGE);

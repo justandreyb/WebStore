@@ -10,7 +10,6 @@ import javax.servlet.http.HttpSession;
 
 public class SearchProductCommand extends InteractionCommand {
     private static final String REQUESTED_PRODUCT = "targetProduct";
-    private static final String ERROR_USER_NOT_FOUND = "Sign in or register at first..";
     private static final String ERROR_WHILE_SEARCHING = "Error while getting order";
 
     @Override

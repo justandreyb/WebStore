@@ -1,6 +1,6 @@
 'use strict'
 
-function getForm(entity, formType, collectedData) {
+function getForm(entity, formType, getDataFunction) {
     var url = '/entity/'.concat(entity.toLowerCase());
 
     $.ajax({
@@ -9,7 +9,28 @@ function getForm(entity, formType, collectedData) {
         data: {
             command: 'GET_FORM',
             action: formType,
-            collectedData: collectedData
+            collectedData: getDataFunction(entity)
+        },
+        success: function(data) {
+            handleSuccess(data);
+        },
+        error: function() {
+            var errorMessage = "Something went wrong.. Try again";
+            handleError(errorMessage);
+        }
+    });
+}
+
+function getFormWithEntityId(entity, id, formType, getDataFunction) {
+    var url = '/entity/'.concat(entity.toLowerCase());
+
+    $.ajax({
+        url: url,
+        method: 'GET',
+        data: {
+            command: 'GET_FORM',
+            action: formType,
+            collectedData: getDataFunction(entity, id)
         },
         success: function(data) {
             handleSuccess(data);
@@ -46,6 +67,7 @@ function getEntityById(id, entity) {
     var url = window.location.pathname;
 
     $.ajax({
+        async: false,
         url: url,
         method: 'GET',
         data: {
@@ -69,6 +91,7 @@ function getEntities(entity) {
     var url = window.location.pathname;
 
     $.ajax({
+        async: false,
         url: url,
         method: 'GET',
         data: {
@@ -106,22 +129,19 @@ function handleDeleteEntity(entity) {
             /* ---- Forms ----- */
 
 function getBrandAddingForm() {
-    getForm("Brand", "add-brand", null);
+    getForm("Brand", "add-brand", doNothing);
 }
 
 function getBrandEditingForm() {
     var entity = "Brand";
     var id = $("#change-brand").val();
     if (isCorrectId(id)) {
-        var collectedData = getEntityById(id, entity);
-        getForm(entity, "edit-brand", collectedData);
+        getFormWithEntityId(entity, id, "edit-brand", getEntityById);
     }
 }
 
 function getBrandChangingForm() {
-    var entity = "Brand";
-    var collectedData = getEntities(entity);
-    getForm(entity, "change-brand", collectedData);
+    getForm("Brand", "change-brand", getEntities);
 }
 
             /* ---- Handle ---- */
@@ -167,19 +187,20 @@ function handleDeleteBrand() {
             /* ---- Forms ----- */
 
 function getAccountChangingForm() {
-    var entity = "Account";
-    var collectedData = getEntities(entity);
-    getForm(entity, "change-account", collectedData);
+    getForm("Account", "change-account", getEntities);
+}
+
+function getChangeRoleData(id) {
+    return {
+        id: id,
+        roles: getEntities("role")
+    };
 }
 
 function getAccountChangeRoleForm() {
     var id = $("#change-account").val();
     if (isCorrectId(id)) {
-        var collectedData = {
-            id: id,
-            roles: getEntities("role")
-        };
-        getForm("Account", "block-account", collectedData);
+        getForm("Account", "block-account", getChangeRoleData);
     }
 }
 
@@ -234,22 +255,18 @@ function handleDeleteAccount() {
             /* ---- Forms ----- */
 
 function getCategoryAddingForm() {
-    getForm("Category", "add-category", null);
+    getForm("Category", "add-category", doNothing);
 }
 
 function getCategoryEditingForm() {
     var id = $("#change-category").val();
-    var entity = "Category";
     if (isCorrectId(id)) {
-        var collectedData = getEntityById(id, entity);
-        getForm(entity, "edit-category", collectedData);
+        getFormWithEntityId("Category", id, "edit-category", getEntityById);
     }
 }
 
 function getCategoryChangingForm() {
-    var entity = "Category";
-    var collectedData = getEntities(entity);
-    getForm(entity, "change-category", collectedData);
+    getForm("Category", "change-category", getEntities);
 }
 
             /* ---- Handle ---- */
@@ -292,33 +309,43 @@ function handleDeleteCategory() {
 
 /* ---------------- Thing ---------------- */
 
+function getThingIdData(id, entity) {
+    return {
+        thingId: id
+    };
+}
+
             /* ---- Forms ----- */
 
-function getThingAddingForm() {
-    var collectedData = {
+function getThingAddingData(entity) {
+    return {
         categories: getEntities("Category"),
         brands: getEntities("Brand")
     };
-    getForm("Thing", "add-thing", collectedData);
+}
+
+function getThingEditingData(id, entity) {
+    return {
+        thing: getEntityById(id, entity),
+        categories: getEntities("Category"),
+        brands: getEntities("Brand")
+    };
+}
+
+function getThingAddingForm() {
+    getForm("Thing", "add-thing", getThingAddingData);
 }
 
 function getThingEditingForm() {
     var id = $("#change-thing").val();
-    var entity = "Thing";
     if (isCorrectId(id)) {
-        var collectedData = {
-            thing: getEntityById(id, entity),
-            categories: getEntities("Category"),
-            brands: getEntities("Brand")
-        };
-        getForm(entity, "edit-thing", collectedData);
+        getFormWithEntityId("Thing", id, "edit-thing", getThingEditingData);
     }
 }
 
 function getThingChangingForm() {
     var entity = "Thing";
-    var collectedData = getEntities(entity);
-    getForm(entity, "change-thing", collectedData);
+    getForm(entity, "change-thing", getEntities);
 }
 
             /* ---- Handle ---- */
@@ -369,14 +396,12 @@ function handleDeleteThing() {
 function getReviewAddingForm() {
     var thingId = $("#change-thing").val();
     if (isCorrectId(thingId)) {
-        getForm("Review", "add-review", thingId);
+        getFormWithEntityId("Review", thingId, "add-review", getThingIdData);
     }
 }
 
 function getReviewDeletingForm() {
-    var entity = "Review";
-    var collectedData = getEntities(entity);
-    getForm(entity, "delete-review", collectedData);
+    getForm("Review", "delete-review", getEntities);
 }
 
             /* ---- Handle ---- */
@@ -403,52 +428,48 @@ function handleDeleteReview() {
 
 /* ---------------- Photo ---------------- */
 
+function getProductPhotoDeletingFormData(productId, entity) {
+    var product = getEntityById(productId, "Product");
+    var images = product.images;
+
+    return {
+        product: product,
+        images: images
+    };
+}
+
+function getThingPhotoDeletingFormData(thingId, entity) {
+    var thing = getEntityById(thingId, "Thing");
+    var images = thing.images;
+
+    return {
+        thing: thing,
+        images: images
+    };
+}
+
             /* ---- Forms ----- */
 
 function getPhotoAddingForm() {
     var thingId = $("#change-thing").val();
     var productId = $("#change-product").val();
-    var collectedData = null;
     var entity = "Image";
 
     if (isCorrectId(thingId)) {
-        collectedData = {
-            thingId: thingId
-        };
-        getForm(entity, "add-image", collectedData);
+        getFormWithEntityId(entity, thingId, "add-image", getThingIdData);
     } else if (isCorrectId(productId)) {
-        collectedData = {
-            productId: productId
-        };
-        getForm(entity, "add-image", collectedData);
+        getFormWithEntityId(entity, productId, "add-image", getProductIdData);
     }
 }
 
 function getPhotoDeletingForm() {
-    var images = null;
-    var collectedData = null;
-
     var productId = $("#change-product").val();
     var thingId = $("#change-thing").val();
 
     if (isCorrectId(productId)) {
-        var product = getEntityById(productId, "Product");
-        images = product.images;
-
-        collectedData = {
-            product: product,
-            images: images
-        };
-        getForm("Image", "delete-image", collectedData);
+        getFormWithEntityId("Image", productId, "delete-image", getProductPhotoDeletingFormData);
     } else if (isCorrectId(thingId)) {
-        var thing = getEntityById(thingId, "Thing");
-        images = thing.images;
-
-        collectedData = {
-            thing: thing,
-            images: images
-        };
-        getForm("Image", "delete-image", collectedData);
+        getFormWithEntityId("Image", thingId, "delete-image", getThingPhotoDeletingFormData);
     }
 }
 
@@ -507,56 +528,73 @@ function handleDeletePhoto() {
 
 /* --------------- Product --------------- */
 
-            /* ---- Forms ----- */
+function getProductIdData(id, entity) {
+    return {
+        productId: id
+    };
+}
 
-function getProductAddingForm() {
-    var collectedData = {
+function getProductAddingData(entity) {
+    return {
         categories: getEntities("Category"),
         brands: getEntities("Brand"),
         discounts: getEntities("Discount")
     };
-    getForm("Product", "add-product", collectedData);
+}
+
+function getProductEditingData(id, entity) {
+    return {
+        product: getEntityById(id, entity),
+        categories: getEntities("Category"),
+        brands: getEntities("Brand"),
+        discount: getEntities("Discount")
+    };
+}
+
+function getThingAddingToProductData(entity) {
+    return {
+        things: getEntities("Thing"),
+        products: getEntities("Product")
+    };
+}
+
+function getThingDeletingFromProductData(id, entity) {
+    var product = getEntityById(id, "Product");
+    var things = product.things;
+
+    return {
+        product: product,
+        things: things
+    };
+}
+
+            /* ---- Forms ----- */
+
+function getProductAddingForm() {
+    getForm("Product", "add-product", getProductAddingData);
 }
 
 function getProductEditingForm() {
     var id = $("#change-product").val();
-    var entity = "Product";
     if (isCorrectId(id)) {
-        var collectedData = {
-            product: getEntityById(id, entity),
-            categories: getEntities("Category"),
-            brands: getEntities("Brand"),
-            discount: getEntities("Discount")
-        };
-        getForm(entity, "edit-product", collectedData);
+        getFormWithEntityId("Product", id, "edit-product", getProductEditingData);
     }
 }
 
 function getProductChangingForm() {
-    var entity = "Product";
-    var collectedData = getEntities(entity);
-    getForm(entity, "change-product", collectedData);
+    getForm("Product", "change-product", getEntities);
 }
 
+//TODO: Check entity
 function getThingAddingToProductForm() {
-    var collectedData = {
-        things: getEntities("Things"),
-        products: getEntities("Products")
-    };
-    getForm("Thing_Product", "add-thing-to-product", collectedData);
+    getForm("Thing_Product", "add-thing-to-product", getThingAddingToProductData);
 }
 
+//TODO: Check entity
 function getThingDeletingFromProductForm() {
     var id = $("#change-product").val();
     if (isCorrectId(id)) {
-        var product = getEntityById(id, "Product");
-        var things = product.things;
-
-        var collectedData = {
-            product: product,
-            things: things
-        };
-        getForm("Thing_Product", "delete-thing-from-product", collectedData);
+        getForm("Thing_Product", "delete-thing-from-product", getThingDeletingFromProductData);
     }
 }
 
@@ -638,22 +676,18 @@ function handleDeleteThingFromProduct() {
             /* ---- Forms ----- */
 
 function getDiscountAddingForm() {
-    getForm("Discount", "add-discount", null);
+    getForm("Discount", "add-discount", doNothing);
 }
 
 function getDiscountEditingForm() {
-    var entity = "Discount";
     var id = $("#change-discount").val();
     if (isCorrectId(id)) {
-        var collectedData = getEntityById(id, entity);
-        getForm(entity, "edit-discount", collectedData);
+        getFormWithEntityId("Discount", id, "edit-discount", getEntityById);
     }
 }
 
 function getDiscountChangingForm() {
-    var entity = "Discount";
-    var collectedData = getEntities(entity);
-    getForm(entity, "change-discount", collectedData);
+    getForm("Discount", "change-discount", getEntities);
 }
 
             /* ---- Handle ---- */
@@ -730,5 +764,6 @@ function isCorrectRating(ratingValue) {
 
 /* ----------------- END ----------------- */
 
+function doNothing(parameter) {}
 
 // http://stackoverflow.com/questions/14028959/why-does-jquery-or-a-dom-method-such-as-getelementbyid-not-find-the-element

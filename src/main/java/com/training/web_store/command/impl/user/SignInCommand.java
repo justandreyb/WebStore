@@ -31,7 +31,6 @@ public class SignInCommand extends UserCommand {
 
                 session.setAttribute(LOCALE_INFO, locale);
                 session.setAttribute(user.getRole(), user);
-
             } else {
                 ResponseWriter.writeError(response, ERROR_USER_NOT_FOUND);
             }

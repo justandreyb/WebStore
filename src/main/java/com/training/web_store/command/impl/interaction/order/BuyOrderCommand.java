@@ -14,6 +14,7 @@ public class BuyOrderCommand extends InteractionCommand {
     private static final String USER = "user";
     private static final String ERROR_USER_NOT_FOUND = "Sign in or register at first..";
     private static final String ERROR_WHILE_BUYING_ORDER = "Error while buying order";
+    private static final String SUCCESS_MESSAGE = "Completed successful";
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) {
@@ -26,6 +27,7 @@ public class BuyOrderCommand extends InteractionCommand {
                     order = service.createOrder(user.getId());
                 }
                 service.buyOrder(order.getId());
+                ResponseWriter.writeSuccess(response, SUCCESS_MESSAGE);
             } else {
                 ResponseWriter.writeError(response, ERROR_USER_NOT_FOUND);
             }

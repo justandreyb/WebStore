@@ -1,19 +1,10 @@
 function handleSuccess(data) {
     stopSpin();
 
-    var jsonObject;
     var block = $("#action-block-inner");
 
     if (data != null && data != "") {
-        // jsonObject = JSON.parse(data);
-        // if (jsonObject != null) {
-        //     printResult(block, jsonObject);
-        // } else {
-        //     printDefaultError(block);
-        // }
-
-        block.html(data);
-
+        printForm(block, data);
     } else {
         printDefaultError(block);
     }
@@ -21,6 +12,10 @@ function handleSuccess(data) {
     if (!actionBlock.modal.isShown) {
         actionBlock.modal('show');
     }
+}
+
+function analyzeReturnedJSON(block, jsonObject) {
+
 }
 
 function handleAuthorisationSuccess(data) {
@@ -58,6 +53,10 @@ function handleError(errorMessage) {
     stopSpin();
     var block = $("#action-block-inner");
     block.html(errorMessage);
+}
+
+function printForm(block, data) {
+    block.html(data);
 }
 
 function printError(block, jsonObject) {

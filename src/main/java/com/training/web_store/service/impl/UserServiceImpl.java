@@ -10,6 +10,7 @@ import com.training.web_store.util.ArgumentParserUtil;
 import com.training.web_store.util.exception.StorageException;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 public class UserServiceImpl implements UserService {
     private static final String USER_INFO = "user";
@@ -65,6 +66,15 @@ public class UserServiceImpl implements UserService {
         }
         try {
             userDAO.updateUser(userId, user);
+        } catch (DAOException | StorageException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public List<User> getAccounts() throws ServiceException {
+        try {
+            return userDAO.getUsers();
         } catch (DAOException | StorageException e) {
             throw new ServiceException(e);
         }

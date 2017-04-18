@@ -36,6 +36,8 @@ public class EditThingCommand extends StoreCommand {
             int brand = Integer.parseInt(brandParam);
 
             service.updateThing(id, name, description, creationDate, category, brand);
+
+            ResponseWriter.writeSuccess(response, SUCCESS_MESSAGE);
         } catch (ServiceException | ParseException e) {
             log.warn(ERROR_MESSAGE, e);
             ResponseWriter.writeError(response, ERROR_MESSAGE);

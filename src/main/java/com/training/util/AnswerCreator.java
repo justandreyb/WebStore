@@ -1,5 +1,6 @@
 package com.training.util;
 
+import com.training.web_store.bean.account.User;
 import com.training.web_store.bean.store.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -11,6 +12,7 @@ public class AnswerCreator {
 
     private static final String DATA = "data";
     private static final String ERROR = "error";
+    private static final String SUCCESS = "success";
 
     private static final String ID = "id";
 
@@ -44,6 +46,10 @@ public class AnswerCreator {
     private static final String THING_DESCRIPTION = "description";
     private static final String THING_CREATION_DATE = "creationDate";
 
+    private static final String ACCOUNTS = "accounts";
+    private static final String ACCOUNT_EMAIL = "email";
+    private static final String ACCOUNT_FIRST_NAME = "firstName";
+
     public static String create(String data) {
         return createJSON(DATA, data);
     }
@@ -56,6 +62,10 @@ public class AnswerCreator {
         JSONObject answerJSON = new JSONObject();
         answerJSON.put(key, value);
         return answerJSON.toString();
+    }
+
+    public static String createSuccess(String message) {
+        return createJSON(SUCCESS, message);
     }
 
     /*-------------------------------------------------------------------*/
@@ -245,7 +255,31 @@ public class AnswerCreator {
         return reviewJSON.toString();
     }
 
+    /*-------------------------------------------------------------------*/
+
     public static String createJSONFromOrder(Order order) {
         return "";
+    }
+
+    /*-------------------------------------------------------------------*/
+
+    private static JSONObject createJSONAccount(User user) {
+        JSONObject entityJSON = new JSONObject();
+        entityJSON.put(ID, user.getId());
+        entityJSON.put(ACCOUNT_EMAIL, user.getEmail());
+        entityJSON.put(ACCOUNT_FIRST_NAME, user.getFirstName());
+
+        return entityJSON;
+    }
+
+    public static String createJSONFromAccounts(List<User> users) {
+        JSONObject entitiesJSON = new JSONObject();
+        JSONArray objects = new JSONArray();
+        for (User user : users) {
+            objects.add(createJSONAccount(user));
+        }
+        entitiesJSON.put(ACCOUNTS, objects);
+
+        return entitiesJSON.toString();
     }
 }

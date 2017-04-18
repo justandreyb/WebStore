@@ -33,7 +33,7 @@ public class EditProductCommand extends StoreCommand {
             } else {
                 service.updateProduct(id, name, price, category);
             }
-
+            ResponseWriter.writeSuccess(response, SUCCESS_MESSAGE);
         } catch (ServiceException e) {
             log.warn(ERROR_MESSAGE, e);
             ResponseWriter.writeError(response, ERROR_MESSAGE);

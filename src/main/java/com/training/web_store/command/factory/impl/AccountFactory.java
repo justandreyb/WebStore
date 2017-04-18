@@ -10,6 +10,7 @@ import com.training.web_store.command.impl.interaction.order.AddToOrderCommand;
 import com.training.web_store.command.impl.interaction.order.BuyOrderCommand;
 import com.training.web_store.command.impl.interaction.order.GetOrderCommand;
 import com.training.web_store.command.impl.interaction.order.RemoveFromOrderCommand;
+import com.training.web_store.command.impl.user.GetAccountsCommand;
 import com.training.web_store.command.impl.user.SignInCommand;
 import com.training.web_store.command.impl.user.SignOutCommand;
 import com.training.web_store.command.impl.user.SignUpCommand;
@@ -25,6 +26,8 @@ public class AccountFactory extends EntityFactory {
         repository.put(CommandName.SIGN_IN, new SignInCommand());
         repository.put(CommandName.SIGN_OUT, new SignOutCommand());
         repository.put(CommandName.UPDATE_ACCOUNT, new UpdateAccountInfoCommand());
+
+        repository.put(CommandName.GET_ENTITIES, new GetAccountsCommand());
 
         repository.put(CommandName.CHANGE_LOCALE, new ChangeLocaleCommand());
 

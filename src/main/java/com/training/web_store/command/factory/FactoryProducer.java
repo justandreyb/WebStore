@@ -38,9 +38,12 @@ public class FactoryProducer {
         EntityFactory factory;
 
         try {
-            factoryName = FactoryName.valueOf(requestedFactory.toUpperCase());
-            factory = repository.get(factoryName);
-
+            if (requestedFactory != null) {
+                factoryName = FactoryName.valueOf(requestedFactory.toUpperCase());
+                factory = repository.get(factoryName);
+            } else {
+                factory = repository.get(FactoryName.WRONG);
+            }
         } catch (IllegalArgumentException ex) {
             factory = repository.get(FactoryName.WRONG);
             log.debug("Wrong factory");

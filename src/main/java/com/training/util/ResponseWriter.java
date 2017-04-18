@@ -27,6 +27,11 @@ public class ResponseWriter {
         }
     }
 
+    public static void writeSuccess(HttpServletResponse response, String message) {
+        message = AnswerCreator.createSuccess(message);
+        write(response, message);
+    }
+
     public static void writeData(HttpServletResponse response, String answer) {
         answer = AnswerCreator.create(answer);
         write(response, answer);
@@ -36,5 +41,4 @@ public class ResponseWriter {
         answer = AnswerCreator.createError(answer);
         write(response, answer);
     }
-
 }

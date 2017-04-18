@@ -22,6 +22,8 @@ public class DeleteThingFromProductCommand extends StoreCommand {
             int productId = Integer.parseInt(productIdParam);
 
             service.deleteThingFromProduct(productId, thingId);
+
+            ResponseWriter.writeSuccess(response, SUCCESS_MESSAGE);
         } catch (ServiceException e) {
             log.warn(ERROR_MESSAGE, e);
             ResponseWriter.writeError(response, ERROR_MESSAGE);

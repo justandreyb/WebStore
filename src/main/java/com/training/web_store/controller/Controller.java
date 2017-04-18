@@ -15,7 +15,6 @@ public class Controller extends HttpServlet {
     private static final Logger log = Logger.getLogger(Controller.class);
     private static final String COMMAND_PARAMETER = "command";
     private static final String ENTITY_PARAMETER = "entity";
-    private static final String ERROR = "error";
     private static final String ERROR_INFO = "Command cannot be executed right now.";
 
     public Controller() {
@@ -56,7 +55,7 @@ public class Controller extends HttpServlet {
 
     private void performCommand(HttpServletRequest request, HttpServletResponse response) {
         String requestedCommand = getCommandFromRequest(request);
-        String entity = (String) request.getAttribute(ENTITY_PARAMETER);
+        String entity = request.getParameter(ENTITY_PARAMETER);
 
         FactoryProducer factoryProducer = FactoryProducer.getInstance();
         EntityFactory factory = factoryProducer.getFactory(entity);

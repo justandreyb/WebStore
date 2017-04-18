@@ -24,6 +24,7 @@ public class AddCategoryCommand extends StoreCommand {
             } else {
                 service.addCategory(name);
             }
+            ResponseWriter.writeSuccess(response, SUCCESS_MESSAGE);
         } catch (ServiceException e) {
             log.warn(ERROR_MESSAGE, e);
             ResponseWriter.writeError(response, ERROR_MESSAGE);

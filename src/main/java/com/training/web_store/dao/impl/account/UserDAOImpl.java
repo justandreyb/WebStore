@@ -163,18 +163,11 @@ public class UserDAOImpl implements UserDAO {
 
                 int userId = set.getInt(USER_ID);
                 String email = set.getString(USER_LOGIN);
-                String password = set.getString(USER_PASSWORD);
-                String locale = set.getString(USER_LOCALE);
                 String firstName = set.getString(USER_FIRST_NAME);
-                String lastName = set.getString(USER_LAST_NAME);
-                String gender = set.getString(USER_GENDER);
-                String phoneNumber = set.getString(USER_PHONE);
-                String address = set.getString(USER_ADDRESS);
-
 
                 user.setId(userId);
-                user = new User(email, password, firstName, lastName, gender, address,
-                        phoneNumber, locale);
+                user.setEmail(email);
+                user.setFirstName(firstName);
 
                 users.add(user);
             }
