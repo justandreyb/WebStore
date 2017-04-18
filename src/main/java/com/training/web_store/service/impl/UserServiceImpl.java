@@ -6,44 +6,39 @@ import com.training.web_store.dao.exception.DAOException;
 import com.training.web_store.dao.factory.DAOFactory;
 import com.training.web_store.service.UserService;
 import com.training.web_store.service.exception.ServiceException;
-import com.training.web_store.util.ArgumentEncoderUtil;
 import com.training.web_store.util.ArgumentParserUtil;
-import com.training.web_store.util.exception.UtilException;
+import com.training.web_store.util.exception.StorageException;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 public class UserServiceImpl implements UserService {
     private static final String USER_INFO = "user";
 
     private final DAOFactory factory = DAOFactory.getInstance();
+    private final UserDAO userDAO = factory.getUserDAO();
+    private static final String INVALID_ARGUMENT = "Invalid arguments";
 
     @Override
-    public void registration(String login, String password, String firstName, String lastName,
-                             String phoneNumber, String gender, String address, String locale) throws ServiceException {
-        if (!ArgumentParserUtil.isValidArguments(login, password, firstName, lastName, locale)) {
-            throw new ServiceException("Invalid arguments");
+    public void registration(User user) throws ServiceException {
+        if (!ArgumentParserUtil.isValidUser(user)) {
+            throw new ServiceException(INVALID_ARGUMENT);
         }
-
-        UserDAO userDAO = factory.getUserDAO();
         try {
-            password = ArgumentEncoderUtil.encodePassword(password);
-            User user = new User(login, password, firstName, lastName, gender, address, phoneNumber, locale);
             userDAO.addUser(user);
-        } catch (DAOException | UtilException e) {
+        } catch (DAOException | StorageException e) {
             throw new ServiceException(e);
         }
     }
 
     public User signIn(String login, String password) throws ServiceException {
-        if (!ArgumentParserUtil.isValidArguments(login, password)) {
-            throw new ServiceException("Invalid arguments");
+        if (!ArgumentParserUtil.areValidArguments(login, password)) {
+            throw new ServiceException(INVALID_ARGUMENT);
         }
-        UserDAO userDAO = factory.getUserDAO();
         User user = null;
         try {
-            password = ArgumentEncoderUtil.encodePassword(password);
             user = userDAO.getUser(login, password);
-        } catch (DAOException | UtilException e) {
+        } catch (DAOException | StorageException e) {
             throw new ServiceException(e);
         }
 
@@ -54,7 +49,6 @@ public class UserServiceImpl implements UserService {
         if (session == null) {
             throw new ServiceException("Session not found");
         }
-
         session.removeAttribute(USER_INFO);
 
         if (session.getAttributeNames().hasMoreElements()) {
@@ -63,18 +57,25 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateAccountInfo(int userId, String login, String password, String firstName, String lastName,
-                                  String phoneNumber, String gender, String address, String locale) throws ServiceException {
-        if (!ArgumentParserUtil.isValidArguments(login, password, firstName, lastName, locale)) {
-            throw new ServiceException("Invalid arguments");
+    public void updateAccountInfo(int userId, User user) throws ServiceException {
+        if (!ArgumentParserUtil.isValidArgument(userId)) {
+            throw new ServiceException(INVALID_ARGUMENT);
         }
-
-        UserDAO userDAO = factory.getUserDAO();
+        if (!ArgumentParserUtil.isValidUser(user)) {
+            throw new ServiceException(INVALID_ARGUMENT);
+        }
         try {
-            password = ArgumentEncoderUtil.encodePassword(password);
-            User newUser = new User(login, password, firstName, lastName, gender, address, phoneNumber, locale);
-            userDAO.updateUser(userId, newUser);
-        } catch (DAOException | UtilException e) {
+            userDAO.updateUser(userId, user);
+        } catch (DAOException | StorageException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public List<User> getAccounts() throws ServiceException {
+        try {
+            return userDAO.getUsers();
+        } catch (DAOException | StorageException e) {
             throw new ServiceException(e);
         }
     }

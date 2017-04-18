@@ -1,18 +1,17 @@
 package com.training.web_store.bean.store;
 
-import java.util.Map;
+import java.util.List;
 
 public class Product {
     private int id;
     private String name;
+    private String category;
     private double price;
-    private Discount discount;
-    private Map<Byte, Thing> things;
+    private byte discount;
+    private List<Thing> things;
+    private List<Photo> photos;
 
     public Product() {
-    }
-
-    public Product(String name, int categoryId, int discountId) {
     }
 
     public String getName() {
@@ -23,6 +22,14 @@ public class Product {
         this.name = name;
     }
 
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
     public double getPrice() {
         return price;
     }
@@ -31,20 +38,28 @@ public class Product {
         this.price = price;
     }
 
-    public Discount getDiscount() {
+    public byte getDiscount() {
         return discount;
     }
 
-    public void setDiscount(Discount discount) {
+    public void setDiscount(byte discount) {
         this.discount = discount;
     }
 
-    public Map<Byte, Thing> getThings() {
+    public List<Thing> getThings() {
         return things;
     }
 
-    public void setThings(Map<Byte, Thing> things) {
+    public void setThings(List<Thing> things) {
         this.things = things;
+    }
+
+    public List<Photo> getPhotos() {
+        return photos;
+    }
+
+    public void setPhotos(List<Photo> photos) {
+        this.photos = photos;
     }
 
     public int getId() {

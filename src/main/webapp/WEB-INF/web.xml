@@ -17,6 +17,7 @@
     <filter-mapping>
         <filter-name>EncodingFilter</filter-name>
         <servlet-name>Controller</servlet-name>
+        <servlet-name>PagesController</servlet-name>
     </filter-mapping>
 
     <servlet>
@@ -27,17 +28,41 @@
     <servlet-mapping>
         <servlet-name>Controller</servlet-name>
         <url-pattern>/welcome</url-pattern>
-        <url-pattern>/login</url-pattern>
+        <url-pattern>/products</url-pattern>
+        <url-pattern>/product</url-pattern>
         <url-pattern>/dashboard</url-pattern>
+        <url-pattern>/im</url-pattern>
+        <url-pattern>/card</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>PagesController</servlet-name>
+        <servlet-class>com.training.pages_creator.controller.PagesController</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>PagesController</servlet-name>
+        <url-pattern>/entity/*</url-pattern>
+    </servlet-mapping>
+
+    <error-page>
+        <error-code>403</error-code>
+        <location>/WEB-INF/jsp/error-pages/Page403.html</location>
+    </error-page>
 
     <error-page>
         <error-code>404</error-code>
         <location>/WEB-INF/jsp/error-pages/Page404.html</location>
     </error-page>
+
     <error-page>
         <error-code>500</error-code>
         <location>/WEB-INF/jsp/error-pages/Page500.html</location>
+    </error-page>
+
+    <error-page>
+        <error-code>503</error-code>
+        <location>/WEB-INF/jsp/error-pages/Page503.html</location>
     </error-page>
 
 </web-app>

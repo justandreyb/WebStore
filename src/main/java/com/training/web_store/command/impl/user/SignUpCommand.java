@@ -1,32 +1,27 @@
 package com.training.web_store.command.impl.user;
 
+import com.training.util.ResponseWriter;
 import com.training.web_store.bean.account.User;
+import com.training.web_store.command.impl.UserCommand;
 import com.training.web_store.service.exception.ServiceException;
-import com.training.web_store.util.Redirector;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.Locale;
-import java.util.logging.Level;
 
 public class SignUpCommand extends UserCommand {
     private static final String EMAIL_PARAMETER = "email";
     private static final String PASSWORD_PARAMETER = "password";
-    private static final String FIRST_NAME_PARAMETER = "first_name";
-    private static final String LAST_NAME_PARAMETER = "last_name";
-    private static final String PHONE_PARAMETER = "phone_number";
+    private static final String FIRST_NAME_PARAMETER = "firstName";
+    private static final String LAST_NAME_PARAMETER = "lastName";
+    private static final String PHONE_PARAMETER = "phone";
     private static final String GENDER_PARAMETER = "gender";
     private static final String ADDRESS_PARAMETER = "address";
-    private static final String LOCALE_PARAMETER = "locale";
+    private static final String LOCALE_PARAMETER = "language";
 
-    private static final String ERROR_PARAMETER = "error-message";
-
-    private static final String USER_INFO = "user";
-
-    private static final String JSP_IM = "/im";
-    private static final String JSP_REGISTRATION_ERROR = "/error?value=register";
-
+    private static final String ERROR_USER_NOT_FOUND = "User not found. Please register at first";
+    private static final String ERROR_WITH_SIGN_UP = "Error while perform sign up";
 
     public void execute(HttpServletRequest request, HttpServletResponse response) {
         String email = request.getParameter(EMAIL_PARAMETER);
@@ -39,24 +34,23 @@ public class SignUpCommand extends UserCommand {
         String locale = request.getParameter(LOCALE_PARAMETER);
 
         try {
-            service.registration(email, password, firstName, lastName,
-                    phone, gender, address, locale);
-            User user = service.signIn(email, password);
+            User user = new User(email, password, firstName, lastName, phone,
+                    gender, address, locale);
+
+            service.registration(user);
+            user = service.signIn(email, password);
             HttpSession session = request.getSession(true);
             if (user != null) {
                 Locale currentLocale = new Locale(locale);
 
                 session.setAttribute(LOCALE_PARAMETER, currentLocale);
-                session.setAttribute(USER_INFO, user);
-                Redirector.redirect(response, JSP_IM);
+                session.setAttribute(user.getRole(), user);
             } else {
-                session.setAttribute(ERROR_PARAMETER, "User not found");
-                Redirector.redirect(response, JSP_REGISTRATION_ERROR);
+                ResponseWriter.writeError(response, ERROR_USER_NOT_FOUND);
             }
         } catch (ServiceException e) {
-            String error = "Error while perform registration";
-            log.log(Level.SEVERE, error, e);
-            Redirector.redirect(response, JSP_REGISTRATION_ERROR);
+            log.warn(ERROR_WITH_SIGN_UP, e);
+            ResponseWriter.writeError(response, ERROR_WITH_SIGN_UP);
         }
     }
 }

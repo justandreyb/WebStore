@@ -2,13 +2,15 @@ package com.training.web_store.dao;
 
 import com.training.web_store.bean.store.Order;
 import com.training.web_store.dao.exception.DAOException;
+import com.training.web_store.util.exception.StorageException;
 
-import java.sql.Date;
+import java.util.List;
 
 public interface OrderDAO {
-    void addOrder(Order order) throws DAOException;
+    void addOrder(Order order) throws DAOException, StorageException;
 
-    Order getOrder(int userId, int productId, Date creationDate) throws DAOException;
+    Order getOrder(int userId, int orderId) throws DAOException, StorageException;
+    List<Order> getOrders(int userId) throws DAOException, StorageException;
 
-    void setOrderState(Order order, boolean state) throws DAOException;
+    void setOrderState(int orderId, boolean state) throws DAOException, StorageException;
 }

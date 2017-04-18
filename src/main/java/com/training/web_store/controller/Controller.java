@@ -1,19 +1,21 @@
 package com.training.web_store.controller;
 
+import com.training.util.Redirector;
+import com.training.util.ResponseWriter;
 import com.training.web_store.command.Command;
-import com.training.web_store.command.CommandProvider;
-import com.training.web_store.util.Redirector;
+import com.training.web_store.command.factory.EntityFactory;
+import com.training.web_store.command.factory.FactoryProducer;
+import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Controller extends HttpServlet {
-    private static final Logger log = Logger.getLogger(Controller.class.getName());
+    private static final Logger log = Logger.getLogger(Controller.class);
     private static final String COMMAND_PARAMETER = "command";
-    private static final String RESOURCES = "resources";
+    private static final String ENTITY_PARAMETER = "entity";
+    private static final String ERROR_INFO = "Command cannot be executed right now.";
 
     public Controller() {
         super();
@@ -30,45 +32,43 @@ public class Controller extends HttpServlet {
     }
 
     private void analyzeRequest(HttpServletRequest request, HttpServletResponse response) {
+        log.debug(request.getRequestURI());
         if (hasCommand(request)) {
             performCommand(request, response);
         } else {
             String uri = request.getRequestURI();
-            if (!isResourceURI(uri)) {
-                Redirector.forward(request, response, uri);
-            } else {
-                Redirector.redirect(response, uri);
-            }
+            Redirector.forward(request, response, uri);
         }
     }
 
-    private boolean hasCommand(HttpServletRequest request) {
+    private String getCommandFromRequest(HttpServletRequest request) {
         String command = request.getParameter(COMMAND_PARAMETER);
         if (command == null) {
             command = (String) request.getAttribute(COMMAND_PARAMETER);
         }
+        return command;
+    }
 
-        return command != null;
+    private boolean hasCommand(HttpServletRequest request) {
+        return getCommandFromRequest(request) != null;
     }
 
     private void performCommand(HttpServletRequest request, HttpServletResponse response) {
-        String requestedCommand = request.getParameter(COMMAND_PARAMETER);
+        String requestedCommand = getCommandFromRequest(request);
+        String entity = request.getParameter(ENTITY_PARAMETER);
 
-        if (requestedCommand == null) {
-            requestedCommand = (String) request.getAttribute(COMMAND_PARAMETER);
-        }
-
-        CommandProvider provider = CommandProvider.getInstance();
-        Command command = provider.getCommand(requestedCommand);
+        FactoryProducer factoryProducer = FactoryProducer.getInstance();
+        EntityFactory factory = factoryProducer.getFactory(entity);
 
         try {
+            Command command = factory.getCommand(requestedCommand);
             command.execute(request, response);
+
         } catch (Exception e) {
-            log.log(Level.SEVERE, "Error while executing command", e);
+            log.warn(ERROR_INFO, e);
+            ResponseWriter.writeError(response, ERROR_INFO);
         }
+
     }
 
-    private boolean isResourceURI(String uri) {
-        return uri.contains(RESOURCES);
-    }
 }

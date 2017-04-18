@@ -1,18 +1,21 @@
 package com.training.web_store.service.factory;
 
-import com.training.web_store.dao.exception.DAOException;
-import com.training.web_store.dao.util.DBConnector;
+import com.training.web_store.service.InteractionService;
 import com.training.web_store.service.StoreService;
-import com.training.web_store.service.exception.ServiceException;
-import com.training.web_store.service.impl.StoreServiceImpl;
 import com.training.web_store.service.UserService;
+import com.training.web_store.service.exception.ServiceException;
+import com.training.web_store.service.impl.InteractionServiceImpl;
+import com.training.web_store.service.impl.StoreServiceImpl;
 import com.training.web_store.service.impl.UserServiceImpl;
+import com.training.web_store.util.database.DBConnector;
+import com.training.web_store.util.exception.StorageException;
 
 public class ServiceFactory {
     private static final ServiceFactory factory = new ServiceFactory();
 
     private final UserService userServiceImpl = new UserServiceImpl();
     private final StoreService storeServiceImpl = new StoreServiceImpl();
+    private final InteractionService interactionService = new InteractionServiceImpl();
 
     private ServiceFactory() {
     }
@@ -21,9 +24,20 @@ public class ServiceFactory {
         DBConnector connector = DBConnector.getInstance();
         try {
             connector.init();
-        } catch (DAOException e) {
+        } catch (StorageException e) {
             throw new ServiceException(e);
         }
+
+    }
+
+    public void close() throws ServiceException {
+        DBConnector connector = DBConnector.getInstance();
+        try {
+            connector.destroy();
+        } catch (StorageException e) {
+            throw new ServiceException(e);
+        }
+
     }
 
     public static ServiceFactory getInstance() {
@@ -36,5 +50,9 @@ public class ServiceFactory {
 
     public StoreService getStoreService() {
         return storeServiceImpl;
+    }
+
+    public InteractionService getInteractionService() {
+        return interactionService;
     }
 }

@@ -10,39 +10,72 @@
     <name>WebStore</name>
     <url>http://maven.apache.org</url>
 
+    <properties>
+        <javax.version>7.0</javax.version>
+        <junit.version>3.8.1</junit.version>
+        <mysql.version>6.0.5</mysql.version>
+        <jstl.version>1.2</jstl.version>
+        <jsonsimple.version>1.1.1</jsonsimple.version>
+        <log4j.version>1.2.17</log4j.version>
+        <json-taglib.version>0.4.1</json-taglib.version>
+    </properties>
+
     <dependencies>
 
         <dependency>
           <groupId>junit</groupId>
           <artifactId>junit</artifactId>
-          <version>3.8.1</version>
+          <version>${junit.version}</version>
           <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-api</artifactId>
-            <version>7.0</version>
+            <version>${javax.version}</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>6.0.5</version>
+            <version>${mysql.version}</version>
         </dependency>
 
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>jstl</artifactId>
-            <version>1.2</version>
+            <version>${jstl.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.googlecode.json-simple</groupId>
+            <artifactId>json-simple</artifactId>
+            <version>${jsonsimple.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>RELEASE</version>
+        </dependency>
+
+        <dependency>
+            <groupId>atg.taglib.json</groupId>
+            <artifactId>json-taglib</artifactId>
+            <version>${json-taglib.version}</version>
+        </dependency>
 
     </dependencies>
 
     <build>
-    <!-- Uncomment if you want to build project from console -->
+    <!-- Uncomment to build project from console -->
     <!--
         <finalName>web_store</finalName>
         <sourceDirectory>src/main/java/</sourceDirectory>

@@ -10,6 +10,7 @@ public class User {
     private String phoneNumber;
     private String gender;
     private String locale;
+    private String role;
 
     public User() {}
 
@@ -95,5 +96,13 @@ public class User {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public String getRole() {
+        return role;
     }
 }

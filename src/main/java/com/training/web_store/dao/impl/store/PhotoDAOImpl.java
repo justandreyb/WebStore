@@ -1,9 +1,10 @@
 package com.training.web_store.dao.impl.store;
 
-import com.training.web_store.dao.PhotoDAO;
 import com.training.web_store.bean.store.Photo;
+import com.training.web_store.dao.PhotoDAO;
 import com.training.web_store.dao.exception.DAOException;
-import com.training.web_store.dao.util.DBConnector;
+import com.training.web_store.util.database.DBConnector;
+import com.training.web_store.util.exception.StorageException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,7 +18,7 @@ public class PhotoDAOImpl implements PhotoDAO {
     private static final DBConnector dbConnector = DBConnector.getInstance();
 
     private static final String DATABASE = "web_store";
-    private static final String PHOTO_TABLE = "thing_image";
+    private static final String PHOTO_TABLE = "image";
     private static final String PHOTO_ID = "id";
     private static final String PHOTO_HREF = "href";
     private static final String PHOTO_REAL_NAME = "real_name";
@@ -43,7 +44,7 @@ public class PhotoDAOImpl implements PhotoDAO {
             ") " +
             "VALUES (?, ?, ?)";
 
-    private static final String GET_PHOTOS_QUERY =
+    private static final String GET_PHOTOS_FOR_THING_QUERY =
             "SELECT " +
                 PHOTO_ID + ", " +
                 PHOTO_HREF + ", " +
@@ -51,7 +52,18 @@ public class PhotoDAOImpl implements PhotoDAO {
             " FROM " +
                 DATABASE + "." + PHOTO_TABLE +
             " WHERE " +
-                THING_ID + "=? AND" +
+                THING_ID + "=? AND " +
+                PHOTO_IS_AVAILABLE + "=" + PHOTO_AVAILABLE;
+
+    private static final String GET_PHOTOS_FOR_PRODUCT_QUERY =
+            "SELECT " +
+                PHOTO_ID + ", " +
+                PHOTO_HREF + ", " +
+                PHOTO_REAL_NAME +
+            " FROM " +
+                DATABASE + "." + PHOTO_TABLE +
+            " WHERE " +
+                PRODUCT_ID + "=? AND " +
                 PHOTO_IS_AVAILABLE + "=" + PHOTO_AVAILABLE;
 
     private static final String SET_PHOTO_AVAILABLE =
@@ -61,23 +73,24 @@ public class PhotoDAOImpl implements PhotoDAO {
             " WHERE " +
                 PHOTO_ID + "=?";
 
+    private static final String ERROR_ADDING = "Error during adding new entity";
+    private static final String ERROR_DELETING = "Error during deleting";
+
     @Override
-    public void addThingPhoto(int thingId, String realName, String href) throws DAOException {
+    public void addThingPhoto(int thingId, String realName, String href) throws DAOException, StorageException {
         addPhoto(ADD_THING_PHOTO_QUERY, thingId, realName, href);
     }
 
     @Override
-    public void addProductPhoto(int productId, String realName, String href) throws DAOException {
+    public void addProductPhoto(int productId, String realName, String href) throws DAOException, StorageException {
         addPhoto(ADD_PRODUCT_PHOTO_QUERY, productId, realName, href);
     }
 
-    private void addPhoto(String query, int id, String realName, String href) throws DAOException {
+    private void addPhoto(String query, int id, String realName, String href) throws DAOException, StorageException {
         Connection connection = null;
         PreparedStatement statement = null;
         try {
             connection = dbConnector.getConnection();
-
-            connection.setAutoCommit(false);
 
             statement = connection.prepareStatement(query);
 
@@ -86,12 +99,8 @@ public class PhotoDAOImpl implements PhotoDAO {
             statement.setInt(3, id);
 
             if (statement.executeUpdate() < 1) {
-                throw new DAOException("Error during adding new entity");
+                throw new DAOException(ERROR_ADDING);
             }
-
-            connection.commit();
-            connection.setAutoCommit(true);
-
         } catch (SQLException e) {
             throw new DAOException("Cannot get connection to DB", e);
         } finally {
@@ -100,7 +109,7 @@ public class PhotoDAOImpl implements PhotoDAO {
     }
 
     @Override
-    public List<Photo> getPhotos(int thingId) throws DAOException {
+    public List<Photo> getPhotosForThing(int thingId) throws DAOException, StorageException {
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet set = null;
@@ -108,7 +117,7 @@ public class PhotoDAOImpl implements PhotoDAO {
 
         try {
             connection = dbConnector.getConnection();
-            statement = connection.prepareStatement(GET_PHOTOS_QUERY);
+            statement = connection.prepareStatement(GET_PHOTOS_FOR_THING_QUERY);
 
             statement.setInt(1, thingId);
 
@@ -135,26 +144,52 @@ public class PhotoDAOImpl implements PhotoDAO {
         } catch (SQLException e) {
             throw new DAOException(e);
         } finally {
-            try {
-                if (set != null) {
-                    set.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException(e);
-            }
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException(e);
-            }
-            dbConnector.closeConnection(connection);
+            dbConnector.closeConnection(connection, statement, set);
         }
     }
 
     @Override
-    public void setAvailable(int photoId, boolean available) throws DAOException {
+    public List<Photo> getPhotosForProduct(int productId) throws DAOException, StorageException {
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        List<Photo> photos = null;
+
+        try {
+            connection = dbConnector.getConnection();
+            statement = connection.prepareStatement(GET_PHOTOS_FOR_PRODUCT_QUERY);
+
+            statement.setInt(1, productId);
+
+            set = statement.executeQuery();
+
+            photos = new ArrayList<Photo>();
+
+            while (set.next()) {
+                Photo photo = new Photo();
+
+                int photoId = set.getInt(PHOTO_ID);
+                String realName = set.getString(PHOTO_REAL_NAME);
+                String photoHref = set.getString(PHOTO_HREF);
+
+                photo.setId(photoId);
+                photo.setRealName(realName);
+                photo.setHref(photoHref);
+                photo.setProductId(productId);
+
+                photos.add(photo);
+            }
+            return photos;
+
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        } finally {
+            dbConnector.closeConnection(connection, statement, set);
+        }
+    }
+
+    @Override
+    public void setAvailable(int photoId, boolean available) throws DAOException, StorageException {
         Connection connection = null;
         PreparedStatement statement = null;
         try {
@@ -164,20 +199,13 @@ public class PhotoDAOImpl implements PhotoDAO {
             statement.setInt(2, photoId);
 
             if (statement.executeUpdate() < 1) {
-                throw new DAOException("Error during changing state");
+                throw new DAOException(ERROR_DELETING);
             }
 
         } catch (SQLException e) {
             throw new DAOException(e);
         } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException(e);
-            }
-            dbConnector.closeConnection(connection);
+            dbConnector.closeConnection(connection, statement);
         }
     }
 }

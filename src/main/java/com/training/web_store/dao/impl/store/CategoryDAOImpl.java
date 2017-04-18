@@ -3,12 +3,10 @@ package com.training.web_store.dao.impl.store;
 import com.training.web_store.bean.store.Category;
 import com.training.web_store.dao.CategoryDAO;
 import com.training.web_store.dao.exception.DAOException;
-import com.training.web_store.dao.util.DBConnector;
+import com.training.web_store.util.database.DBConnector;
+import com.training.web_store.util.exception.StorageException;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,8 +21,7 @@ public class CategoryDAOImpl implements CategoryDAO {
     private static final String CATEGORY_DESCRIPTION = "description";
     private static final String CATEGORY_IS_AVAILABLE = "is_available";
 
-    private static final int AVAILABLE_CATEGORY = 1;
-    private static final int UNAVAILABLE_CATEGORY = 0;
+    private static final String EMPTY_DESCRIPTION = null;
 
     private static final String ADD_CATEGORY_QUERY =
             "INSERT INTO " + DATABASE + "." + CATEGORY_TABLE + " (" +
@@ -41,25 +38,9 @@ public class CategoryDAOImpl implements CategoryDAO {
             " WHERE " +
                 CATEGORY_ID + "=?";
 
-    private static final String GET_CATEGORY_QUERY =
-            "SELECT " +
-                CATEGORY_NAME + ", " +
-                CATEGORY_DESCRIPTION +
-            " FROM " +
-                DATABASE + "." + CATEGORY_TABLE +
-            " WHERE " +
-                CATEGORY_ID + "=? AND" +
-                CATEGORY_IS_AVAILABLE + "=" + AVAILABLE_CATEGORY;
+    private static final String GET_CATEGORY_QUERY = "{call getCategory(?)}";
 
-    private static final String GET_CATEGORIES_QUERY =
-            "SELECT " +
-                CATEGORY_ID + ", " +
-                CATEGORY_NAME + ", " +
-                CATEGORY_DESCRIPTION +
-            " FROM " +
-                DATABASE + "." + CATEGORY_TABLE +
-            " WHERE " +
-                CATEGORY_IS_AVAILABLE + "=" + AVAILABLE_CATEGORY;
+    private static final String GET_CATEGORIES_QUERY = "{call getCategories()}";
 
     private static final String SET_CATEGORY_AVAILABLE =
             "UPDATE " + DATABASE + "." + CATEGORY_TABLE +
@@ -68,34 +49,32 @@ public class CategoryDAOImpl implements CategoryDAO {
             " WHERE " +
                 CATEGORY_ID + "=?";
 
+    private static final String ERROR_ADDING = "Error during adding new entity";
+    private static final String ERROR_UPDATE = "Error during updating";
+    private static final String ERROR_DELETING = "Error during changing state";
+
     @Override
-    public void addCategory(String name) throws DAOException {
-        addCategory(name, null);
+    public void addCategory(String name) throws DAOException, StorageException {
+        addCategory(name, EMPTY_DESCRIPTION);
     }
 
     @Override
-    public void addCategory(String name, String description) throws DAOException {
+    public void addCategory(String name, String description) throws DAOException, StorageException {
         Connection connection = null;
         PreparedStatement statement = null;
         try {
             connection = dbConnector.getConnection();
-
-            connection.setAutoCommit(false);
-
             statement = connection.prepareStatement(ADD_CATEGORY_QUERY);
 
             statement.setString(1, name);
+            //TODO: Mb just send null without check?
             if (description != null) {
                 statement.setString(2, description);
             }
 
             if (statement.executeUpdate() < 1) {
-                throw new DAOException("Error during adding new entity");
+                throw new DAOException(ERROR_ADDING);
             }
-
-            connection.commit();
-            connection.setAutoCommit(true);
-
         } catch (SQLException e) {
             throw new DAOException("Cannot get connection to DB", e);
         } finally {
@@ -104,7 +83,7 @@ public class CategoryDAOImpl implements CategoryDAO {
     }
 
     @Override
-    public void updateCategory(int categoryId, String name, String updatedDescription) throws DAOException {
+    public void updateCategory(int categoryId, String name, String updatedDescription) throws DAOException, StorageException {
         Connection connection = null;
         PreparedStatement statement = null;
         try {
@@ -116,32 +95,25 @@ public class CategoryDAOImpl implements CategoryDAO {
             statement.setInt(3, categoryId);
 
             if (statement.executeUpdate() < 1) {
-                throw new DAOException("Error during updating");
+                throw new DAOException(ERROR_UPDATE);
             }
 
         } catch (SQLException e) {
             throw new DAOException(e);
         } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException(e);
-            }
-            dbConnector.closeConnection(connection);
+            dbConnector.closeConnection(connection, statement);
         }
     }
 
     @Override
-    public Category getCategory(int categoryId) throws DAOException {
+    public Category getCategory(int categoryId) throws DAOException, StorageException {
         Connection connection = null;
-        PreparedStatement statement = null;
+        CallableStatement statement = null;
         ResultSet set = null;
 
         try {
             connection = dbConnector.getConnection();
-            statement = connection.prepareStatement(GET_CATEGORY_QUERY);
+            statement = connection.prepareCall(GET_CATEGORY_QUERY);
 
             statement.setInt(1, categoryId);
 
@@ -153,7 +125,6 @@ public class CategoryDAOImpl implements CategoryDAO {
                 category = new Category();
 
                 category.setId(categoryId);
-
                 String name = set.getString(CATEGORY_NAME);
                 String description = set.getString(CATEGORY_DESCRIPTION);
 
@@ -166,34 +137,20 @@ public class CategoryDAOImpl implements CategoryDAO {
         } catch (SQLException e) {
             throw new DAOException(e);
         } finally {
-            try {
-                if (set != null) {
-                    set.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException(e);
-            }
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException(e);
-            }
-            dbConnector.closeConnection(connection);
+            dbConnector.closeConnection(connection, statement, set);
         }
     }
 
     @Override
-    public List<Category> getCategories() throws DAOException {
+    public List<Category> getCategories() throws DAOException, StorageException {
         Connection connection = null;
-        PreparedStatement statement = null;
+        CallableStatement statement = null;
         ResultSet set = null;
         List<Category> categories = null;
 
         try {
             connection = dbConnector.getConnection();
-            statement = connection.prepareStatement(GET_CATEGORIES_QUERY);
+            statement = connection.prepareCall(GET_CATEGORIES_QUERY);
 
             set = statement.executeQuery();
 
@@ -217,26 +174,12 @@ public class CategoryDAOImpl implements CategoryDAO {
         } catch (SQLException e) {
             throw new DAOException(e);
         } finally {
-            try {
-                if (set != null) {
-                    set.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException(e);
-            }
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException(e);
-            }
-            dbConnector.closeConnection(connection);
+            dbConnector.closeConnection(connection, statement, set);
         }
     }
 
     @Override
-    public void setAvailable(int categoryId, boolean available) throws DAOException {
+    public void setAvailable(int categoryId, boolean available) throws DAOException, StorageException {
         Connection connection = null;
         PreparedStatement statement = null;
         try {
@@ -246,20 +189,13 @@ public class CategoryDAOImpl implements CategoryDAO {
             statement.setInt(2, categoryId);
 
             if (statement.executeUpdate() < 1) {
-                throw new DAOException("Error during changing state");
+                throw new DAOException(ERROR_DELETING);
             }
 
         } catch (SQLException e) {
             throw new DAOException(e);
         } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException(e);
-            }
-            dbConnector.closeConnection(connection);
+            dbConnector.closeConnection(connection, statement);
         }
     }
 }

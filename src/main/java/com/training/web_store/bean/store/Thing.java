@@ -6,13 +6,12 @@ import java.util.List;
 public class Thing {
     private int id;
     private String name;
-    private Category category;
-    private Brand brand;
+    private String category;
+    private String brand;
     private String description;
     private Date creationDate;
     private String review;
     private List<Photo> photos;
-
 
     public Thing() {
     }
@@ -31,19 +30,19 @@ public class Thing {
         this.name = name;
     }
 
-    public Category getCategory() {
+    public String getCategory() {
         return category;
     }
 
-    public void setCategory(Category category) {
+    public void setCategory(String category) {
         this.category = category;
     }
 
-    public Brand getBrand() {
+    public String getBrand() {
         return brand;
     }
 
-    public void setBrand(Brand brand) {
+    public void setBrand(String brand) {
         this.brand = brand;
     }
 
@@ -77,5 +76,13 @@ public class Thing {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public List<Photo> getPhotos() {
+        return photos;
+    }
+
+    public void setPhotos(List<Photo> photos) {
+        this.photos = photos;
     }
 }

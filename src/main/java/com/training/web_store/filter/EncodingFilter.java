@@ -1,10 +1,10 @@
 package com.training.web_store.filter;
 
 import javax.servlet.*;
-import javax.servlet.annotation.WebFilter;
 import java.io.IOException;
 
 public class EncodingFilter implements Filter {
+
     public void destroy() {
     }
 
