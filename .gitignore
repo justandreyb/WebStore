@@ -2,7 +2,6 @@
 /target/**
 /out/**
 WebStore.iml
-*.log
 /src/main/webapp/resources/bootstrap/css/**
 /src/main/webapp/resources/bootstrap/fonts/**
 /src/main/webapp/resources/bootstrap/js/**
