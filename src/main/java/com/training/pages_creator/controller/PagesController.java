@@ -45,7 +45,6 @@ public class PagesController extends HttpServlet {
             CommandRepository factory = CommandRepository.getInstance();
             String entity = parsedRequest.getEntity();
             String requestedCommand = parsedRequest.getCommand();
-
             Command command = factory.getCommand(requestedCommand);
 
             command.execute(request, response, entity);

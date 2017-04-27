@@ -1,5 +1,6 @@
 package com.training.web_store.service.impl;
 
+import com.training.web_store.bean.account.Role;
 import com.training.web_store.bean.store.*;
 import com.training.web_store.dao.*;
 import com.training.web_store.dao.exception.DAOException;
@@ -22,6 +23,7 @@ public class StoreServiceImpl implements StoreService {
     private final PhotoDAO photoDAO = factory.getPhotoDAO();
     private final ProductDAO productDAO = factory.getProductDAO();
     private final ThingDAO thingDAO = factory.getThingDAO();
+    private final RoleDAO roleDAO = factory.getRoleDAO();
 
     private static final String INVALID_ARGUMENT = "Invalid argument";
 
@@ -113,7 +115,7 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     public void addCategory(String name, String description) throws ServiceException {
-        if (!ArgumentParserUtil.areValidArguments(name, description)) {
+        if (!ArgumentParserUtil.areValidArguments(name)) {
             throw new ServiceException(INVALID_ARGUMENT);
         }
         try {
@@ -711,6 +713,15 @@ public class StoreServiceImpl implements StoreService {
         }
         try {
             thingDAO.deleteThingReview(thingId);
+        } catch (DAOException | StorageException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public List<Role> getRoles() throws ServiceException {
+        try {
+            return roleDAO.getRoles();
         } catch (DAOException | StorageException e) {
             throw new ServiceException(e);
         }

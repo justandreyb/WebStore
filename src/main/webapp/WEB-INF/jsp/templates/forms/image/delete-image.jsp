@@ -3,20 +3,15 @@
 <div class="container-fluid">
     <form class="form-horizontal" method="post">
 
+        <input type="hidden" id="delete-image-product-id" value="#PRODUCT_ID" />
+        <input type="hidden" id="delete-image-thing-id" value="#THING_ID" />
+
         <div class="form-group">
-            <label class="control-label col-sm-2" for="delete-image">${entityHref}</label>
+            <label class="control-label col-sm-2" for="delete-image-image-id">${entityHref}</label>
             <div class="col-sm-10">
-                <c:set var="images" scope="request" value="${entities}" />
-                <select class="form-control" id="delete-image">
+                <select class="form-control" id="delete-image-image-id">
                     <option selected>${none}</option>
-                    <c:if test="${images != null}">
-                        <c:forEach items="${images}" var="image">
-                            <c:set var="map" scope="request" value="${image.parameters}" />
-                            <option value="<c:out value="${map['image_id']}"/>">
-                                <c:out value="${map['image_href']}"/>
-                            </option>
-                        </c:forEach>
-                    </c:if>
+                    #PHOTOS
                 </select>
             </div>
         </div>

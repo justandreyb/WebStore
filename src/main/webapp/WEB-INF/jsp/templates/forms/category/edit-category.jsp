@@ -3,19 +3,19 @@
 <div class="container-fluid">
     <form class="form-horizontal" method="post">
 
-        <c:set var="categoryEntity" scope="request" value="${category}" />
+        <input type="hidden" id="edit-category-id" value="#ID" />
 
         <div class="form-group">
             <label class="control-label col-sm-2" for="edit-category-name">${entityName}</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" id="edit-category-name" placeholder="${enterName}" value="${categoryEntity.name}">
+                <input required type="text" class="form-control" id="edit-category-name" placeholder="${enterName}" value="#NAME">
             </div>
         </div>
 
         <div class="form-group">
-            <label class="control-label col-sm-2" for="edit-category-description">${entityDescription}:</label>
+            <label class="control-label col-sm-2" for="edit-category-description">${entityDescription}</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" id="edit-category-description" placeholder="${enterDescription}" value="${categoryEntity.description}>
+                <input required type="text" class="form-control" id="edit-category-description" placeholder="${enterDescription}" value="#DESCRIPTION">
             </div>
         </div>
 

@@ -25,6 +25,7 @@ public class FactoryProducer {
         repository.put(FactoryName.PRODUCT, new ProductFactory());
         repository.put(FactoryName.REVIEW, new ReviewFactory());
         repository.put(FactoryName.THING, new ThingFactory());
+        repository.put(FactoryName.ROLE, new RoleFactory());
 
         repository.put(FactoryName.WRONG, new WrongFactory());
     }

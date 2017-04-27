@@ -14,8 +14,21 @@ function handleSuccess(data) {
     }
 }
 
-function analyzeReturnedJSON(block, jsonObject) {
+function handleActionSuccess(data) {
+    stopSpin();
 
+    var block = $("#action-block-inner");
+
+    var actionBlock = $("#action-block");
+
+    if (data != null && data != "") {
+        actionBlock.fadeOut(500);
+        actionBlock.modal('toggle');
+        block.html("");
+        alert(data);
+    } else {
+        printDefaultError(block);
+    }
 }
 
 function handleAuthorisationSuccess(data) {
@@ -35,8 +48,10 @@ function handleAuthorisationSuccess(data) {
         printDefaultError(block);
     }
     var actionBlock = $("#action-block");
+
     if (!actionBlock.modal.isShown) {
-        actionBlock.modal('show');
+        actionBlock.fadeIn(500);
+        actionBlock.modal('show')
     }
 }
 
@@ -52,11 +67,24 @@ function reloadPage(block, jsonObject) {
 function handleError(errorMessage) {
     stopSpin();
     var block = $("#action-block-inner");
-    block.html(errorMessage);
+
 }
 
-function printForm(block, data) {
-    block.html(data);
+function printForm(code, collectedData, generatePage) {
+    stopSpin();
+    var block = $("#action-block-inner");
+    block.html("");
+
+    if (code != null && code != "") {
+        code = generatePage(code, collectedData);
+        block.html(code);
+    } else {
+        printDefaultError(block);
+    }
+    var actionBlock = $("#action-block");
+
+    actionBlock.fadeIn(250);
+    actionBlock.modal('show');
 }
 
 function printError(block, jsonObject) {
@@ -75,7 +103,7 @@ function printErrorWithSign(errorMessage) {
     var block = $("#action-block");
 
     if (!block.isShown) {
-        block.show();
+        block.fadeIn(300);
     }
 
     $("#action-block-inner").innerHTML = errorMessage;

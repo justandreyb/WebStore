@@ -1,5 +1,6 @@
 package com.training.web_store.service;
 
+import com.training.web_store.bean.account.Role;
 import com.training.web_store.bean.store.*;
 import com.training.web_store.service.exception.ServiceException;
 
@@ -92,5 +93,9 @@ public interface StoreService {
     void addReview(int thingId, String review) throws ServiceException;
     String getReview(int thingId) throws ServiceException;
     void deleteReview(int thingId) throws ServiceException;
+
+    /* --------------------------------------------------------------------- */
+
+    List<Role> getRoles() throws ServiceException;
 
 }

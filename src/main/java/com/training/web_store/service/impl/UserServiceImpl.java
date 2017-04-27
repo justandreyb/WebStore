@@ -79,4 +79,22 @@ public class UserServiceImpl implements UserService {
             throw new ServiceException(e);
         }
     }
+
+    @Override
+    public void changeAccountRole(int accountId, int roleId) throws ServiceException {
+        try {
+            userDAO.changeRole(accountId, roleId);
+        } catch (DAOException | StorageException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public void blockUser(int accountId) throws ServiceException {
+        try {
+            userDAO.setUserAvailable(accountId, false);
+        } catch (DAOException | StorageException e) {
+            throw new ServiceException(e);
+        }
+    }
 }

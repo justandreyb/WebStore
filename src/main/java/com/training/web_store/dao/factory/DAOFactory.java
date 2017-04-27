@@ -1,6 +1,7 @@
 package com.training.web_store.dao.factory;
 
 import com.training.web_store.dao.*;
+import com.training.web_store.dao.impl.account.RoleDAOImpl;
 import com.training.web_store.dao.impl.account.UserDAOImpl;
 import com.training.web_store.dao.impl.store.*;
 
@@ -15,6 +16,7 @@ public class DAOFactory {
     private final DiscountDAO discountDAOImpl = new DiscountDAOImpl();
     private final OrderDAO orderDAOImpl = new OrderDAOImpl();
     private final PhotoDAO photoDAOImpl = new PhotoDAOImpl();
+    private final RoleDAO roleDAOImpl = new RoleDAOImpl();
 
     private DAOFactory() {}
 
@@ -52,5 +54,9 @@ public class DAOFactory {
 
     public PhotoDAO getPhotoDAO() {
         return photoDAOImpl;
+    }
+
+    public RoleDAO getRoleDAO() {
+        return roleDAOImpl;
     }
 }

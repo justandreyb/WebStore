@@ -25,6 +25,7 @@ public class UserDAOImpl implements UserDAO {
     private static final String USER_PHONE = "phone_number";
     private static final String USER_GENDER = "gender";
     private static final String USER_ROLE_INFO = "role";
+    private static final String USER_ROLE_ID = "role_id";
     private static final String USER_ADDRESS = "address";
 
     private static final String ADD_USER_QUERY = "{call addUser(?,?,?,?,?,?,?,?,?)}";
@@ -33,10 +34,17 @@ public class UserDAOImpl implements UserDAO {
 
     private static final String SET_USER_AVAILABLE_QUERY =
             "UPDATE " + DATABASE + "." + USER_TABLE +
-            " SET " + USER_IS_ACTIVE + "=?" +
+            " SET " +
+                USER_IS_ACTIVE + "=?" +
             " WHERE " +
-                USER_LOGIN + "=? AND" +
-                USER_PASSWORD + "=?";
+                USER_ID + "=?";
+
+    private static final String CHANGE_ROLE_QUERY =
+            "UPDATE " + DATABASE + "." + USER_TABLE +
+            " SET " +
+                USER_ROLE_ID + "=?" +
+            " WHERE " +
+                USER_ID + "=?";
 
     private static final String UPDATE_USER_QUERY = "{call updateUser(?,?,?,?,?,?,?,?,?)}";
 
@@ -182,15 +190,14 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public void setUserAvailable(User user, boolean available) throws DAOException, StorageException {
+    public void setUserAvailable(int userId, boolean available) throws DAOException, StorageException {
         Connection connection = null;
         PreparedStatement statement = null;
         try {
             connection = dbConnector.getConnection();
             statement = connection.prepareStatement(SET_USER_AVAILABLE_QUERY);
             statement.setBoolean(1, available);
-            statement.setString(2, user.getEmail());
-            statement.setString(3, user.getPassword());
+            statement.setInt(2, userId);
 
             if (statement.executeUpdate() < 1) {
                 throw new DAOException("Error during changing user state");
@@ -199,14 +206,28 @@ public class UserDAOImpl implements UserDAO {
         } catch (SQLException e) {
             throw new DAOException(e);
         } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (SQLException e) {
-                throw new DAOException(e);
+            dbConnector.closeConnection(connection, statement);
+        }
+    }
+
+    @Override
+    public void changeRole(int accountId, int roleId) throws DAOException, StorageException {
+        Connection connection = null;
+        PreparedStatement statement = null;
+        try {
+            connection = dbConnector.getConnection();
+            statement = connection.prepareStatement(CHANGE_ROLE_QUERY);
+            statement.setInt(1, roleId);
+            statement.setInt(2, accountId);
+
+            if (statement.executeUpdate() < 1) {
+                throw new DAOException("Error during changing user role");
             }
-            dbConnector.closeConnection(connection);
+
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        } finally {
+            dbConnector.closeConnection(connection, statement);
         }
     }
 }

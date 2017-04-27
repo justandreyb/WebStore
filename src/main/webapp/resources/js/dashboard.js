@@ -1,6 +1,6 @@
-'use strict'
+'use strict';
 
-function getForm(entity, formType, getDataFunction) {
+function getForm(entity, formType, collectedData, generateForm) {
     var url = '/entity/'.concat(entity.toLowerCase());
 
     $.ajax({
@@ -8,11 +8,11 @@ function getForm(entity, formType, getDataFunction) {
         method: 'GET',
         data: {
             command: 'GET_FORM',
-            action: formType,
-            collectedData: getDataFunction(entity)
+            action: formType
         },
         success: function(data) {
-            handleSuccess(data);
+            printForm(data, collectedData, generateForm);
+            //handleSuccess(data);
         },
         error: function() {
             var errorMessage = "Something went wrong.. Try again";
@@ -21,53 +21,32 @@ function getForm(entity, formType, getDataFunction) {
     });
 }
 
-function getFormWithEntityId(entity, id, formType, getDataFunction) {
-    var url = '/entity/'.concat(entity.toLowerCase());
-
+function sendRequest(inputFields) {
+    var url = window.location.pathname;
     $.ajax({
         url: url,
-        method: 'GET',
-        data: {
-            command: 'GET_FORM',
-            action: formType,
-            collectedData: getDataFunction(entity, id)
-        },
-        success: function(data) {
-            handleSuccess(data);
-        },
-        error: function() {
-            var errorMessage = "Something went wrong.. Try again";
-            handleError(errorMessage);
-        }
-    });
-}
-
-function sendRequest(entity, inputFields) {
-    $.ajax({
-        url: '/'.concat(entity.toLowerCase()),
         method: 'POST',
         data: inputFields,
         success: function (data) {
-            handleSuccess(data);
+            handleActionSuccess(data);
         }
     });
 }
 
 function isCorrectId(id) {
     if (id != null) {
-        return id != "Not selected";
+        return id != "Not selected" && !id.includes("#");
     } else {
         return false;
     }
 }
 
-function getEntityById(id, entity) {
+function getEntityById(id, entity, formType, getForm, generateForm) {
     showSpin();
 
     var url = window.location.pathname;
 
-    $.ajax({
-        async: false,
+    return $.ajax({
         url: url,
         method: 'GET',
         data: {
@@ -76,7 +55,7 @@ function getEntityById(id, entity) {
             id: id
         },
         success: function(data) {
-            return data;
+            getForm(entity, formType, data, generateForm);
         },
         error: function() {
             var errorMessage = "Something went wrong.. Try again";
@@ -85,13 +64,12 @@ function getEntityById(id, entity) {
     });
 }
 
-function getEntities(entity) {
+function getEntities(entity, formType, getForm, generateForm) {
     showSpin();
 
     var url = window.location.pathname;
 
-    $.ajax({
-        async: false,
+    return $.ajax({
         url: url,
         method: 'GET',
         data: {
@@ -99,7 +77,7 @@ function getEntities(entity) {
             entity: entity
         },
         success: function(data) {
-            return data;
+            getForm(entity, formType, data, generateForm);
         },
         error: function() {
             var errorMessage = "Something went wrong.. Try again";
@@ -120,7 +98,7 @@ function handleDeleteEntity(entity) {
             id: id
         };
 
-        sendRequest(entity, data);
+        sendRequest(data);
     }
 }
 
@@ -129,19 +107,19 @@ function handleDeleteEntity(entity) {
             /* ---- Forms ----- */
 
 function getBrandAddingForm() {
-    getForm("Brand", "add-brand", doNothing);
+    getForm("Brand", "add-brand", null, doNothingWithParam);
 }
 
 function getBrandEditingForm() {
     var entity = "Brand";
     var id = $("#change-brand").val();
     if (isCorrectId(id)) {
-        getFormWithEntityId(entity, id, "edit-brand", getEntityById);
+        getEntityById(id, entity,  "edit-brand", getForm, generateBrandEditingForm);
     }
 }
 
 function getBrandChangingForm() {
-    getForm("Brand", "change-brand", getEntities);
+    getEntities("Brand", "change-brand", getForm, generateBrandChangingForm);
 }
 
             /* ---- Handle ---- */
@@ -157,26 +135,52 @@ function handleAddBrand() {
         description: $("#add-brand-description").val()
     };
 
-    sendRequest(entity, data);
+    sendRequest(data);
 }
 
 function handleEditBrand() {
     var data;
     var entity = 'Brand';
     data = {
-        command: entity.toUpperCase(),
-        action: 'edit'.concat(entity),
+        entity: entity,
+        command: 'edit',
 
         id: $("#edit-brand-id").val(),
         name: $("#edit-brand-name").val(),
         description: $("#edit-brand-description").val()
     };
 
-    sendRequest(entity, data);
+    sendRequest(data);
 }
 
 function handleDeleteBrand() {
     handleDeleteEntity("Brand");
+}
+
+            /* ---- Generate ---- */
+
+function generateBrandEditingForm(code, collectedData) {
+    var brand = JSON.parse(collectedData);
+
+    var currElement = code.replace("#NAME", brand.name);
+    currElement = currElement.replace("#ID", brand.id);
+    currElement = currElement.replace("#DESCRIPTION", brand.description);
+
+    return currElement;
+}
+
+function generateBrandChangingForm(code, collectedData) {
+    var element = '<option value="#VALUE">#NAME</option>';
+
+    var brands = JSON.parse(collectedData).brands;
+    var generatedCode = "";
+    brands.forEach(function(brand) {
+        var currElement = element.replace("#NAME", brand.name);
+        currElement = currElement.replace("#VALUE", brand.id);
+        generatedCode = generatedCode + "\n" + currElement;
+    });
+
+    return code.replace("#BRANDS" , generatedCode);
 }
 
 /* ----------------- END ----------------- */
@@ -184,23 +188,42 @@ function handleDeleteBrand() {
 
 /* -------------- Account --------------- */
 
+function getChangeRoleData(id, entity, formType, getForm, generateForm) {
+    showSpin();
+
+    var url = window.location.pathname;
+
+    return $.ajax({
+        url: url,
+        method: 'GET',
+        data: {
+            command: 'GET_ENTITIES',
+            entity: "Role"
+        },
+        success: function(roles) {
+            var collectedData = {
+                id: id,
+                roles: roles
+            };
+            getForm(entity, formType, collectedData, generateForm);
+        },
+        error: function() {
+            var errorMessage = "Something went wrong.. Try again";
+            handleError(errorMessage);
+        }
+    });
+}
+
             /* ---- Forms ----- */
 
 function getAccountChangingForm() {
-    getForm("Account", "change-account", getEntities);
-}
-
-function getChangeRoleData(id) {
-    return {
-        id: id,
-        roles: getEntities("role")
-    };
+    getEntities("Account", "change-account", getForm, generateAccountChangingForm);
 }
 
 function getAccountChangeRoleForm() {
     var id = $("#change-account").val();
     if (isCorrectId(id)) {
-        getForm("Account", "block-account", getChangeRoleData);
+        getChangeRoleData(id, "Account", "change-role", getForm, generateAccountChangeRoleForm);
     }
 }
 
@@ -210,19 +233,19 @@ function handleChangeAccountRole() {
     var data;
     var entity = 'Account';
 
-    var roleId = $("#role-id").val();
+    var roleId = $("#change-role-role-id").val();
 
     if (isCorrectId(roleId)) {
         data = {
             entity: entity,
             command: 'change_role',
 
-            account_id: $("#account-id").val(),
-            role_id: roleId
+            accountId: $("#change-role-id").val(),
+            roleId: roleId
         };
     }
 
-    sendRequest(entity, data);
+    sendRequest(data);
 }
 
 function handleBlockAccount() {
@@ -236,15 +259,46 @@ function handleBlockAccount() {
             entity: entity,
             command: 'block',
 
-            id: id
+            accountId: id
         };
 
-        sendRequest(entity, data);
+        sendRequest(data);
     }
 }
 
-function handleDeleteAccount() {
-    handleDeleteEntity("Account");
+            /* ---- Generate ---- */
+
+function generateAccountChangeRoleForm(code, collectedData) {
+    var account = collectedData.id;
+
+    var roles = JSON.parse(collectedData.roles).roles;
+    var element = '<option value="#ROLE_ID">#ROLE_VALUE</option>';
+    var generatedCode = "";
+    roles.forEach(function(role) {
+        var currElement = element.replace("#ROLE_VALUE", role.value);
+        currElement = currElement.replace("#ROLE_ID", role.id);
+        generatedCode = generatedCode + "\n" + currElement;
+    });
+
+    var newCode = code.replace("#ID", account);
+    newCode = newCode.replace("#ROLES", generatedCode);
+
+    return newCode;
+}
+
+function generateAccountChangingForm(code, collectedData) {
+    var element = '<option value="#VALUE">#EMAIL | #FIRST_NAME</option>';
+
+    var accounts = JSON.parse(collectedData).accounts;
+    var generatedCode = "";
+    accounts.forEach(function(account) {
+        var currElement = element.replace("#EMAIL", account.email);
+        currElement = currElement.replace("#FIRST_NAME", account.firstName);
+        currElement = currElement.replace("#VALUE", account.id);
+        generatedCode = generatedCode + "\n" + currElement;
+    });
+
+    return code.replace("#ACCOUNTS" , generatedCode);
 }
 
 /* ----------------- END ----------------- */
@@ -255,18 +309,18 @@ function handleDeleteAccount() {
             /* ---- Forms ----- */
 
 function getCategoryAddingForm() {
-    getForm("Category", "add-category", doNothing);
+    getForm("Category", "add-category", null, doNothingWithParam);
 }
 
 function getCategoryEditingForm() {
     var id = $("#change-category").val();
     if (isCorrectId(id)) {
-        getFormWithEntityId("Category", id, "edit-category", getEntityById);
+        getEntityById(id, "Category", "edit-category", getForm, generateCategoryEditForm);
     }
 }
 
 function getCategoryChangingForm() {
-    getForm("Category", "change-category", getEntities);
+    getEntities("Category", "change-category", getForm, generateCategoryChangingForm);
 }
 
             /* ---- Handle ---- */
@@ -282,26 +336,52 @@ function handleAddCategory() {
         description: $("#add-category-description").val()
     };
 
-    sendRequest(entity, data);
+    sendRequest(data);
 }
 
 function handleEditCategory() {
     var data;
     var entity = 'Category';
     data = {
-        command: entity.toUpperCase(),
-        action: 'edit'.concat(entity),
+        command: 'edit',
+        entity: entity,
 
-        id: $("#edit-category-id").val,
+        categoryId: $("#edit-category-id").val(),
         name: $("#edit-category-name").val(),
         description: $("#edit-category-description").val()
     };
 
-    sendRequest(entity, data);
+    sendRequest(data);
 }
 
 function handleDeleteCategory() {
     handleDeleteEntity("Category");
+}
+
+            /* ---- Generate ---- */
+
+function generateCategoryEditForm(code, collectedData) {
+    var category = JSON.parse(collectedData);
+
+    var currElement = code.replace("#NAME", category.name);
+    currElement = currElement.replace("#DESCRIPTION", category.description);
+    currElement = currElement.replace("#ID", category.id);
+
+    return currElement;
+}
+
+function generateCategoryChangingForm(code, collectedData) {
+    var element = '<option value="#VALUE">#NAME</option>';
+
+    var categories = JSON.parse(collectedData).categories;
+    var generatedCode = "";
+    categories.forEach(function(category) {
+        var currElement = element.replace("#NAME", category.name);
+        currElement = currElement.replace("#VALUE", category.id);
+        generatedCode = generatedCode + "\n" + currElement;
+    });
+
+    return code.replace("#CATEGORIES" , generatedCode);
 }
 
 /* ----------------- END ----------------- */
@@ -309,43 +389,118 @@ function handleDeleteCategory() {
 
 /* ---------------- Thing ---------------- */
 
-function getThingIdData(id, entity) {
-    return {
-        thingId: id
-    };
+function getThingAddingData(entity, formType, generateForm) {
+    showSpin();
+
+    var url = window.location.pathname;
+
+    $.ajax({
+        url: url,
+        method: 'GET',
+        data: {
+            command: 'GET_ENTITIES',
+            entity: "Category"
+        },
+        success: function(categories) {
+            $.ajax({
+                url: url,
+                method: 'GET',
+                data: {
+                    command: 'GET_ENTITIES',
+                    entity: "Brand"
+                },
+                success: function (brands) {
+                    var collectedData = {
+                        categories: categories,
+                        brands: brands
+                    };
+                    getForm(entity, formType, collectedData, generateForm);
+                },
+                error: function () {
+                    var errorMessage = "Something went wrong.. Try again";
+                    handleError(errorMessage);
+                }
+            });
+        },
+        error: function () {
+            var errorMessage = "Something went wrong.. Try again";
+            handleError(errorMessage);
+        }
+    });
+}
+
+function getThingEditingData(id, entity, formType, generateForm) {
+    showSpin();
+
+    var url = window.location.pathname;
+
+    $.ajax({
+        url: url,
+        method: 'GET',
+        data: {
+            command: 'GET_ENTITIES',
+            entity: "Category"
+        },
+        success: function(categories) {
+            $.ajax({
+                url: url,
+                method: 'GET',
+                data: {
+                    command: 'GET_ENTITIES',
+                    entity: "Brand"
+                },
+                success: function (brands) {
+                    $.ajax({
+                        url: url,
+                        method: 'GET',
+                        data: {
+                            command: 'GET_ENTITY',
+                            entity: "Thing",
+                            id: id
+                        },
+                        success: function (thing) {
+                            var collectedData = {
+                                categories: categories,
+                                brands: brands,
+                                thing: thing
+                            };
+                            getForm(entity, formType, collectedData, generateForm);
+                        },
+                        error: function () {
+                            var errorMessage = "Something went wrong.. Try again";
+                            handleError(errorMessage);
+                        }
+                    });
+                },
+                error: function () {
+                    var errorMessage = "Something went wrong.. Try again";
+                    handleError(errorMessage);
+                }
+            });
+        },
+        error: function () {
+            var errorMessage = "Something went wrong.. Try again";
+            handleError(errorMessage);
+        }
+    });
 }
 
             /* ---- Forms ----- */
 
-function getThingAddingData(entity) {
-    return {
-        categories: getEntities("Category"),
-        brands: getEntities("Brand")
-    };
-}
-
-function getThingEditingData(id, entity) {
-    return {
-        thing: getEntityById(id, entity),
-        categories: getEntities("Category"),
-        brands: getEntities("Brand")
-    };
-}
-
 function getThingAddingForm() {
-    getForm("Thing", "add-thing", getThingAddingData);
+    getThingAddingData("Thing", "add-thing", generateThingAddingForm);
 }
 
 function getThingEditingForm() {
     var id = $("#change-thing").val();
     if (isCorrectId(id)) {
-        getFormWithEntityId("Thing", id, "edit-thing", getThingEditingData);
+        getThingEditingData(id, "Thing", "edit-thing", generateThingEditForm);
     }
 }
 
 function getThingChangingForm() {
     var entity = "Thing";
-    getForm(entity, "change-thing", getEntities);
+    getEntities(entity, "change-thing", getForm, generateThingChangingForm);
 }
 
             /* ---- Handle ---- */
@@ -357,13 +512,13 @@ function handleAddThing() {
         command: 'add',
 
         name: $("#add-thing-name").val(),
-        category: $("#add-thing-category").val(),
+        category: $("#add-thing-category-id").val(),
         description: $("#add-thing-description").val(),
         creationDate: $("#add-thing-creation-date").val(),
-        brand: $("#add-thing-brand").val()
+        brand: $("#add-thing-brand-id").val()
     };
 
-    sendRequest(entity, data);
+    sendRequest(data);
 }
 
 function handleEditThing() {
@@ -372,6 +527,7 @@ function handleEditThing() {
         entity: entity,
         command: 'edit',
 
+        id: $("#edit-thing-id").val(),
         name: $("#edit-thing-name").val(),
         category: $("#edit-thing-category").val(),
         description: $("#edit-thing-description").val(),
@@ -379,11 +535,96 @@ function handleEditThing() {
         brand: $("#edit-thing-brand").val()
     };
 
-    sendRequest(entity, data);
+    sendRequest(data);
 }
 
 function handleDeleteThing() {
     handleDeleteEntity("Thing");
+}
+
+                /* ---- Generate ---- */
+
+function generateThingEditForm(code, collectedData) {
+    var thing = JSON.parse(collectedData.thing);
+
+    var categories = JSON.parse(collectedData.categories).categories;
+    var optionElement = '<option value="#VALUE">#NAME</option>';
+    var categoriesCode = "";
+
+    categories.forEach(function (category) {
+        var currentElement = "";
+        if (category.name == thing.category) {
+            currentElement = optionElement.replace("#NAME", category.name);
+            currentElement = currentElement.replace("value=", "selected value=");
+        } else {
+            currentElement = optionElement.replace("#NAME", category.name);
+        }
+        currentElement = currentElement.replace("#VALUE", category.id);
+        categoriesCode += "\n" + currentElement;
+    });
+
+    var brands = JSON.parse(collectedData.brands).brands;
+    var brandsCode = "";
+
+    brands.forEach(function (brand) {
+        var currentElement = "";
+        if (brand.name == thing.brand) {
+            currentElement = optionElement.replace("#NAME", brand.name);
+            currentElement = currentElement.replace("value=", "selected value=");
+        } else {
+            currentElement = optionElement.replace("#NAME", brand.name);
+        }
+        currentElement = currentElement.replace("#VALUE", brand.id);
+        brandsCode += "\n" + currentElement;
+    });
+
+    var newCode = code.replace("#NAME", thing.name);
+    newCode = newCode.replace("#CATEGORIES", categoriesCode);
+    newCode = newCode.replace("#DESCRIPTION", thing.description);
+    newCode = newCode.replace("#CREATION_DATE", thing.creationDate);
+    newCode = newCode.replace("#BRANDS", brandsCode);
+    newCode = newCode.replace("#ADDRESS", thing.address);
+
+    return newCode;
+}
+
+function generateThingChangingForm(code, collectedData) {
+    var element = '<option value="#VALUE">#NAME | #CATEGORY</option>';
+
+    var things = JSON.parse(collectedData).things;
+    var generatedCode = "";
+    things.forEach(function(thing) {
+        var currElement = element.replace("#NAME", thing.name);
+        currElement = currElement.replace("#CATEGORY", thing.category);
+        currElement = currElement.replace("#VALUE", thing.id);
+        generatedCode += "\n" + currElement;
+    });
+
+    return code.replace("#THINGS" , generatedCode);
+}
+
+function generateThingAddingForm(code, collectedData) {
+    var element = '<option value="#VALUE">#NAME</option>';
+
+    var brands = JSON.parse(collectedData.brands).brands;
+    var categories = JSON.parse(collectedData.categories).categories;
+
+    var categoriesCode = "";
+    categories.forEach(function(category) {
+        var currElement = element.replace("#NAME", category.name);
+        currElement = currElement.replace("#VALUE", category.id);
+        categoriesCode += "\n" + currElement;
+    });
+
+    var brandsCode = "";
+    brands.forEach(function(brand) {
+        var currElement = element.replace("#NAME", brand.name);
+        currElement = currElement.replace("#VALUE", brand.id);
+        brandsCode += "\n" + currElement;
+    });
+
+    code = code.replace("#CATEGORIES", categoriesCode);
+    return code.replace("#BRANDS" , brandsCode);
 }
 
 /* ----------------- END ----------------- */
@@ -396,12 +637,8 @@ function handleDeleteThing() {
 function getReviewAddingForm() {
     var thingId = $("#change-thing").val();
     if (isCorrectId(thingId)) {
-        getFormWithEntityId("Review", thingId, "add-review", getThingIdData);
+        getForm("Review", "add-review", thingId, generateReviewAddingForm);
     }
-}
-
-function getReviewDeletingForm() {
-    getForm("Review", "delete-review", getEntities);
 }
 
             /* ---- Handle ---- */
@@ -416,11 +653,13 @@ function handleAddReview() {
         text: $("#add-review-text").val()
     };
 
-    sendRequest(entity, data);
+    sendRequest(data);
 }
 
-function handleDeleteReview() {
-    handleDeleteEntity("Review");
+            /* ---- Generate ---- */
+
+function generateReviewAddingForm(code, collectedData) {
+    return code.replace("#THING_ID", collectedData);
 }
 
 /* ----------------- END ----------------- */
@@ -428,24 +667,27 @@ function handleDeleteReview() {
 
 /* ---------------- Photo ---------------- */
 
-function getProductPhotoDeletingFormData(productId, entity) {
-    var product = getEntityById(productId, "Product");
-    var images = product.images;
+function getPhotoDeletingData(id, entity, formType, generateForm) {
+    showSpin();
 
-    return {
-        product: product,
-        images: images
-    };
-}
+    var url = window.location.pathname;
 
-function getThingPhotoDeletingFormData(thingId, entity) {
-    var thing = getEntityById(thingId, "Thing");
-    var images = thing.images;
-
-    return {
-        thing: thing,
-        images: images
-    };
+    return $.ajax({
+        url: url,
+        method: 'GET',
+        data: {
+            command: 'GET_ENTITY',
+            entity: entity,
+            id: id
+        },
+        success: function(data) {
+            getForm("Image", formType, data, generateForm);
+        },
+        error: function() {
+            var errorMessage = "Something went wrong.. Try again";
+            handleError(errorMessage);
+        }
+    });
 }
 
             /* ---- Forms ----- */
@@ -456,9 +698,9 @@ function getPhotoAddingForm() {
     var entity = "Image";
 
     if (isCorrectId(thingId)) {
-        getFormWithEntityId(entity, thingId, "add-image", getThingIdData);
+        getForm(entity, "add-image", thingId, generatePhotoToThingAddingForm);
     } else if (isCorrectId(productId)) {
-        getFormWithEntityId(entity, productId, "add-image", getProductIdData);
+        getForm(entity, "add-image", productId, generatePhotoToProductAddingForm);
     }
 }
 
@@ -467,60 +709,102 @@ function getPhotoDeletingForm() {
     var thingId = $("#change-thing").val();
 
     if (isCorrectId(productId)) {
-        getFormWithEntityId("Image", productId, "delete-image", getProductPhotoDeletingFormData);
+        getPhotoDeletingData(productId, "Product", "delete-image", generatePhotoFormProductDeletingForm);
     } else if (isCorrectId(thingId)) {
-        getFormWithEntityId("Image", thingId, "delete-image", getThingPhotoDeletingFormData);
+        getPhotoDeletingData(thingId, "Thing", "delete-image", generatePhotoFormThingDeletingForm);
     }
 }
 
             /* ---- Handle ---- */
 
 function handleAddPhoto() {
-    var entity = 'Image';
-    var thing = $("#add-image-thing").val();
-    var product = $("#add-image-product").val();
+    var entity = 'Photo';
+    var thing = $("#add-image-thing-id").val();
+    var product = $("#add-image-product-id").val();
     var data = null;
 
-    if (thing != null) {
+    if (isCorrectId(thing)) {
         data = {
             entity: entity,
             command: 'add',
 
-            thing: thing,
+            thingId: thing,
             href: $("#add-image-href").val(),
             realName: $("#add-image-real-name").val()
         };
-    } else if (product != null) {
+    } else if (isCorrectId(product)) {
         data = {
             entity: entity,
             command: 'add',
 
-            product: product,
+            productId: product,
             href: $("#add-image-href").val(),
             realName: $("#add-image-real-name").val()
         };
     }
 
-    sendRequest(entity, data);
+    sendRequest(data);
 }
 
 function handleDeletePhoto() {
-    var entity = 'Image';
+    var entity = 'Photo';
     var data = null;
-
-    var imageId = $("#delete-image-image").val();
-
+    var imageId = $("#delete-image-image-id").val();
 
     if (isCorrectId(imageId)) {
         data = {
             entity: entity,
             command: 'delete',
 
-            id: imageId
+            id: imageId,
         };
 
-        sendRequest(entity, data);
+        sendRequest(data);
     }
+}
+
+            /* ---- Generate ---- */
+
+function generatePhotoToProductAddingForm(code, collectedData) {
+    return code.replace("#PRODUCT_ID", collectedData);
+}
+
+function generatePhotoToThingAddingForm(code, collectedData) {
+    return code.replace("#THING_ID", collectedData);
+}
+
+function generatePhotoFormProductDeletingForm(code, collectedData) {
+    var element = '<option value="#PHOTO_ID">#HREF</option>';
+    var photos = JSON.parse(collectedData).photos;
+    var generatedCode = "";
+    if (photos != null) {
+        photos.forEach(function (photo) {
+            var currElement = element.replace("#PHOTO_ID", photo.id);
+            currElement = currElement.replace("#HREF", photo.href);
+            generatedCode = generatedCode + "\n" + currElement;
+        });
+        code = code.replace("#PHOTOS", generatedCode)
+    }
+
+    var productId = JSON.parse(collectedData).id;
+    return code.replace("#PRODUCT_ID", productId);
+}
+
+function generatePhotoFormThingDeletingForm(code, collectedData) {
+    var element = '<option value="#PHOTO_ID">#HREF</option>';
+    var photos = JSON.parse(collectedData).photos;
+    var generatedCode = "";
+    if (photos != null) {
+        photos.forEach(function (photo) {
+            var currElement = element.replace("#PHOTO_ID", photo.id);
+            currElement = currElement.replace("#HREF", photo.href);
+            generatedCode = generatedCode + "\n" + currElement;
+        });
+        code = code.replace("#PHOTOS", generatedCode)
+    }
+
+    var thingId = JSON.parse(collectedData).id;
+    return code.replace("#THING_ID", thingId);
 }
 
 /* ----------------- END ----------------- */
@@ -528,73 +812,200 @@ function handleDeletePhoto() {
 
 /* --------------- Product --------------- */
 
-function getProductIdData(id, entity) {
-    return {
-        productId: id
-    };
+function getProductAddingData(entity, formType, generateForm) {
+    showSpin();
+
+    var url = window.location.pathname;
+
+    $.ajax({
+        url: url,
+        method: 'GET',
+        data: {
+            command: 'GET_ENTITIES',
+            entity: "Category"
+        },
+        success: function(categories) {
+            $.ajax({
+                url: url,
+                method: 'GET',
+                data: {
+                    command: 'GET_ENTITIES',
+                    entity: "Discount"
+                },
+                success: function (discounts) {
+                    var collectedData = {
+                        categories: categories,
+                        discounts: discounts
+                    };
+                    getForm(entity, formType, collectedData, generateForm);
+                },
+                error: function () {
+                    var errorMessage = "Something went wrong.. Try again";
+                    handleError(errorMessage);
+                }
+            });
+        },
+        error: function () {
+            var errorMessage = "Something went wrong.. Try again";
+            handleError(errorMessage);
+        }
+    });
 }
 
-function getProductAddingData(entity) {
-    return {
-        categories: getEntities("Category"),
-        brands: getEntities("Brand"),
-        discounts: getEntities("Discount")
-    };
+function getProductEditingData(id, entity, formType, generateForm) {
+    showSpin();
+
+    var path = window.location.pathname;
+
+    $.ajax({
+        url: path,
+        method: 'GET',
+        data: {
+            command: 'GET_ENTITIES',
+            entity: "Category"
+        },
+        success: function(categories) {
+            $.ajax({
+                url: path,
+                method: 'GET',
+                data: {
+                    command: 'GET_ENTITIES',
+                    entity: "Discount"
+                },
+                success: function (discounts) {
+                    $.ajax({
+                        url: path,
+                        method: 'GET',
+                        data: {
+                            command: 'GET_ENTITY',
+                            entity: "Product",
+                            id: id
+                        },
+                        success: function (product) {
+                            var collectedData = {
+                                categories: categories,
+                                discounts: discounts,
+                                product: product
+                            };
+                            getForm(entity, formType, collectedData, generateForm);
+                        },
+                        error: function () {
+                            var errorMessage = "Something went wrong.. Try again";
+                            handleError(errorMessage);
+                        }
+                    });
+                },
+                error: function () {
+                    var errorMessage = "Something went wrong.. Try again";
+                    handleError(errorMessage);
+                }
+            });
+        },
+        error: function () {
+            var errorMessage = "Something went wrong.. Try again";
+            handleError(errorMessage);
+        }
+    });
 }
 
-function getProductEditingData(id, entity) {
-    return {
-        product: getEntityById(id, entity),
-        categories: getEntities("Category"),
-        brands: getEntities("Brand"),
-        discount: getEntities("Discount")
-    };
+function getThingAddingToProductData(id, entity, formType, generateForm) {
+    showSpin();
+
+    var url = window.location.pathname;
+
+    $.ajax({
+        url: url,
+        method: 'GET',
+        data: {
+            command: 'GET_ENTITIES',
+            entity: "Thing"
+        },
+        success: function (things) {
+            $.ajax({
+                url: url,
+                method: 'GET',
+                data: {
+                    command: 'GET_ENTITY',
+                    entity: "Product",
+                    id: id
+                },
+                success: function (product) {
+                    var collectedData = {
+                        product: id,
+                        things: things,
+                        usedThings: JSON.parse(product).things
+                    };
+                    getForm(entity, formType, collectedData, generateForm);
+                },
+                error: function () {
+                    var errorMessage = "Something went wrong.. Try again";
+                    handleError(errorMessage);
+                }
+            });
+        },
+        error: function () {
+            var errorMessage = "Something went wrong.. Try again";
+            handleError(errorMessage);
+        }
+    });
 }
 
-function getThingAddingToProductData(entity) {
-    return {
-        things: getEntities("Thing"),
-        products: getEntities("Product")
-    };
-}
+function getThingDeletingFromProductData(id, entity, formType, generateForm) {
+    showSpin();
 
-function getThingDeletingFromProductData(id, entity) {
-    var product = getEntityById(id, "Product");
-    var things = product.things;
+    var url = window.location.pathname;
 
-    return {
-        product: product,
-        things: things
-    };
+    $.ajax({
+        url: url,
+        method: 'GET',
+        data: {
+            command: 'GET_ENTITY',
+            entity: "Product",
+            id: id
+        },
+        success: function (product) {
+            var collectedData = {
+                product: id,
+                things: JSON.parse(product).things
+            };
+            getForm(entity, formType, collectedData, generateForm);
+        },
+        error: function () {
+            var errorMessage = "Something went wrong.. Try again";
+            handleError(errorMessage);
+        }
+    });
+
 }
 
             /* ---- Forms ----- */
 
 function getProductAddingForm() {
-    getForm("Product", "add-product", getProductAddingData);
+    getProductAddingData("Product", "add-product", generateProductAddingForm);
 }
 
 function getProductEditingForm() {
     var id = $("#change-product").val();
     if (isCorrectId(id)) {
-        getFormWithEntityId("Product", id, "edit-product", getProductEditingData);
+        getProductEditingData(id, "Product", "edit-product", generateProductEditingForm);
     }
 }
 
 function getProductChangingForm() {
-    getForm("Product", "change-product", getEntities);
+    getEntities("Product", "change-product", getForm, generateProductChangingForm);
 }
 
-//TODO: Check entity
 function getThingAddingToProductForm() {
-    getForm("Thing_Product", "add-thing-to-product", getThingAddingToProductData);
+    var id = $("#edit-product-id").val();
+    if (isCorrectId(id)) {
+        getThingAddingToProductData(id, "Thing_Product", "add-thing-to-product", generateThingAddingToProductForm);
+    }
 }
 
-//TODO: Check entity
 function getThingDeletingFromProductForm() {
-    var id = $("#change-product").val();
+    var id = $("#edit-product-id").val();
     if (isCorrectId(id)) {
-        getForm("Thing_Product", "delete-thing-from-product", getThingDeletingFromProductData);
+        getThingDeletingFromProductData(id, "Thing_Product", "delete-thing-from-product", generateThingDeletingFromProductForm);
     }
 }
 
@@ -607,12 +1018,12 @@ function handleAddProduct() {
         command: 'add',
 
         name: $("#add-product-name").val(),
-        category: $("#add-product-category").val(),
+        category: $("#add-product-category-id").val(),
         price: $("#add-product-price").val(),
-        brand: $("#add-product-brand").val()
+        discount: $("#add-product-discount-id").val()
     };
 
-    sendRequest(entity, data);
+    sendRequest(data);
 }
 
 function handleEditProduct() {
@@ -621,13 +1032,14 @@ function handleEditProduct() {
         entity: entity,
         command: 'edit',
 
+        id: $("#edit-product-id").val(),
         name: $("#edit-product-name").val(),
         category: $("#edit-product-category").val(),
         price: $("#edit-product-price").val(),
-        brand: $("#edit-product-brand").val()
+        discount: $("#edit-product-discount-id")
     };
 
-    sendRequest(entity, data);
+    sendRequest(data);
 }
 
 function handleDeleteProduct() {
@@ -636,8 +1048,8 @@ function handleDeleteProduct() {
 
 function handleAddThingToProduct() {
     var entity = 'Thing';
-    var productId = $("#add-to-product-product").val();
-    var thingId = $("#add-to-product-thing").val();
+    var productId = $("#add-thing-to-product-product").val();
+    var thingId = $("#add-thing-to-product-thing").val();
 
     if (isCorrectId(productId) && isCorrectId(thingId)) {
         var data = {
@@ -648,24 +1060,154 @@ function handleAddThingToProduct() {
             thing: thingId
         };
 
-        sendRequest(entity, data);
+        sendRequest(data);
     }
 }
 
 function handleDeleteThingFromProduct() {
     var entity = 'Thing';
-    var thingId = $("#delete-from-product-thing").val();
+    var thingId = $("#delete-thing-from-product-thing").val();
     if (isCorrectId(thingId)) {
         var data = {
             entity: entity,
             command: 'delete_from_product',
 
-            product: $("#delete-from-product-product").val(),
+            product: $("#delete-thing-from-product-product").val(),
             thing: thingId
         };
 
-        sendRequest(entity, data);
+        sendRequest(data);
     }
+}
+
+            /* ---- Generate ---- */
+
+function generateProductAddingForm(code, collectedData) {
+    var optionElement = '<option value="#VALUE">#NAME</option>';
+
+    var categories = JSON.parse(collectedData.categories).categories;
+    var categoriesCode = "";
+    categories.forEach(function (category) {
+        var currentElement = optionElement.replace("#NAME", category.name);
+        currentElement = currentElement.replace("#VALUE", category.id);
+        categoriesCode += "\n" + currentElement;
+    });
+
+    var discounts = JSON.parse(collectedData.discounts).discounts;
+    var discountsCode = "";
+    discounts.forEach(function (discount) {
+        var currentElement = optionElement.replace("#NAME", discount.value);
+        currentElement = currentElement.replace("#VALUE", discount.id);
+        discountsCode += "\n" + currentElement;
+    });
+
+    code = code.replace("#CATEGORIES", categoriesCode);
+    return code.replace("#DISCOUNTS", discountsCode);
+}
+
+function generateProductEditingForm(code, collectedData) {
+    var product = JSON.parse(collectedData.product);
+    code = code.replace("#ID", product.id);
+    code = code.replace("#NAME", product.name);
+
+    var optionElement = '<option value="#VALUE">#NAME</option>';
+
+    var categories = JSON.parse(collectedData.categories).categories;
+    var categoriesCode = "";
+    categories.forEach(function (category) {
+        var currentElement = "";
+        if (category.name == product.category) {
+            currentElement = optionElement.replace("#NAME", category.name);
+            currentElement = currentElement.replace("value=", "selected value=");
+        } else {
+            currentElement = optionElement.replace("#NAME", category.name);
+        }
+        currentElement = currentElement.replace("#VALUE", category.id);
+        categoriesCode = categoriesCode + "\n" + currentElement;
+    });
+
+    var discounts = JSON.parse(collectedData.discounts).discounts;
+    var discountsCode = "";
+    discounts.forEach(function (discount) {
+        var currentElement = "";
+        if (discount.value == product.discount) {
+            currentElement = optionElement.replace("#NAME", discount.value);
+            currentElement = currentElement.replace("value=", "selected value=");
+        } else {
+            currentElement = optionElement.replace("#NAME", discount.value);
+        }
+        currentElement = currentElement.replace("#VALUE", discount.id);
+        discountsCode = discountsCode + "\n" + currentElement;
+    });
+
+    code = code.replace("#CATEGORIES", categoriesCode);
+    code = code.replace("#DISCOUNTS", discountsCode);
+    return code.replace("#PRICE", product.price);
+}
+
+function generateProductChangingForm(code, collectedData) {
+    var element = '<option value="#VALUE">#NAME | #PRICE</option>';
+
+    var products = JSON.parse(collectedData).products;
+    var generatedCode = "";
+    products.forEach(function(product) {
+        var currElement = element.replace("#NAME", product.name);
+        currElement = currElement.replace("#VALUE", product.id);
+        currElement = currElement.replace("#PRICE", product.price);
+        generatedCode = generatedCode + "\n" + currElement;
+    });
+
+    return code.replace("#PRODUCTS" , generatedCode);
+}
+
+function generateThingAddingToProductForm(code, collectedData) {
+    var element = '<option value="#VALUE">#NAME</option>';
+
+    var things = JSON.parse(collectedData.things).things;
+    var usedThings = collectedData.usedThings;
+
+    var showingThings = [];
+
+    var thingsCode = "";
+    things.forEach(function(thing) {
+        var isUsed = false;
+        usedThings.forEach(function (usedThing) {
+            if (usedThing.name == thing.name) {
+                isUsed = true;
+            }
+        });
+        if (!isUsed) {
+           showingThings.push(thing);
+        }
+    });
+
+    showingThings.forEach(function(thing) {
+        var currElement = element.replace("#NAME", thing.name);
+        currElement = currElement.replace("#VALUE", thing.id);
+        thingsCode = thingsCode + "\n" + currElement;
+    });
+
+    var product = collectedData.product;
+
+    code = code.replace("#PRODUCT_ID", product);
+    return code.replace("#THINGS" , thingsCode);
+}
+
+function generateThingDeletingFromProductForm(code, collectedData) {
+    var productId = collectedData.product;
+    code = code.replace("#PRODUCT_ID", productId);
+
+    var things = collectedData.things;
+
+    var generatedCode = "";
+    var element = '<option value="#VALUE">#NAME</option>';
+    things.forEach(function(things) {
+        var currElement = element.replace("#NAME", things.name);
+        currElement = currElement.replace("#VALUE", things.id);
+        generatedCode = generatedCode + "\n" + currElement;
+    });
+
+    return code.replace("#THINGS" , generatedCode);
 }
 
 /* ----------------- END ----------------- */
@@ -676,18 +1218,18 @@ function handleDeleteThingFromProduct() {
             /* ---- Forms ----- */
 
 function getDiscountAddingForm() {
-    getForm("Discount", "add-discount", doNothing);
+    getForm("Discount", "add-discount", null, doNothingWithParam);
 }
 
 function getDiscountEditingForm() {
     var id = $("#change-discount").val();
     if (isCorrectId(id)) {
-        getFormWithEntityId("Discount", id, "edit-discount", getEntityById);
+        getEntityById(id, "Discount", "edit-discount", getForm, generateDiscountEditForm);
     }
 }
 
 function getDiscountChangingForm() {
-    getForm("Discount", "change-discount", getEntities);
+    getEntities("Discount", "change-discount", getForm, generateDiscountChangingForm);
 }
 
             /* ---- Handle ---- */
@@ -703,7 +1245,7 @@ function handleAddDiscount() {
         finishDate: $("#add-discount-finish-date").val()
     };
 
-    sendRequest(entity, data);
+    sendRequest(data);
 }
 
 function handleEditDiscount() {
@@ -712,16 +1254,43 @@ function handleEditDiscount() {
         entity: entity,
         command: 'edit',
 
+        id: $("#edit-discount-id").val(),
         value: $("#edit-discount-value").val(),
         startDate: $("#edit-discount-start-date").val(),
         finishDate: $("#edit-discount-finish-date").val()
     };
 
-    sendRequest(entity, data);
+    sendRequest(data);
 }
 
 function handleDeleteDiscount() {
     handleDeleteEntity("Discount");
+}
+
+                /* ---- Generate ---- */
+
+function generateDiscountEditForm(code, collectedData) {
+    var discount = JSON.parse(collectedData);
+    code = code.replace("#ID", discount.id);
+    code = code.replace("#VALUE", discount.value);
+    code = code.replace("#START_DATE", discount.startDate);
+    return code.replace("#FINISH_DATE", discount.finishDate);
+}
+
+function generateDiscountChangingForm(code, collectedData) {
+    var element = '<option value="#ID">#VALUE | (#START_DATE - #FINISH_DATE)</option>';
+
+    var discounts = JSON.parse(collectedData).discounts;
+    var generatedCode = "";
+    discounts.forEach(function(discount) {
+        var currElement = element.replace("#VALUE", discount.value);
+        currElement = currElement.replace("#ID", discount.id);
+        currElement = currElement.replace("#START_DATE", discount.startDate);
+        currElement = currElement.replace("#FINISH_DATE", discount.finishDate);
+        generatedCode = generatedCode + "\n" + currElement;
+    });
+
+    return code.replace("#DISCOUNTS" , generatedCode);
 }
 
 /* ----------------- END ----------------- */
@@ -729,19 +1298,23 @@ function handleDeleteDiscount() {
 
 /* ---------------- Rating --------------- */
 
+function isCorrectRating(ratingValue) {
+    return ratingValue <= 100 && ratingValue > 0;
+}
+
             /* ---- Forms ----- */
 
 function getRatingSettingForm() {
-    //TODO: Collected data
-    getForm("Rating", "set-rating", null);
+    var thingId = $("#thing-id");
+    getForm("Rating", "set-rating", thingId, generateRatingSettingForm);
 }
 
             /* ---- Handle ---- */
 
 function handleSetRating() {
     //TODO : Get UserId in command
-    var thingId = $("#thing-id").val();
-    var ratingValue = $("#rating-value").val();
+    var thingId = $("#set-rating-thing-id").val();
+    var ratingValue = $("#set-rating-value").val();
 
     if (isCorrectId(thingId) && isCorrectRating(ratingValue)) {
         var entity = 'Rating';
@@ -753,17 +1326,20 @@ function handleSetRating() {
             value: ratingValue
         };
 
-        sendRequest(entity, data);
+        sendRequest(data);
     }
 }
 
-function isCorrectRating(ratingValue) {
-    //TODO: Write rating check
-    return true;
+            /* ---- Generate ---- */
+
+function generateRatingSettingForm(code, collectedData) {
+    return code.replace("#THING_ID", collectedData);
 }
 
 /* ----------------- END ----------------- */
 
-function doNothing(parameter) {}
+function doNothingWithParam(parameter1, parameter2) {
+    return parameter1;
+}
 
 // http://stackoverflow.com/questions/14028959/why-does-jquery-or-a-dom-method-such-as-getelementbyid-not-find-the-element

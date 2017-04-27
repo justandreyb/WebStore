@@ -6,6 +6,8 @@ public enum CommandName {
     SIGN_IN,
     SIGN_OUT,
     UPDATE_ACCOUNT,
+    CHANGE_ROLE,
+    BLOCK,
 
     ADD,
     EDIT,

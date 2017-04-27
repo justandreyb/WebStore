@@ -44,16 +44,6 @@
                         <br>
                         <div class="row">
 
-                            <%--<div class="dashboard-button col-sm-4" onclick="getAccountChangingRoleForm()">
-                                <a name="button" value="change-user-role">
-                                    <div class="well">
-                                        <h4><span class="glyphicon glyphicon-sunglasses"></span></h4>
-                                        <p>${changeUserRole}</p>
-
-                                    </div>
-                                </a>
-                            </div>--%>
-
                             <div class="dashboard-button col-sm-12" onclick="getAccountChangingForm()">
                                 <a>
                                     <div class="well">
@@ -63,16 +53,6 @@
                                     </div>
                                 </a>
                             </div>
-
-                            <%--<div class="dashboard-button col-sm-4" onclick="getAccountDeletingForm()">
-                                <a>
-                                    <div class="well">
-                                        <h4><span class="glyphicon glyphicon-remove-circle"></span></h4>
-                                        <p>${btnDelete}</p>
-
-                                    </div>
-                                </a>
-                            </div>--%>
 
                         </div>
                     </div>
@@ -111,25 +91,6 @@
                                 </a>
                             </div>
 
-                            <%--<div class="dashboard-button col-sm-4"  onclick="getCategoryEditingForm()">
-                                <a>
-                                    <div class="well">
-                                        <h4><span class="glyphicon glyphicon-refresh"></span></h4>
-                                        <p>${btnUpdate}</p>
-
-                                    </div>
-                                </a>
-                            </div>
-
-                            <div class="dashboard-button col-sm-4"  onclick="getCategoryDeletingForm()">
-                                <a>
-                                    <div class="well">
-                                        <h4><span class="glyphicon glyphicon-eye-close"></span></h4>
-                                        <p>${btnDelete}</p>
-
-                                    </div>
-                                </a>
-                            </div>--%>
                         </div>
                     </div>
 
@@ -159,27 +120,6 @@
                                 </a>
                             </div>
 
-                            <%--
-                            <div class="dashboard-button col-sm-4" onclick="getBrandEditingForm()">
-                                <a>
-                                    <div class="well">
-                                        <h4><span class="glyphicon glyphicon-refresh"></span></h4>
-                                        <p>${btnUpdate}</p>
-
-                                    </div>
-                                </a>
-                            </div>
-
-                            <div class="dashboard-button col-sm-4" onclick="getBrandDeletingForm()">
-                                <a>
-                                    <div class="well">
-                                        <h4><span class="glyphicon glyphicon-eye-close"></span></h4>
-                                        <p>${btnDelete}</p>
-
-                                    </div>
-                                </a>
-                            </div>
-                            --%>
                         </div>
                     </div>
 
@@ -209,83 +149,6 @@
                                 </a>
                             </div>
 
-                            <%--
-                            <div class="dashboard-button col-sm-4" onclick="getThingEditingForm()">
-                                <a>
-                                    <div class="well">
-                                        <h4><span class="glyphicon glyphicon-refresh"></span></h4>
-                                        <p>${btnUpdate}</p>
-
-                                    </div>
-                                </a>
-                            </div>
-
-                            <div class="dashboard-button col-sm-4" onclick="getThingDeletingForm()">
-                                <a>
-                                    <div class="well">
-                                        <h4><span class="glyphicon glyphicon-eye-close"></span></h4>
-                                        <p>${btnDelete}</p>
-
-                                    </div>
-                                </a>
-                            </div>
-                            --%>
-                        </div>
-                    </div>
-
-                    <div class="well text-center" id="photos">
-                        <h4><span class="glyphicon glyphicon-camera"></span> ${photos}</h4>
-                        <p>${photosInfo}</p>
-                        <br>
-
-                        <div class="row">
-                            <div class="dashboard-button col-sm-6" onclick="getPhotoAddingForm()">
-                                <a>
-                                    <div class="well">
-                                        <h4><span class="glyphicon glyphicon-plus"></span></h4>
-                                        <p>${btnAdd}</p>
-
-                                    </div>
-                                </a>
-                            </div>
-
-                            <div class="dashboard-button col-sm-6" onclick="getPhotoDeletingForm()">
-                                <a>
-                                    <div class="well">
-                                        <h4><span class="glyphicon glyphicon-eye-close"></span></h4>
-                                        <p>${btnDelete}</p>
-
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="well text-center" id="reviews">
-                        <h4><span class="glyphicon glyphicon-check"></span> ${reviews}</h4>
-                        <p>${reviewsInfo}</p>
-                        <br>
-
-                        <div class="row">
-                            <div class="dashboard-button col-sm-6" onclick="getReviewAddingForm()">
-                                <a>
-                                    <div class="well">
-                                        <h4><span class="glyphicon glyphicon-pencil"></span></h4>
-                                        <p>${btnAdd}</p>
-
-                                    </div>
-                                </a>
-                            </div>
-
-                            <div class="dashboard-button col-sm-6" onclick="getReviewDeletingForm()">
-                                <a>
-                                    <div class="well">
-                                        <h4><span class="glyphicon glyphicon-apple"></span></h4>
-                                        <p>${btnDelete}</p>
-
-                                    </div>
-                                </a>
-                            </div>
                         </div>
                     </div>
 
@@ -325,57 +188,6 @@
                                 </a>
                             </div>
 
-                            <%--
-                            <div class="dashboard-button col-sm-4" onclick="getProductEditingForm()">
-                                <a>
-                                    <div class="well">
-                                        <h4><span class="glyphicon glyphicon-refresh"></span></h4>
-                                        <p>${btnUpdate}</p>
-
-                                    </div>
-                                </a>
-                            </div>
-
-                            <div class="dashboard-button col-sm-4" onclick="getProductDeletingForm()">
-                                <a>
-                                    <div class="well">
-                                        <h4><span class="glyphicon glyphicon-remove-circle"></span></h4>
-                                        <p>${btnDelete}</p>
-
-                                    </div>
-                                </a>
-                            </div>
-                            --%>
-
-                        </div>
-                    </div>
-
-                    <div class="well text-center" id="product-thing">
-                        <h4><span class="glyphicon glyphicon-apple"></span> ${productsThings}</h4>
-                        <p>${productsThingsInfo}</p>
-                        <br>
-
-                        <div class="row">
-                            <div class="dashboard-button col-sm-6" onclick="getThingAddingToProductForm()">
-                                <a>
-                                    <div class="well">
-                                        <h4><span class="glyphicon glyphicon-plus"></span></h4>
-                                        <p>${btnAdd}</p>
-
-                                    </div>
-                                </a>
-                            </div>
-
-                            <div class="dashboard-button col-sm-6" onclick="getThingDeletingFromProductForm()">
-                                <a>
-                                    <div class="well">
-                                        <h4><span class="glyphicon glyphicon-remove-circle"></span></h4>
-                                        <p>${btnDelete}</p>
-
-                                    </div>
-                                </a>
-                            </div>
-
                         </div>
                     </div>
 
@@ -385,7 +197,7 @@
                         <br>
                         <div class="row">
 
-                            <div class="dashboard-button col-sm-4" onclick="getDiscountAddingForm()">
+                            <div class="dashboard-button col-sm-6" onclick="getDiscountAddingForm()">
                                 <a>
                                     <div class="well">
                                         <h4><span class="glyphicon glyphicon-plus"></span></h4>
@@ -395,7 +207,7 @@
                                 </a>
                             </div>
 
-                            <div class="dashboard-button col-sm-4" onclick="getDiscountChangingForm()">
+                            <div class="dashboard-button col-sm-6" onclick="getDiscountChangingForm()">
                                 <a>
                                     <div class="well">
                                         <h4><span class="glyphicon glyphicon-remove-circle"></span></h4>
@@ -404,28 +216,6 @@
                                     </div>
                                 </a>
                             </div>
-
-                            <%--
-                            <div class="dashboard-button col-sm-4" onclick="getDiscountEditingForm()">
-                                <a>
-                                    <div class="well">
-                                        <h4><span class="glyphicon glyphicon-refresh"></span></h4>
-                                        <p>${btnUpdate}</p>
-
-                                    </div>
-                                </a>
-                            </div>
-
-                            <div class="dashboard-button col-sm-4" onclick="getDiscountDeletingForm()">
-                                <a>
-                                    <div class="well">
-                                        <h4><span class="glyphicon glyphicon-remove-circle"></span></h4>
-                                        <p>${btnDelete}t</p>
-
-                                    </div>
-                                </a>
-                            </div>
-                            --%>
 
                         </div>
                     </div>

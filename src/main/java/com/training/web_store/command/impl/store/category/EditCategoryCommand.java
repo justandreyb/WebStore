@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class EditCategoryCommand extends StoreCommand {
-    private static final String ID_PARAMETER = "id";
+    private static final String ID_PARAMETER = "categoryId";
     private static final String NAME_PARAMETER = "name";
     private static final String DESCRIPTION_PARAMETER = "description";
     private static final String ERROR_MESSAGE = "Something went wrong while editing category";

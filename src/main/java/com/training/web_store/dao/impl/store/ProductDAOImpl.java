@@ -84,7 +84,7 @@ public class ProductDAOImpl implements ProductDAO {
     private static final String REMOVE_THING_FROM_PRODUCT_QUERY =
             "DELETE FROM " + DATABASE + "." + THING_TO_PRODUCT_TABLE +
             " WHERE " +
-                THING_ID + "=? AND" +
+                THING_ID + "=? AND " +
                 PRODUCT_ID + "=?"
             ;
 
@@ -365,7 +365,7 @@ public class ProductDAOImpl implements ProductDAO {
             connection = dbConnector.getConnection();
             statement = connection.prepareStatement(ADD_THING_QUERY);
             statement.setInt(1, productId);
-            statement.setInt(2, productId);
+            statement.setInt(2, thingId);
             statement.setInt(3, INITIAL_AMOUNT);
 
             if (statement.executeUpdate() < 1) {

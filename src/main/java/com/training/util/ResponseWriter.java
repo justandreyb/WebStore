@@ -33,7 +33,7 @@ public class ResponseWriter {
     }
 
     public static void writeData(HttpServletResponse response, String answer) {
-        answer = AnswerCreator.create(answer);
+//        answer = AnswerCreator.create(answer);
         write(response, answer);
     }
 
