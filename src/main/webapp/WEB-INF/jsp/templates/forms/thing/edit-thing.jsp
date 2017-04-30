@@ -8,7 +8,7 @@
                 <div class="form-group">
                     <label class="control-label col-sm-2" for="edit-thing-name">${entityName}</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" id="edit-thing-name" placeholder="${enterName}">
+                        <input type="text" class="form-control" id="edit-thing-name" placeholder="${enterName}" value="#NAME">
                     </div>
                 </div>
 
@@ -33,14 +33,14 @@
                 <div class="form-group">
                     <label class="control-label col-sm-2" for="edit-thing-creation-date">${entityCreationDate}</label>
                     <div class="col-sm-10">
-                        <input type="date" class="form-control" id="edit-thing-creation-date" placeholder="${enterCreationDate}">
+                        <input type="date" class="form-control" id="edit-thing-creation-date" placeholder="${enterCreationDate}" value="#CREATION_DATE">
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label class="control-label col-sm-2" for="edit-thing-description">${entityDescription}</label>
                     <div class="col-sm-10">
-                        <textarea id="edit-thing-description" maxlength="254"></textarea>
+                        <textarea id="edit-thing-description" maxlength="254">#DESCRIPTION</textarea>
                     </div>
                 </div>
 

@@ -358,7 +358,7 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     public void addProduct(String name, double price, int categoryId, int discountId) throws ServiceException {
-        if (!ArgumentParserUtil.areValidArguments(categoryId, discountId)) {
+        if (!ArgumentParserUtil.areValidArguments(categoryId)) {
             throw new ServiceException(INVALID_ARGUMENT);
         }
         if (!ArgumentParserUtil.isValidArgument(price)) {
@@ -537,7 +537,7 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     public void updateProduct(int productId, String name, double price, int categoryId, int discountId) throws ServiceException {
-        if (!ArgumentParserUtil.areValidArguments(productId, categoryId, discountId)) {
+        if (!ArgumentParserUtil.areValidArguments(productId, categoryId)) {
             throw new ServiceException(INVALID_ARGUMENT);
         }
         if (!ArgumentParserUtil.isValidArgument(price)) {
@@ -593,7 +593,10 @@ public class StoreServiceImpl implements StoreService {
             throw new ServiceException(INVALID_ARGUMENT);
         }
         try {
-            return thingDAO.getThing(thingId);
+            Thing thing = thingDAO.getThing(thingId);
+            List<Photo> photos = photoDAO.getPhotosForThing(thingId);
+            thing.setPhotos(photos);
+            return thing;
         } catch (DAOException | StorageException e) {
             throw new ServiceException(e);
         }

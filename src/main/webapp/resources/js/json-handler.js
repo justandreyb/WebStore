@@ -1,16 +1,8 @@
-function handleSuccess(data) {
-    stopSpin();
-
-    var block = $("#action-block-inner");
-
-    if (data != null && data != "") {
-        printForm(block, data);
+function checkAuthorisation(jsonObj) {
+    if (jsonObj.success != null) {
+        reloadPage();
     } else {
-        printDefaultError(block);
-    }
-    var actionBlock = $("#action-block");
-    if (!actionBlock.modal.isShown) {
-        actionBlock.modal('show');
+        printError(jsonObj);
     }
 }
 
@@ -40,28 +32,15 @@ function handleAuthorisationSuccess(data) {
     if (data != null && data != "") {
         jsonObject = JSON.parse(data);
         if (jsonObject != null) {
-            reloadPage(block, jsonObject);
-        } else {
-            printDefaultError(block);
+            checkAuthorisation(jsonObject);
         }
     } else {
         printDefaultError(block);
     }
-    var actionBlock = $("#action-block");
-
-    if (!actionBlock.modal.isShown) {
-        actionBlock.fadeIn(500);
-        actionBlock.modal('show')
-    }
 }
 
-function reloadPage(block, jsonObject) {
-    if (jsonObject.success != null) {
-        // location.reload();
-        alert("GJ")
-    } else {
-        printError(block, jsonObject);
-    }
+function reloadPage() {
+    location.reload();
 }
 
 function handleError(errorMessage) {
@@ -87,24 +66,41 @@ function printForm(code, collectedData, generatePage) {
     actionBlock.modal('show');
 }
 
-function printError(block, jsonObject) {
-    if (jsonObject.error != null) {
-        block.innerHTML = jsonObject.error;
+function printError(jsonObject) {
+    var signBlock = $("#signing");
+    signBlock.fadeOut(250);
+    signBlock.modal('toggle');
+
+    var block = $("#action-block-inner");
+    var error = jsonObject.error;
+    if (error != null) {
+        alert(error);
+        reloadPage();
     } else {
         printDefaultError(block);
     }
+
+    var actionBlock = $("#action-block");
+    actionBlock.fadeIn(250);
+    actionBlock.modal('show');
 }
 
 function printDefaultError(block) {
-    block.innerHTML = "Something went wrong. Please, try again";
+    block = $("#action-block-inner");
+
+    block.html("Something went wrong. Please, try again");
+    var actionBlock = $("#action-block");
+
+    actionBlock.fadeIn(250);
+    actionBlock.modal('show');
 }
 
 function printErrorWithSign(errorMessage) {
-    var block = $("#action-block");
+    var actionBlock = $("#action-block");
 
-    if (!block.isShown) {
-        block.fadeIn(300);
+    if (!actionBlock.isShown) {
+        actionBlock.fadeIn(300);
     }
 
-    $("#action-block-inner").innerHTML = errorMessage;
+    $("#action-block-inner").html(errorMessage);
 }

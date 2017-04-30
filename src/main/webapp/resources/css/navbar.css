@@ -65,3 +65,9 @@ body {
     text-align: left;
 }
 
+@media (max-width: 600px) {
+    .navbar-default {
+        background-color:  rgba(40, 96, 144, 0.95);
+    }
+}
+

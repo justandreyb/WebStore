@@ -1,7 +1,6 @@
 package com.training.web_store.dao.impl.store;
 
 import com.training.web_store.bean.store.Product;
-import com.training.web_store.bean.store.Thing;
 import com.training.web_store.dao.ProductDAO;
 import com.training.web_store.dao.exception.DAOException;
 import com.training.web_store.util.database.DBConnector;
@@ -31,21 +30,12 @@ public class ProductDAOImpl implements ProductDAO {
     private static final String THING_ID = "thing_id";
     private static final String THING_TO_PRODUCT_AMOUNT = "amount";
 
-    private static final String THING_TABLE = "thing";
-    private static final String THING_NAME = "name";
-    private static final String THING_DESCRIPTION = "description";
-    private static final String THING_CREATION_DATE = "creation_date";
-    private static final String THING_REVIEW = "review";
-    private static final String BRAND_ID = "brand_id";
-
-    private static final int PRODUCT_AVAILABLE = 1;
-
     private static final String ADD_PRODUCT_QUERY =
             "INSERT INTO " + DATABASE + "." + PRODUCT_TABLE + " (" +
                 PRODUCT_NAME + ", " +
                 PRODUCT_PRICE + ", " +
-                DISCOUNT_ID + ", " +
-                CATEGORY_ID +
+                CATEGORY_ID + ", " +
+                DISCOUNT_ID +
             ") " +
             "VALUES (?, ?, ?, ?)";
 
@@ -62,7 +52,14 @@ public class ProductDAOImpl implements ProductDAO {
     private static final String SEARCH_PRODUCT_QUERY = "{call searchProduct(?)}";
 
     private static final String UPDATE_PRODUCT_QUERY =
-            "{call updateProduct(?, ?, ?, ?, ?)}";
+            "UPDATE " + DATABASE + "." + PRODUCT_TABLE +
+            " SET " +
+                PRODUCT_NAME + "=?, " +
+                PRODUCT_PRICE + "=?, " +
+                CATEGORY_ID + "=?, " +
+                DISCOUNT_ID + "=?" +
+            " WHERE " +
+                ID + "=?";
 
     private static final String SET_PRODUCT_AVAILABLE =
             "UPDATE " + DATABASE + "." + PRODUCT_TABLE +
@@ -111,6 +108,8 @@ public class ProductDAOImpl implements ProductDAO {
             statement.setInt(3, categoryId);
             if (discountId != 0) {
                 statement.setInt(4, discountId);
+            } else {
+                statement.setNull(4, Types.INTEGER);
             }
 
             if (statement.executeUpdate() < 1) {
@@ -131,17 +130,23 @@ public class ProductDAOImpl implements ProductDAO {
     @Override
     public void updateProduct(int productId, String name, double price, int categoryId, int discountId) throws DAOException, StorageException {
         Connection connection = null;
-        CallableStatement statement = null;
+        PreparedStatement statement = null;
         try {
             connection = dbConnector.getConnection();
-            statement = connection.prepareCall(UPDATE_PRODUCT_QUERY);
+            statement = connection.prepareStatement(UPDATE_PRODUCT_QUERY);
 
-            statement.setInt(1, productId);
-            statement.setString(2, name);
-            statement.setDouble(3, price);
-            statement.setInt(4, categoryId);
+            statement.setInt(5, productId);
+            statement.setString(1, name);
+            statement.setDouble(2, price);
+            statement.setInt(3, categoryId);
             if (discountId != 0) {
-                statement.setInt(5, discountId);
+                statement.setInt(4, discountId);
+            } else {
+                statement.setNull(4, Types.INTEGER);
+            }
+
+            if (statement.executeUpdate() < 1) {
+                throw new DAOException("Something went wrong. Product wasn't updated");
             }
         } catch (SQLException e) {
             throw new DAOException("Cannot get connection to DB", e);
@@ -386,7 +391,7 @@ public class ProductDAOImpl implements ProductDAO {
         try {
             connection = dbConnector.getConnection();
             statement = connection.prepareStatement(REMOVE_THING_FROM_PRODUCT_QUERY);
-            statement.setInt(1, productId);
+            statement.setInt(1, thingId);
             statement.setInt(2, productId);
 
             if (statement.executeUpdate() < 1) {

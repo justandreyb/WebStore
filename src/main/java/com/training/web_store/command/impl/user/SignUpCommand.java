@@ -45,6 +45,7 @@ public class SignUpCommand extends UserCommand {
 
                 session.setAttribute(LOCALE_PARAMETER, currentLocale);
                 session.setAttribute(user.getRole(), user);
+                ResponseWriter.writeSuccess(response, "Complete");
             } else {
                 ResponseWriter.writeError(response, ERROR_USER_NOT_FOUND);
             }

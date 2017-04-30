@@ -26,18 +26,19 @@ public class ThingDAOImpl implements ThingDAO {
     private static final String THING_REVIEW = "review";
     private static final String CATEGORY_NAME = "category";
     private static final String THING_BRAND = "brand";
+    private static final String THING_BRAND_ID = "brand_id";
     private static final String THING_IS_AVAILABLE = "is_available";
     private static final String RATING_THING = "thing_id";
     private static final String RATING_USER = "customer_id";
     private static final String RATING_VALUE = "value";
 
-    private static final String ADD_PRODUCT_QUERY =
+    private static final String ADD_THING_QUERY =
             "INSERT INTO " + DATABASE + "." + THING_TABLE + " (" +
                 THING_NAME + ", " +
                 THING_CATEGORY + ", " +
                 THING_DESCRIPTION + ", " +
                 THING_CREATION_DATE + ", " +
-                THING_BRAND +
+                THING_BRAND_ID +
             ") " +
             "VALUES (?, ?, ?, ?, ?)";
 
@@ -47,7 +48,17 @@ public class ThingDAOImpl implements ThingDAO {
 
     private static final String GET_THINGS_FOR_PRODUCT_QUERY = "{call getThingsForProduct(?)}";
 
-    private static final String UPDATE_THING_QUERY = "{call updateThing(?, ?, ?, ?, ?)}";
+    private static final String UPDATE_THING_QUERY =
+            "UPDATE " + DATABASE + "." + THING_TABLE +
+            " SET " +
+                THING_NAME + "=?, " +
+                THING_CATEGORY + "=?, " +
+                THING_DESCRIPTION + "=?, " +
+                THING_CREATION_DATE + "=?, " +
+                THING_BRAND_ID + "=?" +
+            " WHERE " +
+                ID + "=?"
+            ;
 
     private static final String ADD_RATING_QUERY =
             "INSERT INTO " + DATABASE + "." + RATING_TABLE + "( " +
@@ -93,10 +104,10 @@ public class ThingDAOImpl implements ThingDAO {
 
     private static final String SET_THING_AVAILABLE =
             "UPDATE " + DATABASE + "." + THING_TABLE +
-                    " SET " +
-                    THING_IS_AVAILABLE + "=?" +
-                    " WHERE " +
-                    ID + "=?";
+            " SET " +
+                THING_IS_AVAILABLE + "=?" +
+            " WHERE " +
+                ID + "=?";
 
     private static final String ERROR_ADDING = "Error during adding new entity";
     private static final String ERROR_DELETING = "Error during deleting";
@@ -107,7 +118,7 @@ public class ThingDAOImpl implements ThingDAO {
         PreparedStatement statement = null;
         try {
             connection = dbConnector.getConnection();
-            statement = connection.prepareStatement(ADD_PRODUCT_QUERY);
+            statement = connection.prepareStatement(ADD_THING_QUERY);
 
             statement.setString(1, thing.getName());
             statement.setInt(2, categoryId);
@@ -261,19 +272,21 @@ public class ThingDAOImpl implements ThingDAO {
     @Override
     public void updateThing(int thingId, String name, String description, Date creationDate, int categoryId, int brandId) throws DAOException, StorageException {
         Connection connection = null;
-        CallableStatement statement = null;
+        PreparedStatement statement = null;
         try {
             connection = dbConnector.getConnection();
-            statement = connection.prepareCall(UPDATE_THING_QUERY);
+            statement = connection.prepareStatement(UPDATE_THING_QUERY);
 
-            statement.setInt(1, thingId);
-            statement.setString(2, name);
-            statement.setInt(3, categoryId);
-            statement.setString(4, description);
-            statement.setDate(5, creationDate);
-            statement.setInt(6, brandId);
+            statement.setInt(6, thingId);
+            statement.setString(1, name);
+            statement.setInt(2, categoryId);
+            statement.setString(3, description);
+            statement.setDate(4, creationDate);
+            statement.setInt(5, brandId);
 
-            statement.executeUpdate();
+            if (statement.executeUpdate() < 1) {
+                throw new DAOException("Something went wrong. Thing wasn't updated");
+            }
         } catch (SQLException e) {
             throw new DAOException("Cannot get connection to DB", e);
         } finally {

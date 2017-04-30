@@ -23,7 +23,7 @@
                     <label class="control-label col-sm-2" for="add-product-discount-id">${entityDiscount}</label>
                     <div class="col-sm-10">
                         <select class="form-control" id="add-product-discount-id">
-                            <option selected>${none}</option>
+                            <option selected value="0">${none}</option>
                             #DISCOUNTS
                         </select>
                     </div>

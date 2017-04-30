@@ -27,6 +27,7 @@ public class EditProductCommand extends StoreCommand {
             int id = Integer.parseInt(idParam);
             double price = Double.parseDouble(priceParam);
             int category = Integer.parseInt(categoryParam);
+            //TODO: Check in js
             if (discountParam != null) {
                 int discount = Integer.parseInt(discountParam);
                 service.updateProduct(id, name, price, category, discount);

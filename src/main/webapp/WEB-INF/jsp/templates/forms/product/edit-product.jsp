@@ -25,7 +25,7 @@
                     <label class="control-label col-sm-2" for="edit-product-discount-id">${entityDiscount}</label>
                     <div class="col-sm-10">
                         <select class="form-control" id="edit-product-discount-id">
-                            <option selected>${none}</option>
+                            <option selected value="0">${none}</option>
                             #DISCOUNTS
                         </select>
                     </div>

@@ -529,10 +529,10 @@ function handleEditThing() {
 
         id: $("#edit-thing-id").val(),
         name: $("#edit-thing-name").val(),
-        category: $("#edit-thing-category").val(),
+        category: $("#edit-thing-category-id").val(),
         description: $("#edit-thing-description").val(),
         creationDate: $("#edit-thing-creation-date").val(),
-        brand: $("#edit-thing-brand").val()
+        brand: $("#edit-thing-brand-id").val()
     };
 
     sendRequest(data);
@@ -579,6 +579,7 @@ function generateThingEditForm(code, collectedData) {
     });
 
     var newCode = code.replace("#NAME", thing.name);
+    newCode = newCode.replace("#ID", thing.id);
     newCode = newCode.replace("#CATEGORIES", categoriesCode);
     newCode = newCode.replace("#DESCRIPTION", thing.description);
     newCode = newCode.replace("#CREATION_DATE", thing.creationDate);
@@ -649,7 +650,7 @@ function handleAddReview() {
         entity: entity,
         command: 'add',
 
-        thing: $("#add-review-thing").val(),
+        thingId: $("#add-review-thing-id").val(),
         text: $("#add-review-text").val()
     };
 
@@ -1028,17 +1029,20 @@ function handleAddProduct() {
 
 function handleEditProduct() {
     var entity = 'Product';
+    var discountId = $("#edit-product-discount-id").val();
+    if (discountId != null && discountId == "Not selected") {
+        discountId = 0;
+    }
     var data = {
         entity: entity,
         command: 'edit',
 
         id: $("#edit-product-id").val(),
         name: $("#edit-product-name").val(),
-        category: $("#edit-product-category").val(),
+        category: $("#edit-product-category-id").val(),
         price: $("#edit-product-price").val(),
-        discount: $("#edit-product-discount-id")
+        discount: discountId
     };
-
     sendRequest(data);
 }
 
@@ -1171,11 +1175,13 @@ function generateThingAddingToProductForm(code, collectedData) {
     var thingsCode = "";
     things.forEach(function(thing) {
         var isUsed = false;
-        usedThings.forEach(function (usedThing) {
-            if (usedThing.name == thing.name) {
-                isUsed = true;
-            }
-        });
+        if (usedThings != null) {
+            usedThings.forEach(function (usedThing) {
+                if (usedThing.name == thing.name) {
+                    isUsed = true;
+                }
+            });
+        }
         if (!isUsed) {
            showingThings.push(thing);
         }
@@ -1200,12 +1206,14 @@ function generateThingDeletingFromProductForm(code, collectedData) {
     var things = collectedData.things;
 
     var generatedCode = "";
-    var element = '<option value="#VALUE">#NAME</option>';
-    things.forEach(function(things) {
-        var currElement = element.replace("#NAME", things.name);
-        currElement = currElement.replace("#VALUE", things.id);
-        generatedCode = generatedCode + "\n" + currElement;
-    });
+    if (things != null) {
+        var element = '<option value="#VALUE">#NAME</option>';
+        things.forEach(function (things) {
+            var currElement = element.replace("#NAME", things.name);
+            currElement = currElement.replace("#VALUE", things.id);
+            generatedCode = generatedCode + "\n" + currElement;
+        });
+    }
 
     return code.replace("#THINGS" , generatedCode);
 }

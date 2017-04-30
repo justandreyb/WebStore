@@ -27,7 +27,7 @@ public class EditDiscountCommand extends StoreCommand {
         try {
             int id = Integer.parseInt(idParam);
             byte value = Byte.parseByte(valueParam);
-            SimpleDateFormat dateFormat = new SimpleDateFormat();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             Date startDate = dateFormat.parse(startDateParam);
             Date finishDate = dateFormat.parse(finishDateParam);
 

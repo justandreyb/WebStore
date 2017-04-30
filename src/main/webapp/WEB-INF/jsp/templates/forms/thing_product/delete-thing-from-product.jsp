@@ -9,6 +9,7 @@
             <label class="control-label col-sm-2" for="delete-thing-from-product-thing">${entityThing}</label>
             <div class="col-sm-10">
                 <select class="form-control" id="delete-thing-from-product-thing">
+                    <option selected>${none}</option>
                     #THINGS
                 </select>
             </div>
