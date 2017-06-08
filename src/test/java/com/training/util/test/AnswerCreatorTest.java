@@ -109,7 +109,6 @@ public class AnswerCreatorTest {
     public void createJSONFromDiscount() throws Exception {
         System.out.println("createDiscount()");
         Discount discount = service.getDiscount(1);
-
         System.out.println(AnswerCreator.createJSONFromDiscount(discount));
     }
 

@@ -3,30 +3,13 @@
 <div class="container-fluid">
     <form class="form-horizontal" method="post">
 
-        <div class="form-group">
-            <div class="col-sm-10">
-                <c:set var="accountEntity" scope="request" value="${account}" />
-                <div class="form-group">
-                    <label class="control-label col-sm-2">${accountField}</label>
-                    <label class="control-label col-sm-10" id="change-role">${accountEntity}</label>
-                </div>
-            </div>
-        </div>
+        <input type="hidden" id="change-role-id" value="#ID" />
 
         <div class="form-group">
-            <label class="control-label col-sm-2" for="role-id">${rolesField}</label>
+            <label class="control-label col-sm-2" for="change-role-role-id">${rolesField}</label>
             <div class="col-sm-10">
-                <c:set var="roles" scope="request" value="${entities}" />
-                <select class="form-control" id="role-id">
-                    <option value="Not selected" selected>${none}</option>
-                    <c:if test="${roles != null}">
-                        <c:forEach items="${roles}" var="role">
-                            <c:set var="map" scope="request" value="${role.parameters}" />
-                            <option value="<c:out value="${map['role_id']}"/>">
-                                <c:out value="${map['role_value']}"/>
-                            </option>
-                        </c:forEach>
-                    </c:if>
+                <select class="form-control" id="change-role-role-id">
+                    #ROLES
                 </select>
             </div>
         </div>

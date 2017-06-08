@@ -11,6 +11,7 @@
 
     <title>${title}</title>
     <link rel="stylesheet" href="resources/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="resources/css/main.css">
     <link rel="stylesheet" href="resources/css/navbar.css">
     <link rel="stylesheet" href="resources/css/spinner.css">
 </head>

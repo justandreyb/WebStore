@@ -24,7 +24,7 @@ public class AddDiscountCommand extends StoreCommand {
 
         try {
             byte value = Byte.parseByte(valueParam);
-            SimpleDateFormat dateFormat = new SimpleDateFormat();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             Date startDate = dateFormat.parse(startDateParam);
             Date finishDate = dateFormat.parse(finishDateParam);
 

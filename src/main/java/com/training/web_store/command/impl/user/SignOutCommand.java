@@ -16,6 +16,7 @@ public class SignOutCommand extends UserCommand {
         try {
             HttpSession session = request.getSession(false);
             service.signOut(session);
+            ResponseWriter.writeSuccess(response, "Complete");
         } catch (ServiceException e) {
             log.debug(ERROR_WITH_SIGN_OUT, e);
             ResponseWriter.writeError(response, ERROR_WITH_SIGN_OUT);

@@ -15,5 +15,7 @@ public interface UserDAO {
 
     List<User> getUsers() throws DAOException, StorageException;
 
-    void setUserAvailable(User user, boolean available) throws DAOException, StorageException;
+    void setUserAvailable(int userId, boolean available) throws DAOException, StorageException;
+
+    void changeRole(int accountId, int roleId) throws DAOException, StorageException;
 }

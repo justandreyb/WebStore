@@ -34,8 +34,7 @@ public class SignUpCommand extends UserCommand {
         String locale = request.getParameter(LOCALE_PARAMETER);
 
         try {
-            User user = new User(email, password, firstName, lastName, phone,
-                    gender, address, locale);
+            User user = new User(email, password, firstName, lastName, gender, address, phone, locale);
 
             service.registration(user);
             user = service.signIn(email, password);
@@ -45,6 +44,7 @@ public class SignUpCommand extends UserCommand {
 
                 session.setAttribute(LOCALE_PARAMETER, currentLocale);
                 session.setAttribute(user.getRole(), user);
+                ResponseWriter.writeSuccess(response, "Complete");
             } else {
                 ResponseWriter.writeError(response, ERROR_USER_NOT_FOUND);
             }

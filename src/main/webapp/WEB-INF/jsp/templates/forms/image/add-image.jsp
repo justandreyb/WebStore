@@ -3,6 +3,9 @@
         <div class="container-fluid">
             <form class="form-horizontal" method="post">
 
+                <input type="hidden" id="add-image-product-id" value="#PRODUCT_ID" />
+                <input type="hidden" id="add-image-thing-id" value="#THING_ID" />
+
                 <div class="form-group">
                     <label class="control-label col-sm-2" for="add-image-href">${entityHref}</label>
                     <div class="col-sm-10">
@@ -11,9 +14,9 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="control-label col-sm-2" for="add-image-realName">${realName}</label>
+                    <label class="control-label col-sm-2" for="add-image-real-name">${realName}</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" id="add-image-realName" placeholder="${enterRealName}">
+                        <input type="text" class="form-control" id="add-image-real-name" placeholder="${enterRealName}">
                     </div>
                 </div>
 

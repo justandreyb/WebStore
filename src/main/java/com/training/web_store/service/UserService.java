@@ -16,4 +16,8 @@ public interface UserService {
     void updateAccountInfo(int userId, User user) throws ServiceException;
 
     List<User> getAccounts() throws ServiceException;
+
+    void changeAccountRole(int accountId, int roleId) throws ServiceException;
+
+    void blockUser(int accountId) throws ServiceException;
 }

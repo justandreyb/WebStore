@@ -6,7 +6,7 @@
                 <div class="form-group">
                     <label class="control-label col-sm-2" for="add-category-name">${entityName}</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" id="add-category-name" placeholder="${enterName}">
+                        <input required type="text" class="form-control" id="add-category-name" placeholder="${enterName}">
                     </div>
                 </div>
 

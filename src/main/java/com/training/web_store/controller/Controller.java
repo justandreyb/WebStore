@@ -54,7 +54,7 @@ public class Controller extends HttpServlet {
     }
 
     private void performCommand(HttpServletRequest request, HttpServletResponse response) {
-        String requestedCommand = getCommandFromRequest(request);
+        String requestedCommand = getCommandFromRequest(request).toUpperCase();
         String entity = request.getParameter(ENTITY_PARAMETER);
 
         FactoryProducer factoryProducer = FactoryProducer.getInstance();

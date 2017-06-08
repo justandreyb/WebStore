@@ -27,7 +27,7 @@ public class AddThingCommand extends StoreCommand {
         String brandParam = request.getParameter(BRAND_PARAMETER);
 
         try {
-            SimpleDateFormat dateFormat = new SimpleDateFormat();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             Date creationDate = dateFormat.parse(creationDateParam);
             int brand = Integer.parseInt(brandParam);
             int category = Integer.parseInt(categoryParam);

@@ -13,6 +13,5 @@ public interface InteractionService {
     void removeFromOrder(int orderId, int productId) throws ServiceException;
     void buyOrder(int orderId) throws ServiceException;
 
-    List<Product> searchProduct(String requestedProduct) throws ServiceException;
     void setRating(int userId, int thingId, byte value) throws ServiceException;
 }

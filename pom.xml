@@ -8,7 +8,7 @@
     <packaging>war</packaging>
     <version>1.0-SNAPSHOT</version>
     <name>WebStore</name>
-    <url>http://maven.apache.org</url>
+    <url>justandreyb@gmail.com</url>
 
     <properties>
         <javax.version>7.0</javax.version>
@@ -67,9 +67,9 @@
         </dependency>
 
         <dependency>
-            <groupId>atg.taglib.json</groupId>
-            <artifactId>json-taglib</artifactId>
-            <version>${json-taglib.version}</version>
+            <groupId>com.github.livesense</groupId>
+            <artifactId>org.liveSense.scripting.jsp.taglib.jsonatg</artifactId>
+            <version>1.0.5</version>
         </dependency>
 
     </dependencies>

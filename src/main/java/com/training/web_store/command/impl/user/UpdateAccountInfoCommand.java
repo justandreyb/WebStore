@@ -50,6 +50,7 @@ public class UpdateAccountInfoCommand extends UserCommand {
 
             session.setAttribute(LOCALE_PARAMETER, currentLocale);
             session.setAttribute(user.getRole(), user);
+            ResponseWriter.writeSuccess(response, "Complete");
 
         } catch (ServiceException e) {
             log.warn(ERROR_WITH_UPDATING_ACCOUNT, e);

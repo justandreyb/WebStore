@@ -96,7 +96,7 @@ public class DiscountDAOImpl implements DiscountDAO {
             statement.setByte(1, discount.getValue());
             statement.setDate(2, (Date) discount.getStartDate());
             statement.setDate(3, (Date) discount.getFinishDate());
-            statement.setInt(4, discount.getId());
+            statement.setInt(4, discountId);
 
             if (statement.executeUpdate() < 1) {
                 throw new DAOException(ERROR_UPDATE);

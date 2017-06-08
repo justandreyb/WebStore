@@ -1,5 +1,3 @@
-   <%--TODO: Add block for guest and user--%>
-
     <div class="container-fluid action-block">
 
         <div id="action-block" class="modal fade" role="dialog">

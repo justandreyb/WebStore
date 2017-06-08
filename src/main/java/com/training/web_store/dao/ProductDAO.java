@@ -19,7 +19,11 @@ public interface ProductDAO {
     Product getProduct(int productId) throws DAOException, StorageException;
     Product getProduct(String name, int categoryId) throws DAOException;
     List<Product> getProducts() throws DAOException, StorageException;
+
     List<Product> searchProduct(String requestedName) throws DAOException, StorageException;
+    List<Product> searchProductByBrand(String brandName) throws DAOException, StorageException;
+    List<Product> searchProductByCategory(String categoryName) throws DAOException, StorageException;
+
     List<Product> getProductsForCategory(int categoryId) throws DAOException, StorageException;
     List<Product> getProductsForBrand(int brandId) throws DAOException, StorageException;
     List<Product> getProductsForDiscount(int discountId) throws DAOException, StorageException;

@@ -1,5 +1,6 @@
 package com.training.util;
 
+import com.training.web_store.bean.account.Role;
 import com.training.web_store.bean.account.User;
 import com.training.web_store.bean.store.*;
 import org.json.simple.JSONArray;
@@ -44,11 +45,15 @@ public class AnswerCreator {
     private static final String THING_CATEGORY = "category";
     private static final String THING_BRAND = "brand";
     private static final String THING_DESCRIPTION = "description";
-    private static final String THING_CREATION_DATE = "creationDate";
+    private static final Object THING_RATING = "rating";
 
+    private static final String THING_CREATION_DATE = "creationDate";
     private static final String ACCOUNTS = "accounts";
     private static final String ACCOUNT_EMAIL = "email";
+
     private static final String ACCOUNT_FIRST_NAME = "firstName";
+    private static final Object ROLES = "roles";
+    private static final Object ROLE_VALUE = "value";
 
     public static String create(String data) {
         return createJSON(DATA, data);
@@ -61,7 +66,7 @@ public class AnswerCreator {
     private static String createJSON(String key, String value) {
         JSONObject answerJSON = new JSONObject();
         answerJSON.put(key, value);
-        return answerJSON.toString();
+        return answerJSON.toJSONString();
     }
 
     public static String createSuccess(String message) {
@@ -79,7 +84,7 @@ public class AnswerCreator {
     }
 
     public static String createJSONFromBrand(Brand brand) {
-        return createJSONBrand(brand).toString();
+        return createJSONBrand(brand).toJSONString();
     }
 
     public static String createJSONFromBrands(List<Brand> brands) {
@@ -90,7 +95,7 @@ public class AnswerCreator {
         }
         brandsJSON.put(BRANDS, objects);
 
-        return brandsJSON.toString();
+        return brandsJSON.toJSONString();
     }
 
     /*-------------------------------------------------------------------*/
@@ -104,7 +109,7 @@ public class AnswerCreator {
     }
 
     public static String createJSONFromCategory(Category category) {
-        return createJSONCategory(category).toString();
+        return createJSONCategory(category).toJSONString();
     }
 
     public static String createJSONFromCategories(List<Category> categories) {
@@ -115,7 +120,7 @@ public class AnswerCreator {
         }
         entitiesJSON.put(CATEGORIES, objects);
 
-        return entitiesJSON.toString();
+        return entitiesJSON.toJSONString();
     }
 
     /*-------------------------------------------------------------------*/
@@ -148,7 +153,7 @@ public class AnswerCreator {
     }
 
     public static String createJSONFromProduct(Product product) {
-        return createJSONProduct(product).toString();
+        return createJSONProduct(product).toJSONString();
     }
 
     public static String createJSONFromProducts(List<Product> products) {
@@ -159,7 +164,7 @@ public class AnswerCreator {
         }
         entitiesJSON.put(PRODUCTS, objects);
 
-        return entitiesJSON.toString();
+        return entitiesJSON.toJSONString();
     }
 
     /*-------------------------------------------------------------------*/
@@ -180,7 +185,7 @@ public class AnswerCreator {
         }
         entitiesJSON.put(PHOTOS, objects);
 
-        return entitiesJSON.toString();
+        return entitiesJSON.toJSONString();
     }
 
     /*-------------------------------------------------------------------*/
@@ -189,13 +194,13 @@ public class AnswerCreator {
         JSONObject entityJSON = new JSONObject();
         entityJSON.put(ID, discount.getId());
         entityJSON.put(DISCOUNT_VALUE, discount.getValue());
-        entityJSON.put(DISCOUNT_START_DATE, discount.getStartDate());
-        entityJSON.put(DISCOUNT_FINISH_DATE, discount.getFinishDate());
+        entityJSON.put(DISCOUNT_START_DATE, discount.getStartDate().toString());
+        entityJSON.put(DISCOUNT_FINISH_DATE, discount.getFinishDate().toString());
         return entityJSON;
     }
 
     public static String createJSONFromDiscount(Discount discount) {
-        return createJSONDiscount(discount).toString();
+        return createJSONDiscount(discount).toJSONString();
     }
 
     public static String createJSONFromDiscounts(List<Discount> discounts) {
@@ -206,7 +211,7 @@ public class AnswerCreator {
         }
         entitiesJSON.put(DISCOUNTS, objects);
 
-        return entitiesJSON.toString();
+        return entitiesJSON.toJSONString();
     }
 
     /*-------------------------------------------------------------------*/
@@ -218,7 +223,8 @@ public class AnswerCreator {
         entityJSON.put(THING_CATEGORY, thing.getCategory());
         entityJSON.put(THING_BRAND, thing.getBrand());
         entityJSON.put(THING_DESCRIPTION, thing.getDescription());
-        entityJSON.put(THING_CREATION_DATE, thing.getCreationDate());
+        entityJSON.put(THING_CREATION_DATE, thing.getCreationDate().toString());
+        entityJSON.put(THING_RATING, thing.getRating());
         JSONArray photos = new JSONArray();
         List<Photo> photosList = thing.getPhotos();
         if (photosList != null) {
@@ -231,7 +237,7 @@ public class AnswerCreator {
     }
 
     public static String createJSONFromThing(Thing thing) {
-        return createJSONThing(thing).toString();
+        return createJSONThing(thing).toJSONString();
     }
 
     public static String createJSONFromThings(List<Thing> things) {
@@ -242,7 +248,7 @@ public class AnswerCreator {
         }
         entitiesJSON.put(THINGS, objects);
 
-        return entitiesJSON.toString();
+        return entitiesJSON.toJSONString();
     }
 
     /*-------------------------------------------------------------------*/
@@ -252,7 +258,7 @@ public class AnswerCreator {
 
         reviewJSON.put("review", review);
 
-        return reviewJSON.toString();
+        return reviewJSON.toJSONString();
     }
 
     /*-------------------------------------------------------------------*/
@@ -280,6 +286,27 @@ public class AnswerCreator {
         }
         entitiesJSON.put(ACCOUNTS, objects);
 
-        return entitiesJSON.toString();
+        return entitiesJSON.toJSONString();
+    }
+
+    /*-------------------------------------------------------------------*/
+
+    private static JSONObject createJSONRole(Role role) {
+        JSONObject entityJSON = new JSONObject();
+        entityJSON.put(ID, role.getId());
+        entityJSON.put(ROLE_VALUE, role.getValue());
+
+        return entityJSON;
+    }
+
+    public static String createJSONFromRoles(List<Role> roles) {
+        JSONObject entitiesJSON = new JSONObject();
+        JSONArray objects = new JSONArray();
+        for (Role role : roles) {
+            objects.add(createJSONRole(role));
+        }
+        entitiesJSON.put(ROLES, objects);
+
+        return entitiesJSON.toJSONString();
     }
 }

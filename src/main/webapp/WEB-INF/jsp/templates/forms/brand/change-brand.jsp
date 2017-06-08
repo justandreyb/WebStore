@@ -5,17 +5,9 @@
                 <div class="form-group">
                     <label class="control-label col-sm-2" for="change-brand">${entityTitle}</label>
                     <div class="col-sm-10">
-                        <c:set var="brands" scope="request" value="${entities}" />
                         <select class="form-control" id="change-brand">
-                            <option selected>${none}</option>
-                            <c:if test="${brands != null}">
-                                <c:forEach items="${brands}" var="brand">
-                                    <c:set var="map" scope="request" value="${brand.parameters}" />
-                                    <option value="<c:out value="${map['brand_id']}"/>">
-                                        <c:out value="${map['brand_name']}"/>
-                                    </option>
-                                </c:forEach>
-                            </c:if>
+                            <option value="Not selected" selected>${none}</option>
+                            #BRANDS
                         </select>
                     </div>
                 </div>

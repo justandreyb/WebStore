@@ -19,6 +19,7 @@ public class AddImageCommand extends StoreCommand {
         String productParam = request.getParameter(PRODUCT_ID_PARAMETER);
         String thingParam = request.getParameter(THING_ID_PARAMETER);
         String realName = request.getParameter(REAL_NAME_PARAMETER);
+        String href = request.getParameter(HREF_PARAMETER);
 
         try {
             if (productParam != null) {
@@ -27,6 +28,8 @@ public class AddImageCommand extends StoreCommand {
             } else if(thingParam != null) {
                 int thing = Integer.parseInt(thingParam);
                 service.addPhotoForThing(thing, realName);
+            } else {
+                ResponseWriter.writeError(response, ERROR_MESSAGE);
             }
             ResponseWriter.writeSuccess(response, SUCCESS_MESSAGE);
         } catch (ServiceException e) {

@@ -1,5 +1,6 @@
 package com.training.web_store.service.impl;
 
+import com.training.web_store.bean.account.Role;
 import com.training.web_store.bean.store.*;
 import com.training.web_store.dao.*;
 import com.training.web_store.dao.exception.DAOException;
@@ -22,6 +23,7 @@ public class StoreServiceImpl implements StoreService {
     private final PhotoDAO photoDAO = factory.getPhotoDAO();
     private final ProductDAO productDAO = factory.getProductDAO();
     private final ThingDAO thingDAO = factory.getThingDAO();
+    private final RoleDAO roleDAO = factory.getRoleDAO();
 
     private static final String INVALID_ARGUMENT = "Invalid argument";
 
@@ -113,7 +115,7 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     public void addCategory(String name, String description) throws ServiceException {
-        if (!ArgumentParserUtil.areValidArguments(name, description)) {
+        if (!ArgumentParserUtil.areValidArguments(name)) {
             throw new ServiceException(INVALID_ARGUMENT);
         }
         try {
@@ -356,7 +358,7 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     public void addProduct(String name, double price, int categoryId, int discountId) throws ServiceException {
-        if (!ArgumentParserUtil.areValidArguments(categoryId, discountId)) {
+        if (!ArgumentParserUtil.areValidArguments(categoryId)) {
             throw new ServiceException(INVALID_ARGUMENT);
         }
         if (!ArgumentParserUtil.isValidArgument(price)) {
@@ -535,7 +537,7 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     public void updateProduct(int productId, String name, double price, int categoryId, int discountId) throws ServiceException {
-        if (!ArgumentParserUtil.areValidArguments(productId, categoryId, discountId)) {
+        if (!ArgumentParserUtil.areValidArguments(productId, categoryId)) {
             throw new ServiceException(INVALID_ARGUMENT);
         }
         if (!ArgumentParserUtil.isValidArgument(price)) {
@@ -591,7 +593,10 @@ public class StoreServiceImpl implements StoreService {
             throw new ServiceException(INVALID_ARGUMENT);
         }
         try {
-            return thingDAO.getThing(thingId);
+            Thing thing = thingDAO.getThing(thingId);
+            List<Photo> photos = photoDAO.getPhotosForThing(thingId);
+            thing.setPhotos(photos);
+            return thing;
         } catch (DAOException | StorageException e) {
             throw new ServiceException(e);
         }
@@ -600,7 +605,14 @@ public class StoreServiceImpl implements StoreService {
     @Override
     public List<Thing> getThings() throws ServiceException {
         try {
-            return thingDAO.getThings();
+            List<Thing> things = thingDAO.getThings();
+            for (Thing thing : things) {
+                byte rating = thingDAO.getRating(thing.getId());
+                if (rating != 0) {
+                    thing.setRating(rating);
+                }
+            }
+            return things;
         } catch (DAOException | StorageException e) {
             throw new ServiceException(e);
         }
@@ -711,6 +723,15 @@ public class StoreServiceImpl implements StoreService {
         }
         try {
             thingDAO.deleteThingReview(thingId);
+        } catch (DAOException | StorageException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public List<Role> getRoles() throws ServiceException {
+        try {
+            return roleDAO.getRoles();
         } catch (DAOException | StorageException e) {
             throw new ServiceException(e);
         }

@@ -30,7 +30,7 @@ public class EditThingCommand extends StoreCommand {
 
         try {
             int id = Integer.parseInt(idParam);
-            SimpleDateFormat dateFormat = new SimpleDateFormat();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             Date creationDate = dateFormat.parse(creationDateParam);
             int category = Integer.parseInt(categoryParam);
             int brand = Integer.parseInt(brandParam);

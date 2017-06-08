@@ -1,0 +1,12 @@
+.thing-desc-box {
+    text-align: left;
+}
+
+.thing-desc-box h3 {
+    margin-top: 0px;
+}
+
+.btn-add-to-order {
+    margin-right: 10px;
+    margin-top: 20px;
+}

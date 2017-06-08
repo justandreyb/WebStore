@@ -8,21 +8,18 @@ import com.training.web_store.service.exception.ServiceException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 public class GetCategoriesCommand extends StoreCommand {
-    private static final String ID_PARAMETER = "id";
-    private static final String ERROR_MESSAGE = "Something went wrong while getting categories";
+    private static final String ERROR_MESSAGE = "Something went wrong while getting category";
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) {
-        String idParam = request.getParameter(ID_PARAMETER);
-
         try {
-            int id = Integer.parseInt(idParam);
-            Category category = service.getCategory(id);
-            String categoryJSON = AnswerCreator.createJSONFromCategory(category);
+            List<Category> categories = service.getCategories();
+            String categoriesJSON = AnswerCreator.createJSONFromCategories(categories);
 
-            ResponseWriter.writeData(response, categoryJSON);
+            ResponseWriter.writeData(response, categoriesJSON);
         } catch (ServiceException e) {
             log.warn(ERROR_MESSAGE, e);
             ResponseWriter.writeError(response, ERROR_MESSAGE);
