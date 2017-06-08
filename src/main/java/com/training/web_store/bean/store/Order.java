@@ -1,6 +1,7 @@
 package com.training.web_store.bean.store;
 
 import java.util.Date;
+import java.util.List;
 
 public class Order {
     private int id;
@@ -8,6 +9,7 @@ public class Order {
     private Date creationDate;
     private double price;
     private boolean isComplete;
+    private List<Product> products;
 
     public Order() {
     }
@@ -50,5 +52,13 @@ public class Order {
 
     public void setComplete(boolean complete) {
         isComplete = complete;
+    }
+
+    public List<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<Product> products) {
+        this.products = products;
     }
 }

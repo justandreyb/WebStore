@@ -27,6 +27,7 @@ public interface ProductDAO {
     List<Product> getProductsForCategory(int categoryId) throws DAOException, StorageException;
     List<Product> getProductsForBrand(int brandId) throws DAOException, StorageException;
     List<Product> getProductsForDiscount(int discountId) throws DAOException, StorageException;
+    List<Product> getProductsForOrder(int orderId) throws DAOException, StorageException;
 
     void setProductAvailable(int productId, boolean available) throws DAOException, StorageException;
 

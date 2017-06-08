@@ -169,7 +169,6 @@ public class BrandDAOImpl implements BrandDAO {
             return brands;
 
         } catch (SQLException e) {
-            //TODO: Write all throw with messages
             throw new DAOException("",e);
         } finally {
             dbConnector.closeConnection(connection, statement, set);

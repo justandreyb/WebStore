@@ -419,7 +419,6 @@ public class StoreServiceImpl implements StoreService {
         }
     }
 
-    //TODO: Who will use this method?
     @Override
     public Product getProduct(String name, int categoryId) throws ServiceException {
         if (!ArgumentParserUtil.isValidArgument(categoryId)) {

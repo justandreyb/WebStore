@@ -1320,7 +1320,6 @@ function getRatingSettingForm() {
             /* ---- Handle ---- */
 
 function handleSetRating() {
-    //TODO : Get UserId in command
     var thingId = $("#set-rating-thing-id").val();
     var ratingValue = $("#set-rating-value").val();
 

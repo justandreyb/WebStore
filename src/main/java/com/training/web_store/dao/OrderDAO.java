@@ -7,7 +7,7 @@ import com.training.web_store.util.exception.StorageException;
 import java.util.List;
 
 public interface OrderDAO {
-    void addOrder(Order order) throws DAOException, StorageException;
+    void addOrder(Order order, int userId) throws DAOException, StorageException;
 
     Order getOrder(int userId, int orderId) throws DAOException, StorageException;
     List<Order> getOrders(int userId) throws DAOException, StorageException;

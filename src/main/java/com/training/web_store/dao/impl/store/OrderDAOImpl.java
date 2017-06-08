@@ -22,6 +22,7 @@ public class OrderDAOImpl implements OrderDAO {
     private static final String CUSTOMER_ID = "customer_id";
     private static final String ORDER_IS_COMPLETE = "is_complete";
     private static final String ORDER_CREATION_DATE = "creation_date";
+    private static final String ORDER_CUSROMER_ID = "customer_id";
 
     private static final String ORDERS_PRODUCTS_TABLE = "product_order";
     private static final String ORDERS_PRODUCTS_PRODUCT = "product_id";
@@ -33,9 +34,10 @@ public class OrderDAOImpl implements OrderDAO {
             "INSERT INTO " + DATABASE + "." + ORDER_TABLE + " (" +
                 ORDER_PRICE + ", " +
                 ORDER_CREATION_DATE + ", " +
+                ORDER_CUSROMER_ID + ", " +
                 ORDER_IS_COMPLETE +
             ") " +
-            "VALUES (?, ?, ?)";
+            "VALUES (?, ?, ?, ?)";
 
     private static final String ADD_PRODUCT_QUERY =
             "INSERT INTO " + DATABASE + "." + ORDERS_PRODUCTS_TABLE + " (" +
@@ -58,8 +60,8 @@ public class OrderDAOImpl implements OrderDAO {
                 ORDER_ID + "=?"
             ;
 
-    private static final String GET_ORDERS_QUERY = "{call getOrders(?)}";
-            /*"SELECT " +
+    private static final String GET_ORDERS_QUERY =
+            "SELECT " +
                 ORDER_ID + ", " +
                 ORDER_PRICE + ", " +
                 ORDER_CREATION_DATE + ", " +
@@ -67,7 +69,7 @@ public class OrderDAOImpl implements OrderDAO {
             " FROM " +
                 DATABASE + "." + ORDER_TABLE +
             " WHERE " +
-                CUSTOMER_ID + "=?";*/
+                CUSTOMER_ID + "=?";
 
     private static final String SET_ORDER_STATE =
             "UPDATE " + DATABASE + "." + ORDER_TABLE +
@@ -88,7 +90,7 @@ public class OrderDAOImpl implements OrderDAO {
     private static final String ERROR_DELETING = "Error during deleting";
 
     @Override
-    public void addOrder(Order order) throws DAOException, StorageException {
+    public void addOrder(Order order, int userId) throws DAOException, StorageException {
         Connection connection = null;
         PreparedStatement statement = null;
         try {
@@ -96,9 +98,9 @@ public class OrderDAOImpl implements OrderDAO {
             statement = connection.prepareStatement(ADD_ORDER_QUERY);
 
             statement.setDouble(1, order.getPrice());
-            //TODO: Replace
             statement.setDate(2, ArgumentExchanger.exchangeToSQLDate(order.getCreationDate()));
-            statement.setBoolean(3, order.isComplete());
+            statement.setInt(3, userId);
+            statement.setBoolean(4, order.isComplete());
 
             if (statement.executeUpdate() < 1) {
                 throw new DAOException(ERROR_ADDING);
@@ -173,7 +175,6 @@ public class OrderDAOImpl implements OrderDAO {
                 int orderId = set.getInt(ORDER_ID);
                 boolean complete = set.getBoolean(ORDER_IS_COMPLETE);
                 double price = set.getDouble(ORDER_PRICE);
-                //TODO: Replace
                 java.util.Date creationDate = ArgumentExchanger.exchangeFromSQLDate(set.getDate(ORDER_CREATION_DATE));
 
                 order.setId(orderId);
@@ -221,8 +222,8 @@ public class OrderDAOImpl implements OrderDAO {
         try {
             connection = dbConnector.getConnection();
             statement = connection.prepareStatement(ADD_PRODUCT_QUERY);
-            statement.setInt(1, orderId);
-            statement.setInt(2, productId);
+            statement.setInt(1, productId);
+            statement.setInt(2, orderId);
             statement.setInt(3, DEFAULT_AMOUND);
 
             if (statement.executeUpdate() < 1) {

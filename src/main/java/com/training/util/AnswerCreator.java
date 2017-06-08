@@ -52,8 +52,10 @@ public class AnswerCreator {
     private static final String ACCOUNT_EMAIL = "email";
 
     private static final String ACCOUNT_FIRST_NAME = "firstName";
-    private static final Object ROLES = "roles";
-    private static final Object ROLE_VALUE = "value";
+    private static final String ROLES = "roles";
+    private static final String ROLE_VALUE = "value";
+    private static final String ORDER_PRICE = "price";
+    private static final String ORDER_CREATION_DATE = "creationDate";
 
     public static String create(String data) {
         return createJSON(DATA, data);
@@ -130,7 +132,9 @@ public class AnswerCreator {
         entityJSON.put(ID, product.getId());
         entityJSON.put(PRODUCT_NAME, product.getName());
         entityJSON.put(PRODUCT_PRICE, product.getPrice());
-        entityJSON.put(PRODUCT_CATEGORY, product.getCategory());
+        if (product.getCategory() != null) {
+            entityJSON.put(PRODUCT_CATEGORY, product.getCategory());
+        }
         entityJSON.put(PRODUCT_DISCOUNT, product.getDiscount());
         List<Thing> thingList = product.getThings();
         if (thingList != null && thingList.size() != 0) {
@@ -264,7 +268,18 @@ public class AnswerCreator {
     /*-------------------------------------------------------------------*/
 
     public static String createJSONFromOrder(Order order) {
-        return "";
+        JSONObject orderJSON = new JSONObject();
+
+        orderJSON.put(ID, order.getId());
+        orderJSON.put(ORDER_PRICE, order.getPrice());
+        orderJSON.put(ORDER_CREATION_DATE, order.getCreationDate().toString());
+        JSONArray objects = new JSONArray();
+        for (Product product : order.getProducts()) {
+            objects.add(createJSONProduct(product));
+        }
+        orderJSON.put(PRODUCTS, objects);
+
+        return orderJSON.toJSONString();
     }
 
     /*-------------------------------------------------------------------*/

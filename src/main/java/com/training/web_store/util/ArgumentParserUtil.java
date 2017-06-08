@@ -57,13 +57,14 @@ public class ArgumentParserUtil {
 
     public static boolean isValidPassword(String password) {
         boolean result = true;
-        //TODO: Write
+        if (password.length() < 6) {
+            result = false;
+        }
         return result;
     }
 
     public static boolean isValidLogin(String email) {
         boolean valid = true;
-        //TODO: Wrie
 
         if (!email.contains("@")) {
             valid = false;

@@ -60,6 +60,8 @@ public class ProductDAOImpl implements ProductDAO {
 
     private static final String GET_PRODUCTS_FOR_DISCOUNT_QUERY = "{call getProductsForDiscount(?)}";
 
+    private static final String GET_PRODUCTS_FOR_ORDER_QUERY = "{call getProductsForOrder(?)}";
+
     private static final String SEARCH_PRODUCT_QUERY = "{call searchProduct(?)}";
 
     private static final String SEARCH_PRODUCT_BY_CATEGORY_QUERY =
@@ -113,8 +115,8 @@ public class ProductDAOImpl implements ProductDAO {
             ;
 
     private static final String ERROR_ADDING = "Error during adding new entity";
-    private static final String ERROR_DELETING = "Error during deleting";
 
+    private static final String ERROR_DELETING = "Error during deleting";
     private static final int INITIAL_AMOUNT = 1;
 
     @Override
@@ -444,6 +446,11 @@ public class ProductDAOImpl implements ProductDAO {
         return getProductsToRequirements(GET_PRODUCTS_FOR_DISCOUNT_QUERY, discountId);
     }
 
+    @Override
+    public List<Product> getProductsForOrder(int orderId) throws DAOException, StorageException {
+        return getProductsToRequirements(GET_PRODUCTS_FOR_ORDER_QUERY, orderId);
+    }
+
     private List<Product> getProductsToRequirements(String query, int entityId) throws DAOException, StorageException {
         Connection connection = null;
         CallableStatement statement = null;
@@ -467,13 +474,11 @@ public class ProductDAOImpl implements ProductDAO {
                 String name = set.getString(PRODUCT_NAME);
                 double price = set.getDouble(PRODUCT_PRICE);
                 byte discount = set.getByte(DISCOUNT_VALUE);
-                String category = set.getString(CATEGORY_NAME);
 
                 product.setId(productId);
                 product.setName(name);
                 product.setPrice(price);
                 product.setDiscount(discount);
-                product.setCategory(category);
 
                 products.add(product);
             }

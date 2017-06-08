@@ -1,8 +1,11 @@
 package com.training.web_store.service.impl;
 
 import com.training.web_store.bean.store.Order;
+import com.training.web_store.bean.store.Photo;
 import com.training.web_store.bean.store.Product;
 import com.training.web_store.dao.OrderDAO;
+import com.training.web_store.dao.PhotoDAO;
+import com.training.web_store.dao.ProductDAO;
 import com.training.web_store.dao.ThingDAO;
 import com.training.web_store.dao.exception.DAOException;
 import com.training.web_store.dao.factory.DAOFactory;
@@ -17,6 +20,8 @@ public class InteractionServiceImpl implements InteractionService {
 
     private final DAOFactory factory = DAOFactory.getInstance();
     private final OrderDAO orderDAO = factory.getOrderDAO();
+    private final ProductDAO productDAO = factory.getProductDAO();
+    private final PhotoDAO photoDAO = factory.getPhotoDAO();
 
     private static final String INVALID_ARGUMENT = "Invalid argument";
 
@@ -28,7 +33,7 @@ public class InteractionServiceImpl implements InteractionService {
         order.setComplete(false);
 
         try {
-            orderDAO.addOrder(order);
+            orderDAO.addOrder(order, userId);
             return getMainOrder(userId);
         } catch (DAOException | StorageException e) {
             throw new ServiceException("Error while creating new order" + e);
@@ -52,6 +57,13 @@ public class InteractionServiceImpl implements InteractionService {
 
         if (orders.size() > 0) {
             targetOrder = orders.get(0);
+            List<Product> products = productDAO.getProductsForOrder(targetOrder.getId());
+            for (Product product : products) {
+                List<Photo> photos = photoDAO.getPhotosForProduct(product.getId());
+                product.setPhotos(photos);
+            }
+            targetOrder.setProducts(products);
+
         }
         return targetOrder;
     }

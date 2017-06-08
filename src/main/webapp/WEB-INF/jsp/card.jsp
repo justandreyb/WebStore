@@ -6,7 +6,7 @@
 <body>
 <div class="wrapper">
     <%@include file="templates/navbar/begin-navbar.jsp" %>
-    <%@include file="templates/navbar/role-selector.jsp" %>
+        <%@include file="templates/navbar/role-selector.jsp" %>
     <%@include file="templates/navbar/end-navbar.jsp" %>
 
     <div class="inner">
@@ -25,44 +25,12 @@
         </div>
 
         <div class="container col-sm-10">
-
-            <div class="container-fluid text-center">
-                <div class="container-fluid">
-                    <div class="col-sm-10">
-                        <h3>${orderLabel}</h3>
-                    </div>
-                    <div class="col-sm-2">
-                        <input type="button" class="btn btn-primary btn-add-to-order" value="Buy order" onclick="buyOrder()">
-                    </div>
-                </div>
-                <hr>
-                <br>
-                <div class="row" id="things">
-                    <c:forEach items="${order.products}" var="product">
-                        <div class="row">
-                            <div class="col-sm-4">
-                                <c:if test="${not empty product.photos}">
-                                    <img src="${product.photos[0].href}" class="img-responsive" style="width:100%" alt="Image">
-                                </c:if>
-                                <c:if test="${empty product.photos}">
-                                    <img src="https://placehold.it/255x135?text=No image" class="img-responsive" style="width:100%" alt="Image">
-                                </c:if>
-                            </div>
-                            <div class="col-sm-6 thing-desc-box">
-                                <h3>${product.name}</h3>
-                                <label>${category} : ${product.category}</label>
-                                <br>
-                                <label>${price} : ${product.price}</label>
-                            </div>
-                            <div class="col-sm-2">
-                                <a href="/card?entity=account&command=delete_from_order&productId=${product.id}"><input type="button" class="btn btn-primary btn-add-to-order" value="Delete"></a>
-                            </div>
-                        </div>
-                        <br>
-                    </c:forEach>
+            <div class="text-center">
+                <h3>${navProducts}</h3><br>
+                <div class="row" id="products">
+                    #PRODUCTS
                 </div>
             </div><br>
-
         </div>
     </div>
 
@@ -82,4 +50,4 @@
 </div>
 
 <%@include file="templates/end-page.jsp" %>
-<script src="resources/js/product.js"></script>
+<script src="resources/js/card.js"></script>
