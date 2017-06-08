@@ -12,6 +12,7 @@ public class Thing {
     private Date creationDate;
     private String review;
     private List<Photo> photos;
+    private byte rating;
 
     public Thing() {
     }
@@ -84,5 +85,13 @@ public class Thing {
 
     public void setPhotos(List<Photo> photos) {
         this.photos = photos;
+    }
+
+    public void setRating(byte rating) {
+        this.rating = rating;
+    }
+
+    public byte getRating() {
+        return rating;
     }
 }

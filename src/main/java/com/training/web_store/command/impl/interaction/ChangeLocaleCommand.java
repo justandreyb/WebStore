@@ -8,7 +8,7 @@ import javax.servlet.http.HttpSession;
 import java.util.Locale;
 
 public class ChangeLocaleCommand extends InteractionCommand {
-    private static final String TARGET_LOCALE = "productId";
+    private static final String TARGET_LOCALE = "targetLocale";
     private static final String LOCALE = "locale";
 
     @Override

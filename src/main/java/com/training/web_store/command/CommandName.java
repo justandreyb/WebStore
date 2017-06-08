@@ -19,8 +19,9 @@ public enum CommandName {
     GET_ENTITY,
     GET_ENTITIES,
 
-    SHOW_PRODUCT,
-    SEARCH_PRODUCT,
+    SEARCH,
+
+    SHOW,
     SHOW_PRODUCTS,
     ADD_TO_ORDER,
     REMOVE_FROM_ORDER,

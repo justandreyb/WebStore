@@ -34,8 +34,7 @@ public class SignUpCommand extends UserCommand {
         String locale = request.getParameter(LOCALE_PARAMETER);
 
         try {
-            User user = new User(email, password, firstName, lastName, phone,
-                    gender, address, locale);
+            User user = new User(email, password, firstName, lastName, gender, address, phone, locale);
 
             service.registration(user);
             user = service.signIn(email, password);

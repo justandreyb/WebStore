@@ -13,7 +13,7 @@ function signIn() {
             password: $("#login-password").val()
         },
         success: function(data) {
-            handleAuthorisationSuccess(data);
+            handleAuthorisationSuccess(data, "/welcome");
         },
         error: function () {
             var errorMessage = "Something went wrong while signing in.. Try again";
@@ -44,7 +44,7 @@ function signUp() {
             locale: $("#register-locale").val()
         },
         success: function (data) {
-            handleAuthorisationSuccess(data);
+            handleAuthorisationSuccess(data, "/welcome");
         },
         error: function () {
             var errorMessage = "Something went wrong while signing up.. Try again";
@@ -66,7 +66,7 @@ function signOut() {
             command: 'SIGN_OUT'
         },
         success: function (data) {
-            handleAuthorisationSuccess(data);
+            handleAuthorisationSuccess(data, "/welcome");
         },
         error: function () {
             var errorMessage = "Something went wrong while signing out.. Try again";

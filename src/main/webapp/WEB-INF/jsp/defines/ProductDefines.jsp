@@ -1,4 +1,13 @@
-<fmt:message key="names.titleLogin" bundle="${curr_locale}" var="title" />
+<fmt:message key="product.title" bundle="${curr_locale}" var="title" />
+<fmt:message key="product.price" bundle="${curr_locale}" var="price" />
+<fmt:message key="product.category" bundle="${curr_locale}" var="category" />
+<fmt:message key="dashboard.categories" bundle="${curr_locale}" var="categories" />
+<fmt:message key="brand.title" bundle="${curr_locale}" var="brand" />
+<fmt:message key="dashboard.brands" bundle="${curr_locale}" var="brands" />
+<fmt:message key="thing.description" bundle="${curr_locale}" var="description" />
+<fmt:message key="rating.name" bundle="${curr_locale}" var="rating" />
+<fmt:message key="product.availableDiscount" bundle="${curr_locale}" var="availableDiscount" />
+<fmt:message key="order.title" bundle="${curr_locale}" var="orderLabel" />
 <fmt:message key="names.aboutLogin" bundle="${curr_locale}" var="about" />
 <fmt:message key="errors.alreadySignedIn" bundle="${curr_locale}" var="errorSigned" />
 <fmt:message key="userInfo.password" bundle="${curr_locale}" var="password" />

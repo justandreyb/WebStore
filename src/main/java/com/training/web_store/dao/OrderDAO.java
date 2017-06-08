@@ -13,4 +13,7 @@ public interface OrderDAO {
     List<Order> getOrders(int userId) throws DAOException, StorageException;
 
     void setOrderState(int orderId, boolean state) throws DAOException, StorageException;
+
+    void addToOrder(int orderId, int productId) throws DAOException, StorageException;
+    void deleteFromOrder(int orderId, int productId) throws DAOException, StorageException;
 }

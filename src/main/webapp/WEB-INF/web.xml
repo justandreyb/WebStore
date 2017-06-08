@@ -20,6 +20,27 @@
         <servlet-name>PagesController</servlet-name>
     </filter-mapping>
 
+    <filter>
+        <filter-name>AdminPermissionsFilter</filter-name>
+        <filter-class>com.training.web_store.filter.permission.AdminPermissionsFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>AdminPermissionsFilter</filter-name>
+        <url-pattern>/dashboard</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>UserPermissionsFilter</filter-name>
+        <filter-class>com.training.web_store.filter.permission.UserPermissionsFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>UserPermissionsFilter</filter-name>
+        <url-pattern>/im</url-pattern>
+        <url-pattern>/card</url-pattern>
+    </filter-mapping>
+
     <servlet>
         <servlet-name>Controller</servlet-name>
         <servlet-class>com.training.web_store.controller.Controller</servlet-class>
@@ -33,6 +54,7 @@
         <url-pattern>/dashboard</url-pattern>
         <url-pattern>/im</url-pattern>
         <url-pattern>/card</url-pattern>
+        <url-pattern>/search</url-pattern>
     </servlet-mapping>
 
     <servlet>

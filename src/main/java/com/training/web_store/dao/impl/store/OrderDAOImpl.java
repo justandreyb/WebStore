@@ -23,6 +23,12 @@ public class OrderDAOImpl implements OrderDAO {
     private static final String ORDER_IS_COMPLETE = "is_complete";
     private static final String ORDER_CREATION_DATE = "creation_date";
 
+    private static final String ORDERS_PRODUCTS_TABLE = "product_order";
+    private static final String ORDERS_PRODUCTS_PRODUCT = "product_id";
+    private static final String ORDERS_PRODUCTS_ORDER = "order_id";
+    private static final String ORDERS_PRODUCTS_AMOUND = "product_amount";
+    private static final int DEFAULT_AMOUND = 1;
+
     private static final String ADD_ORDER_QUERY =
             "INSERT INTO " + DATABASE + "." + ORDER_TABLE + " (" +
                 ORDER_PRICE + ", " +
@@ -30,6 +36,15 @@ public class OrderDAOImpl implements OrderDAO {
                 ORDER_IS_COMPLETE +
             ") " +
             "VALUES (?, ?, ?)";
+
+    private static final String ADD_PRODUCT_QUERY =
+            "INSERT INTO " + DATABASE + "." + ORDERS_PRODUCTS_TABLE + " (" +
+                ORDERS_PRODUCTS_PRODUCT + ", " +
+                ORDERS_PRODUCTS_ORDER + ", " +
+                ORDERS_PRODUCTS_AMOUND +
+            ") " +
+            "VALUES (?, ?, ?)";
+
 
     private static final String GET_ORDER_QUERY =
             "SELECT " +
@@ -60,6 +75,14 @@ public class OrderDAOImpl implements OrderDAO {
                 ORDER_IS_COMPLETE + "=?" +
             " WHERE " +
                 ORDER_ID + "=?";
+
+    private static final String DELETE_PRODUCT_QUERY =
+            "DELETE FROM " + DATABASE + "." + ORDERS_PRODUCTS_TABLE +
+            " WHERE " +
+                ORDERS_PRODUCTS_ORDER + "=? AND " +
+                ORDERS_PRODUCTS_PRODUCT + "=?"
+            ;
+
 
     private static final String ERROR_ADDING = "Error during adding new entity";
     private static final String ERROR_DELETING = "Error during deleting";
@@ -179,6 +202,49 @@ public class OrderDAOImpl implements OrderDAO {
             statement = connection.prepareStatement(SET_ORDER_STATE);
             statement.setBoolean(1, state);
             statement.setInt(2, orderId);
+
+            if (statement.executeUpdate() < 1) {
+                throw new DAOException(ERROR_DELETING);
+            }
+
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        } finally {
+            dbConnector.closeConnection(connection, statement);
+        }
+    }
+
+    @Override
+    public void addToOrder(int orderId, int productId) throws DAOException, StorageException {
+        Connection connection = null;
+        PreparedStatement statement = null;
+        try {
+            connection = dbConnector.getConnection();
+            statement = connection.prepareStatement(ADD_PRODUCT_QUERY);
+            statement.setInt(1, orderId);
+            statement.setInt(2, productId);
+            statement.setInt(3, DEFAULT_AMOUND);
+
+            if (statement.executeUpdate() < 1) {
+                throw new DAOException(ERROR_ADDING);
+            }
+
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        } finally {
+            dbConnector.closeConnection(connection, statement);
+        }
+    }
+
+    @Override
+    public void deleteFromOrder(int orderId, int productId) throws DAOException, StorageException {
+        Connection connection = null;
+        PreparedStatement statement = null;
+        try {
+            connection = dbConnector.getConnection();
+            statement = connection.prepareStatement(DELETE_PRODUCT_QUERY);
+            statement.setInt(1, orderId);
+            statement.setInt(2, productId);
 
             if (statement.executeUpdate() < 1) {
                 throw new DAOException(ERROR_DELETING);

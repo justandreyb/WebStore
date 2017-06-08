@@ -45,12 +45,13 @@ public class AnswerCreator {
     private static final String THING_CATEGORY = "category";
     private static final String THING_BRAND = "brand";
     private static final String THING_DESCRIPTION = "description";
-    private static final String THING_CREATION_DATE = "creationDate";
+    private static final Object THING_RATING = "rating";
 
+    private static final String THING_CREATION_DATE = "creationDate";
     private static final String ACCOUNTS = "accounts";
     private static final String ACCOUNT_EMAIL = "email";
-    private static final String ACCOUNT_FIRST_NAME = "firstName";
 
+    private static final String ACCOUNT_FIRST_NAME = "firstName";
     private static final Object ROLES = "roles";
     private static final Object ROLE_VALUE = "value";
 
@@ -223,6 +224,7 @@ public class AnswerCreator {
         entityJSON.put(THING_BRAND, thing.getBrand());
         entityJSON.put(THING_DESCRIPTION, thing.getDescription());
         entityJSON.put(THING_CREATION_DATE, thing.getCreationDate().toString());
+        entityJSON.put(THING_RATING, thing.getRating());
         JSONArray photos = new JSONArray();
         List<Photo> photosList = thing.getPhotos();
         if (photosList != null) {

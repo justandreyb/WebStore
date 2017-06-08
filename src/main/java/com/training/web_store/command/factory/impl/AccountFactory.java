@@ -4,7 +4,7 @@ import com.training.web_store.command.CommandName;
 import com.training.web_store.command.factory.EntityFactory;
 import com.training.web_store.command.impl.WrongCommand;
 import com.training.web_store.command.impl.interaction.ChangeLocaleCommand;
-import com.training.web_store.command.impl.interaction.SearchProductCommand;
+import com.training.web_store.command.impl.search.SearchProductCommand;
 import com.training.web_store.command.impl.interaction.SetRatingCommand;
 import com.training.web_store.command.impl.interaction.order.AddToOrderCommand;
 import com.training.web_store.command.impl.interaction.order.BuyOrderCommand;
@@ -34,7 +34,7 @@ public class AccountFactory extends EntityFactory {
         repository.put(CommandName.REMOVE_FROM_ORDER, new RemoveFromOrderCommand());
         repository.put(CommandName.GET_ORDER, new GetOrderCommand());
         repository.put(CommandName.BUY_ORDER, new BuyOrderCommand());
-        repository.put(CommandName.SEARCH_PRODUCT, new SearchProductCommand());
+        repository.put(CommandName.SEARCH, new SearchProductCommand());
 
         repository.put(CommandName.WRONG, new WrongCommand());
     }

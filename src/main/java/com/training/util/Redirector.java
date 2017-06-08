@@ -38,6 +38,15 @@ public class Redirector {
         return builder.toString();
     }
 
+    public static void redirect(HttpServletRequest request, HttpServletResponse response, String path) {
+        try {
+            response.sendRedirect(path);
+            return;
+        } catch (IOException e) {
+            log.warn("Error while forwarding");
+        }
+    }
+
     private static boolean isRequest(String uri) {
         return uri.contains("?");
     }

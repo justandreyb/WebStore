@@ -1,12 +1,15 @@
 package com.training.web_store.dao.impl.store;
 
 import com.training.web_store.bean.store.Product;
+import com.training.web_store.bean.store.Thing;
 import com.training.web_store.dao.ProductDAO;
 import com.training.web_store.dao.exception.DAOException;
+import com.training.web_store.util.ArgumentExchanger;
 import com.training.web_store.util.database.DBConnector;
 import com.training.web_store.util.exception.StorageException;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -14,21 +17,29 @@ import java.util.List;
 public class ProductDAOImpl implements ProductDAO {
     private static final DBConnector dbConnector = DBConnector.getInstance();
 
-    private static final String DATABASE = "web_store";
-    private static final String PRODUCT_TABLE = "product";
     private static final String ID = "id";
+    private static final String DATABASE = "web_store";
+
+    private static final String PRODUCT_TABLE = "product";
     private static final String PRODUCT_NAME = "name";
     private static final String PRODUCT_PRICE = "price";
+    private static final String PRODUCT_IS_AVAILABLE = "is_available";
+
+    private static final String DISCOUNT_TABLE = "discount";
+    private static final String DISCOUNT_TABLE_VALUE = "value";
     private static final String DISCOUNT_ID = "discount_id";
     private static final String DISCOUNT_VALUE = "discount";
+
+    private static final String CATEGORY_TABLE = "category";
     private static final String CATEGORY_ID = "category_id";
     private static final String CATEGORY_NAME = "category";
-    private static final String PRODUCT_IS_AVAILABLE = "is_available";
+    private static final String CATEGORY_TABLE_NAME = "name";
 
     private static final String THING_TO_PRODUCT_TABLE = "thing_to_product";
     private static final String PRODUCT_ID = "product_id";
     private static final String THING_ID = "thing_id";
     private static final String THING_TO_PRODUCT_AMOUNT = "amount";
+    private static final String THING_BRAND = "brand";
 
     private static final String ADD_PRODUCT_QUERY =
             "INSERT INTO " + DATABASE + "." + PRODUCT_TABLE + " (" +
@@ -50,6 +61,22 @@ public class ProductDAOImpl implements ProductDAO {
     private static final String GET_PRODUCTS_FOR_DISCOUNT_QUERY = "{call getProductsForDiscount(?)}";
 
     private static final String SEARCH_PRODUCT_QUERY = "{call searchProduct(?)}";
+
+    private static final String SEARCH_PRODUCT_BY_CATEGORY_QUERY =
+            "SELECT " +
+                PRODUCT_TABLE + "." + ID + ", " +
+                PRODUCT_TABLE + "." + PRODUCT_NAME + ", " +
+                PRODUCT_TABLE + "." + PRODUCT_PRICE + ", " +
+                DISCOUNT_TABLE + "." + DISCOUNT_TABLE_VALUE + " AS " + DISCOUNT_VALUE +
+            " FROM " +
+                DATABASE + "." + PRODUCT_TABLE +
+                " LEFT JOIN " + DATABASE + "." + DISCOUNT_TABLE + " ON " +
+                    DISCOUNT_TABLE + "." + ID + " = " + PRODUCT_TABLE + "." + DISCOUNT_ID +
+                " LEFT JOIN " + DATABASE + "." + CATEGORY_TABLE + " ON " +
+                    CATEGORY_TABLE + "." + ID + " = " + PRODUCT_TABLE + "." + CATEGORY_ID +
+            " WHERE " +
+                CATEGORY_TABLE + "." + CATEGORY_TABLE_NAME + " LIKE CONCAT('%', ?, '%') AND " +
+                PRODUCT_TABLE + "." + PRODUCT_IS_AVAILABLE + " = 1";
 
     private static final String UPDATE_PRODUCT_QUERY =
             "UPDATE " + DATABASE + "." + PRODUCT_TABLE +
@@ -264,6 +291,45 @@ public class ProductDAOImpl implements ProductDAO {
                 String name = set.getString(PRODUCT_NAME);
                 double price = set.getDouble(PRODUCT_PRICE);
                 byte discount = set.getByte(DISCOUNT_VALUE);
+
+                product.setId(productId);
+                product.setName(name);
+                product.setPrice(price);
+                product.setDiscount(discount);
+
+                products.add(product);
+            }
+            return products;
+
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        } finally {
+            dbConnector.closeConnection(connection, statement, set);
+        }
+    }
+
+    @Override
+    public List<Product> searchProductByBrand(String brandName) throws DAOException, StorageException {
+        Connection connection = null;
+        CallableStatement statement = null;
+        ResultSet set = null;
+        List<Product> products = null;
+
+        try {
+            connection = dbConnector.getConnection();
+            statement = connection.prepareCall(GET_PRODUCTS_QUERY);
+
+            set = statement.executeQuery();
+
+            products = new LinkedList<Product>();
+
+            while (set.next()) {
+                Product product = new Product();
+
+                int productId = set.getInt(ID);
+                String name = set.getString(PRODUCT_NAME);
+                double price = set.getDouble(PRODUCT_PRICE);
+                byte discount = set.getByte(DISCOUNT_VALUE);
                 String category = set.getString(CATEGORY_NAME);
 
                 product.setId(productId);
@@ -271,6 +337,86 @@ public class ProductDAOImpl implements ProductDAO {
                 product.setPrice(price);
                 product.setDiscount(discount);
                 product.setCategory(category);
+
+                products.add(product);
+            }
+
+            List<Product> targetProducts = new ArrayList<>();
+            for (Product product : products) {
+                if (analyzeProductOnTargetBrand(product, brandName)) {
+                    targetProducts.add(product);
+                }
+            }
+
+            return targetProducts;
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        } finally {
+            dbConnector.closeConnection(connection, statement, set);
+        }
+    }
+
+    private boolean analyzeProductOnTargetBrand(Product product, String targetName) throws DAOException, StorageException {
+        Connection connection = null;
+        CallableStatement statement = null;
+        ResultSet set = null;
+
+        try {
+            connection = dbConnector.getConnection();
+            statement = connection.prepareCall(GET_THINGS_QUERY);
+
+            statement.setInt(1, product.getId());
+
+            set = statement.executeQuery();
+
+            boolean result = false;
+
+            while (set.next()) {
+                String brand = set.getString(THING_BRAND);
+                brand = brand.toLowerCase();
+                if (brand.contains(targetName.toLowerCase())) {
+                    result = true;
+                }
+            }
+
+            return result;
+
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        } finally {
+            dbConnector.closeConnection(connection, statement, set);
+        }
+    }
+
+    @Override
+    public List<Product> searchProductByCategory(String categoryName) throws DAOException, StorageException {
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        List<Product> products = null;
+
+        try {
+            connection = dbConnector.getConnection();
+            statement = connection.prepareStatement(SEARCH_PRODUCT_BY_CATEGORY_QUERY);
+
+            statement.setString(1, categoryName);
+
+            set = statement.executeQuery();
+
+            products = new LinkedList<Product>();
+
+            while (set.next()) {
+                Product product = new Product();
+
+                int productId = set.getInt(ID);
+                String name = set.getString(PRODUCT_NAME);
+                double price = set.getDouble(PRODUCT_PRICE);
+                byte discount = set.getByte(DISCOUNT_VALUE);
+
+                product.setId(productId);
+                product.setName(name);
+                product.setPrice(price);
+                product.setDiscount(discount);
 
                 products.add(product);
             }
@@ -290,7 +436,6 @@ public class ProductDAOImpl implements ProductDAO {
 
     @Override
     public List<Product> getProductsForBrand(int brandId) throws DAOException, StorageException {
-        //TODO: Create (search in things)
         return getProductsToRequirements(GET_PRODUCTS_FOR_BRAND_QUERY, brandId);
     }
 

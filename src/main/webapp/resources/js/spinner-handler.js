@@ -1,16 +1,18 @@
 function showSpin() {
-    if ($("#spinner-block") != null) {
-        stopSpin();
-    }
+    stopSpin();
 
-    var target = document.getElementById('action-block');
+    var target = document.getElementById('spinner-block');
     var div = document.createElement('div');
-    div.id = "spinner-block";
+    div.id = "spinner-element";
     target.appendChild(div);
 
-    $("#action-block").modal('show');
+    $("#spinner-block").modal('show');
 }
 
 function stopSpin() {
-   $("#spinner-block").remove();
+    var spinner = $("#spinner-element");
+    if (typeof spinner.html() != 'undefined') {
+        spinner.remove();
+        $("#spinner-block").modal('toggle');
+    }
 }

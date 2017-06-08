@@ -605,7 +605,14 @@ public class StoreServiceImpl implements StoreService {
     @Override
     public List<Thing> getThings() throws ServiceException {
         try {
-            return thingDAO.getThings();
+            List<Thing> things = thingDAO.getThings();
+            for (Thing thing : things) {
+                byte rating = thingDAO.getRating(thing.getId());
+                if (rating != 0) {
+                    thing.setRating(rating);
+                }
+            }
+            return things;
         } catch (DAOException | StorageException e) {
             throw new ServiceException(e);
         }

@@ -19,6 +19,8 @@ public class ProductFactory extends EntityFactory {
         repository.put(CommandName.GET_ENTITY, new GetProductCommand());
         repository.put(CommandName.GET_ENTITIES, new GetProductsCommand());
 
+        repository.put(CommandName.SHOW, new ShowProductCommand());
+
         repository.put(CommandName.WRONG, new WrongCommand());
     }
 }

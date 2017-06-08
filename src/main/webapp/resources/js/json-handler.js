@@ -1,8 +1,17 @@
-function checkAuthorisation(jsonObj) {
+function checkAuthorisation(jsonObj, page) {
     if (jsonObj.success != null) {
-        reloadPage();
+        redirect(page);
     } else {
         printError(jsonObj);
+    }
+}
+
+function checkAction(jsonObj) {
+    var result = JSON.parse(jsonObj);
+    if (result.success != null) {
+        alert(result.success);
+    } else if (result.error != null) {
+        alert(result.error);
     }
 }
 
@@ -17,13 +26,13 @@ function handleActionSuccess(data) {
         actionBlock.fadeOut(500);
         actionBlock.modal('toggle');
         block.html("");
-        alert(data);
+        checkAction(data);
     } else {
         printDefaultError(block);
     }
 }
 
-function handleAuthorisationSuccess(data) {
+function handleAuthorisationSuccess(data, page) {
     stopSpin();
 
     var jsonObject;
@@ -32,7 +41,7 @@ function handleAuthorisationSuccess(data) {
     if (data != null && data != "") {
         jsonObject = JSON.parse(data);
         if (jsonObject != null) {
-            checkAuthorisation(jsonObject);
+            checkAuthorisation(jsonObject, page);
         }
     } else {
         printDefaultError(block);
@@ -41,6 +50,13 @@ function handleAuthorisationSuccess(data) {
 
 function reloadPage() {
     location.reload();
+}
+
+function redirect(page) {
+    reloadPage();
+    if (page != null && page != "") {
+        window.location.replace(page);
+    }
 }
 
 function handleError(errorMessage) {

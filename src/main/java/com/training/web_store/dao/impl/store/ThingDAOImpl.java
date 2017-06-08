@@ -126,8 +126,6 @@ public class ThingDAOImpl implements ThingDAO {
             statement.setDate(4, (Date) thing.getCreationDate());
             statement.setInt(5, brandId);
 
-            statement.executeUpdate();
-
             if (statement.executeUpdate() < 1) {
                 throw new DAOException(ERROR_ADDING);
             }
@@ -356,8 +354,12 @@ public class ThingDAOImpl implements ThingDAO {
                 result += set.getByte(RATING_VALUE);
                 amount++;
             }
+            byte answer = 0;
+            if (amount != 0) {
+                answer = (byte) (result / amount);
+            }
 
-            return (byte) (result / amount);
+            return answer;
 
         } catch (SQLException e) {
             throw new DAOException(e);
