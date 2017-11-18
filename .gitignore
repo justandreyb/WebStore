@@ -1,8 +1,8 @@
 /.idea/**
+/node_modules/**
 /target/**
+/public
 /out/**
-WebStore.iml
+*.iml
 *.log
-/src/main/webapp/resources/bootstrap/css/**
-/src/main/webapp/resources/bootstrap/fonts/**
-/src/main/webapp/resources/bootstrap/js/**
+/index.html

@@ -1,0 +1,48 @@
+{
+  "name": "create-react-redux-app",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "axios": "^0.17.1",
+    "history": "^4.7.2",
+    "immutable": "^3.8.1",
+    "prop-types": "^15.5.10",
+    "react": "^16.0.0",
+    "react-bootstrap": "^0.31.5",
+    "react-bootstrap-switch": "^15.5.2",
+    "react-bootstrap-table": "^4.1.4",
+    "react-dom": "^16.0.0",
+    "react-redux": "^5.0.6",
+    "react-router-bootstrap": "^0.24.4",
+    "react-router-dom": "^4.2.2",
+    "react-router-redux": "^5.0.0-alpha.6",
+    "redux": "^3.7.2",
+    "redux-saga": "^0.16.0"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-es2017": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "eslint": "4.5.0",
+    "eslint-plugin-import": "2.8.0",
+    "eslint-plugin-jsx-a11y": "6.0.2",
+    "eslint-plugin-react": "7.4.0",
+    "lint-staged": "^4.3.0",
+    "npm-install-webpack-plugin": "^4.0.5",
+    "pre-commit": "^1.2.2",
+    "react-scripts": "1.0.17",
+    "webpack": "^3.8.1"
+  },
+  "scripts": {
+    "start": "webpack",
+    "build": "webpack && lite-server"
+  },
+  "pre-commit": "lint:staged",
+  "lint-staged": {
+    "*.js": "lint:js"
+  },
+  "proxy": "https://httpbin.org"
+}

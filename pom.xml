@@ -3,10 +3,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>by.training</groupId>
+    <groupId>by.bsuir</groupId>
     <artifactId>web_store</artifactId>
-    <packaging>war</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <version>2.0-SNAPSHOT</version>
     <name>WebStore</name>
     <url>justandreyb@gmail.com</url>
 
@@ -14,6 +14,7 @@
         <javax.version>7.0</javax.version>
         <junit.version>3.8.1</junit.version>
         <mysql.version>6.0.5</mysql.version>
+        <flyway.version>2.3.1</flyway.version>
         <jstl.version>1.2</jstl.version>
         <jsonsimple.version>1.1.1</jsonsimple.version>
         <log4j.version>1.2.17</log4j.version>
@@ -23,23 +24,21 @@
     <dependencies>
 
         <dependency>
-          <groupId>junit</groupId>
-          <artifactId>junit</artifactId>
-          <version>${junit.version}</version>
-          <scope>test</scope>
-        </dependency>
-
-        <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-api</artifactId>
             <version>${javax.version}</version>
-            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>${mysql.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.googlecode.flyway</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>${flyway.version}</version>
         </dependency>
 
         <dependency>
@@ -66,30 +65,71 @@
             <version>RELEASE</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.github.livesense</groupId>
-            <artifactId>org.liveSense.scripting.jsp.taglib.jsonatg</artifactId>
-            <version>1.0.5</version>
-        </dependency>
-
     </dependencies>
 
     <build>
-    <!-- Uncomment to build project from console -->
-    <!--
-        <finalName>web_store</finalName>
-        <sourceDirectory>src/main/java/</sourceDirectory>
-    -->
         <plugins>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.5.1</version>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>com.googlecode.flyway</groupId>
+                <artifactId>flyway-maven-plugin</artifactId>
+                <version>${flyway.version}</version>
+                <configuration>
+                    <driver>com.mysql.cj.jdbc.Driver</driver>
+                    <url>jdbc:mysql://localhost:3306/web_store?autoReconnect=true&amp;useSSL=false&amp;characterEncoding=UTF-8</url>
+                    <user>root</user>
+                    <password>root</password>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>com.github.eirslett</groupId>
+                <artifactId>frontend-maven-plugin</artifactId>
+                <version>1.4</version>
+                <configuration>
+                    <installDirectory>./</installDirectory>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>install node and npm</id>
+                        <goals>
+                            <goal>install-node-and-npm</goal>
+                        </goals>
+                        <configuration>
+                            <nodeVersion>v8.9.0</nodeVersion>
+                            <npmVersion>5.5.1</npmVersion>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>npm install</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <phase>generate-resources</phase>
+                        <configuration>
+                            <arguments>install</arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>webpack build</id>
+                        <goals>
+                            <goal>webpack</goal>
+                        </goals>
+                        <phase>generate-resources</phase>
+                    </execution>
+                </executions>
+            </plugin>
+
 
         </plugins>
 
